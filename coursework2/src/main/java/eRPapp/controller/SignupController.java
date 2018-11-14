@@ -22,6 +22,7 @@ import eRPapp.repository.*;
 public class SignupController {
 	
 	@Autowired UserRepository userRepository;
+	@Autowired AccountTypeRepository accountTypeRepository;
 	
 //    @InitBinder
 //    protected void initBinder(WebDataBinder binder) {
@@ -29,39 +30,40 @@ public class SignupController {
 //    }
 	
 	@RequestMapping(value="/", method = RequestMethod.GET)
-	public String initModel(Model model) {
-		AppDataTransferObject appDataTransferObject = new AppDataTransferObject();
-    	model.addAttribute("appDataTransferObject", appDataTransferObject);
+	public String initModel(@ModelAttribute("user") User user, Model model) {
+		System.out.println("Register started");
         return "Signup";
 	}
 	
-	@RequestMapping(value="register", params="register", method=RequestMethod.POST)
-	public String signup(@Valid @ModelAttribute("appDataTransferObject") AppDataTransferObject appDataTransferObject, BindingResult result, Model model) {
-		if (!result.hasErrors()) {
-			if (userRepository.findByEmail(appDataTransferObject.getEmail()) != null) {
-				appDataTransferObject.getUser().setUserRemark("Email exists, please try another one.");
-				model.addAttribute("appDataTransferObject", appDataTransferObject);
-				return "redirect:/signup";
-				
-			}
-			User newVoter = new User();
-			newVoter.setEmail(appDataTransferObject.getEmail());
-			newVoter.setFamilyName(appDataTransferObject.getFamilyName());
-			newVoter.setGivenName(appDataTransferObject.getGivenName());
-			newVoter.setDateOfBirth(appDataTransferObject.getDateOfBirth());
-			newVoter.setAddress(appDataTransferObject.getAddress());
+	@RequestMapping(value="/register", method=RequestMethod.POST)
+	public String signup(@Valid @ModelAttribute("user") User user, Model model) {
+		System.out.println(0);
+		
+
+		if (userRepository.findByEmail(user.getEmail()) != null) {
+			System.out.println(05);
 			
-			return "redirect:/userLogin";
-			
-		} else {
-			return "redirect:/signup";
+			user.setUserRemark("Email exists, please try another one.");
+			return "redirect:/signup/";
 			
 		}
+		// set account type "voter"
+		user.setAccountType(accountTypeRepository.findById(1));
+		System.out.println(user.toString());
+		
+		// encrypt user password
+		PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
+		user.setPassword(passwordEncryptor.getSHA256(user.getPassword()));
+		
+		userRepository.save(user);
+		
+		return "redirect:/userLogin";	
+
 	}
 	
 	@RequestMapping(value="/cancel", method=RequestMethod.POST)
-	public String signupCancel(@ModelAttribute("appDataTransferObject")  AppDataTransferObject appDataTransferObject, Model model) {
-		System.out.println(00000000000);
+	public String signupCancel(@ModelAttribute("user")  User user, Model model) {
+		System.out.println("Register cencelled");
 		return "redirect:/userLogin";
 	}
 

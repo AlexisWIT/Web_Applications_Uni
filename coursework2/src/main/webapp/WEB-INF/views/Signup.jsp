@@ -16,7 +16,7 @@
 <body><div class="interface">
 <h1>Voter Sign up</h1>
 
-<form:form action="/signup/register" commandName="appDataTransferObject" method="POST" >
+<form:form action="/signup/register" commandName="user" method="POST" >
    <table>
    <tr>
         <td><form:label path="email">Email</form:label></td>
@@ -54,20 +54,21 @@
         <td><form:errors path="passwordCheck"  cssClass="error" /></td>
     </tr>
     <tr>
-        <td colspan="2">
-            <input type="reset" name="reset" class="btn btn-default"/>
+    	<td colspan="1">
+            
         </td>
-        <td colspan="2">
-            <input type="submit" name="register" class="btn btn-default"/>
+        <td colspan="1">
+            <input type="reset" name="reset" class="btn"/>
+        </td>
+        <td colspan="1">
+            <input type="submit" name="register" class="btn"/>
         </td>
     </tr>
 </table>  
 </form:form>
 
-<form:form action="/signup/cancel" commandName="appDataTransferObject" method="POST">
-		<td colspan="1">
-        	<input type="submit" value="Cancel" class="btn btn-default"/>
-        </td>
+<form:form action="/signup/cancel" modelAttribute="user" method="POST">
+     <input type="submit" value="Cancel" class="btn"/> 
 </form:form>
 
 </div>

@@ -2,6 +2,7 @@ package eRPapp.controller;
 
 import java.util.Date;
 
+import eRPapp.domain.AccountType;
 import eRPapp.domain.User;
 
 public class AppDataTransferObject {
@@ -15,6 +16,7 @@ public class AppDataTransferObject {
 	private String password;
 	private String passwordCheck;
 	private String remark;
+	private AccountType accountType;
 	
 	public AppDataTransferObject() {
 		

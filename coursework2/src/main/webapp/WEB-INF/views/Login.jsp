@@ -25,6 +25,7 @@
 			<core:if test="${param.logout != null}">       
 				<p class="error">You have been logged out.</p>
 			</core:if>
+			
 			<table>
 			<tr>
 				<td><label for="email">Email</label></td>
@@ -34,9 +35,12 @@
 				<td><label for="password">Password</label><br></td>
 				<td><input type="password" id="password" name="password"/></td>	
 			</tr>
+			<tr colspan="2">
+				<td><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/></td>
+				<td><button id='LoginButton' type="submit" class="btn">Login</button></td>
+			</tr>
 			</table>
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-			<button id='LoginButton' type="submit" class="btn">Login</button>
+			
 		</form>	
 		<a href="/signup/">Create an account for vote</a>
 	</div>
