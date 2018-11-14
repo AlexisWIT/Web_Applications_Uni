@@ -57,5 +57,9 @@ public class AccountType {
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
+	
+	public String toString() {
+		return accountType;
+	}
 
 }

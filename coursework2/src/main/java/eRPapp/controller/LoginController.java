@@ -41,9 +41,9 @@ public class LoginController {
     }
 	
 	@RequestMapping(value="/accessCheck", method=RequestMethod.POST)
-	public String accountCheck(@Valid @ModelAttribute("appDataTransferObject") AppDataTransferObject appDataTransferObject, Model model, BindingResult result) {
-		if ((!result.hasErrors())&&(userRepository.findByEmail(appDataTransferObject.getEmail()) != null)) {
-			if (userRepository.findByEmail(appDataTransferObject.getEmail()).getPassword().equals(appDataTransferObject.getPassword())){			
+	public String accountCheck(@Valid @ModelAttribute("appDataTransferObject") AppDataTransferObject appDataTransferObject, Model model) {
+		if (userRepository.findByEmail(appDataTransferObject.getEmail()) != null) {
+			if (userRepository.findByEmail(appDataTransferObject.getEmail()).getPassword().equals(PasswordEncryptor.getSHA256(appDataTransferObject.getPassword()))){			
 				String view;
 				user = userRepository.findByEmail(appDataTransferObject.getEmail());
 				switch (user.getAccountType().getId()) {
@@ -73,7 +73,7 @@ public class LoginController {
 	
 	@RequestMapping("/voterLoggedIn")
 	public String voter() {
-		return "redirect:/home";
+		return "redirect:/home/";
 	}
 	
 //	@RequestMapping(value="/logged-in", method=RequestMethod.GET)

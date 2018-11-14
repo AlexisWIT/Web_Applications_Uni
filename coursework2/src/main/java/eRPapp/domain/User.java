@@ -30,7 +30,7 @@ public class User {
 	@Column(name="Email", unique=false , nullable=false)			String email;
 	@Column(name="Family_Name", unique=false, nullable=false)		String familyName;
 	@Column(name="Given_Name", unique=false, nullable=false)		String givenName;
-	@Column(name="Date_of_Borth", unique=false, nullable=false)		Date dateOfBirth;
+	@Column(name="Date_of_Birth", unique=false, nullable=false)		Date dateOfBirth;
 	@Column(name="Address", unique=false, nullable=false)			String address;
 	@Column(name="Password", unique=false, nullable=false)			String password;
 	@Transient														String passwordCheck;
@@ -53,6 +53,8 @@ public class User {
 	// String dateString = format.format(new Date());
 	@Transient
 	private String userRemark;
+	@Transient
+	String dateOfBirthString; // Date of birth input from Signup.jsp will be saved here.
 	
 	public User() {
 		
@@ -111,6 +113,14 @@ public class User {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getDateOfBirthString() {
+		return dateOfBirthString;
+	}
+
+	public void setDateOfBirthString(String dateOfBirthString) {
+		this.dateOfBirthString = dateOfBirthString;
 	}
 
 	public String getAddress() {
@@ -173,7 +183,7 @@ public class User {
 	public String toString() {
 		return "UserDetail [ID=" + id + ", Email=" + email + ", Password=" + password + ", Password-Check=" + passwordCheck 
 					+ ", FamilyName=" + familyName + ", GivenName=" + givenName + ", DateOfBirth=" + dateOfBirth 
-					+ ", Address=" + address + ", BIC=" + bioIdCode + ", AccountType=" + accountType + ", Vote=" + vote +"]";
+					+ ", Address=" + address + ", BIC=" + bioIdCode + ", AccountType=" + accountType.toString() + ", Vote=" + vote +"]";
 	}
 
 }

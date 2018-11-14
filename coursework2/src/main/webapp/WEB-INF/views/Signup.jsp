@@ -34,9 +34,9 @@
         <td><form:errors path="givenName"  cssClass="error" /></td>
     </tr>
     <tr>
-        <td><form:label path="dateOfBirth">Date of Birth</form:label></td>
-        <td><form:input type="date" path="dateOfBirth" /></td>
-        <td><form:errors path="dateOfBirth"  cssClass="error" /></td>
+        <td><form:label path="dateOfBirthString">Date of Birth</form:label></td>
+        <td><form:input type="date" path="dateOfBirthString" /></td>
+        <td><form:errors path="dateOfBirthString"  cssClass="error" /></td>
     </tr>
     <tr>
         <td><form:label path="address">Address</form:label></td>

@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import eRPapp.controller.PasswordEncryptor;
 import eRPapp.domain.*;
 import eRPapp.repository.*;
 
@@ -40,7 +41,8 @@ public class BallotApplication extends WebMvcConfigurerAdapter implements Comman
 		
 		// Add account of election commission to database
 		try {
-			User adminUser = new User("admin@gov.com", "admin", "admin", "2018-11-07", "Government facility", "admin", commissionType);
+			String adminPassword = PasswordEncryptor.getSHA256("admin");
+			User adminUser = new User("admin@gov.com", "admin", "admin", "2018-11-07", "Government facility", adminPassword, commissionType);
 			
 			//adminUser.setUserId(1);
 			

@@ -1,5 +1,7 @@
 package eRPapp.controller;
 
+import java.text.ParseException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +33,17 @@ public class SignupController {
 	
 	@RequestMapping(value="/", method = RequestMethod.GET)
 	public String initModel(@ModelAttribute("user") User user, Model model) {
-		System.out.println("Register started");
+		System.out.println("-----------  Register started  ---------------");
         return "Signup";
 	}
 	
 	@RequestMapping(value="/register", method=RequestMethod.POST)
 	public String signup(@Valid @ModelAttribute("user") User user, Model model) {
-		System.out.println(0);
+		System.out.println("-----------  Processing register info  ---------------");
 		
 
 		if (userRepository.findByEmail(user.getEmail()) != null) {
-			System.out.println(05);
+			System.out.println("!!! Email exists !!!");
 			
 			user.setUserRemark("Email exists, please try another one.");
 			return "redirect:/signup/";
@@ -49,21 +51,27 @@ public class SignupController {
 		}
 		// set account type "voter"
 		user.setAccountType(accountTypeRepository.findById(1));
+		
+		// parse date of birth to Date format
+		try {
+			user.setDateOfBirth(user.toDate(user.getDateOfBirthString()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		System.out.println(user.toString());
 		
 		// encrypt user password
-		PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
-		user.setPassword(passwordEncryptor.getSHA256(user.getPassword()));
+		user.setPassword(PasswordEncryptor.getSHA256(user.getPassword()));
 		
 		userRepository.save(user);
-		
+		System.out.println("-----------  User created  ---------------");
 		return "redirect:/userLogin";	
 
 	}
 	
 	@RequestMapping(value="/cancel", method=RequestMethod.POST)
 	public String signupCancel(@ModelAttribute("user")  User user, Model model) {
-		System.out.println("Register cencelled");
+		System.out.println("-------  Register cencelled  -------");
 		return "redirect:/userLogin";
 	}
 
