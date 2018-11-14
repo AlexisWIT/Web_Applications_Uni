@@ -40,11 +40,8 @@ public class SignupController {
 	@RequestMapping(value="/register", method=RequestMethod.POST)
 	public String signup(@Valid @ModelAttribute("user") User user, Model model) {
 		System.out.println("-----------  Processing register info  ---------------");
-		
-
 		if (userRepository.findByEmail(user.getEmail()) != null) {
 			System.out.println("!!! Email exists !!!");
-			
 			user.setUserRemark("Email exists, please try another one.");
 			return "redirect:/signup/";
 			

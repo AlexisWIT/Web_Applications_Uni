@@ -12,7 +12,7 @@ public class PasswordEncryptor {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");             
 			byte[] hash = digest.digest(data.getBytes("UTF-8"));             
 			return DatatypeConverter.printHexBinary(hash);         
-			}catch(Exception ex) {             
+			} catch(Exception ex) {             
 				ex.printStackTrace();         
 				}         
 		return result;     

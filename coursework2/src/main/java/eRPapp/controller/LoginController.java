@@ -60,10 +60,10 @@ public class LoginController {
 				return view;
 				
 			}
-			return "Login";
+			return "redirect:/accessDenied";
 			
 		}
-		return "Login";
+		return "redirect:/accessDenied";
 	}
 	
 	@RequestMapping("/adminLoggedIn")

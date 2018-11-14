@@ -11,11 +11,47 @@
 	    <style> 
 		    .error { color: red; } 
 	    	.interface { padding: 50px 100px; }
+	    	.VoteItem {padding: 10px 20px;}
+	    	.VoteOption {padding: 10px;}
 	    </style>
 	</head>
 	
 	<body><div class="interface">
 	<h1>Vote</h1>
+	
+	<table class="VoteTable">
+	<tr>
+		<th>Item</td>
+		<th>Options</td>
+	</tr>
+	
+	<form:form action="/vote/confirm" modelAttribute="" method="POST">
+	<core:forEach items="${questionList}" var="question">
+	<tr>
+		<td class="VoteItem">
+			<p>
+			(<core:out value="${question.getRefId()}"/>) 
+			 <core:out value="${question.getTitle()}"/>
+			</p>
+		</td>
+		<td class="VoteOption">
+			<core:forEach items="${optionList}" var="option">
+			<p><input type="radio" name="options" value="${option.getOptId()}">
+			<core:out value="${option.getOptId()}"/>. 
+			<core:out value="${option.getOption()}"/>
+			</p>
+			</core:forEach>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="submit" name="confirm" class="btn"/>
+		</td>
+	</tr>
+	</core:forEach>
+	</form:form>
+	
+	</table>
 	
 	
 	</div>

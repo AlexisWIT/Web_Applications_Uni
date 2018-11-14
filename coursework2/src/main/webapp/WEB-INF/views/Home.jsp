@@ -16,16 +16,23 @@
 	
 	<body><div class="interface">
 		<h1>Voter Home</h1>
-		<div>
-			<a href="/vote/" class="btn btn-default">Vote now</a>
-		</div>
-		<br>
-		<div>
-			<a href="/login/" class="btn btn-default">Sign out</a>
-		</div>
-		<br>
-		<div>
-			<a href="/login/" class="btn btn-default">Admin login</a>
-		</div>
+		<p> Hello _____ you can vote now</p>
+		
+		<table>
+		<tr>
+			<form:form action="/home/logout">
+			<td>
+				<button id='SignOutButton' type="submit" class="btn">Sign Out</button>
+			</td>
+			</form:form>	
+	
+			<form:form action="/home/vote">
+			<td>
+				<button id='GoToVoteButton' type="submit" class="btn">Vote</button>
+			</td >
+			</form:form>
+		</tr>
+		</table>
+
 	</body>
 </html>

@@ -16,7 +16,7 @@
 <body><div class="interface">
 <h1>Voter Sign up</h1>
 
-<form:form action="/signup/register" commandName="user" method="POST" >
+<form:form action="/signup/register" modelAttribute="user" method="POST" >
    <table>
    <tr>
         <td><form:label path="email">Email</form:label></td>
