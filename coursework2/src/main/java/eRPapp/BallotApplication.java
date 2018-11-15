@@ -33,8 +33,8 @@ public class BallotApplication extends WebMvcConfigurerAdapter implements Comman
 	public void run(String[] args) throws Exception {
 		
 		// Add account types (voter, election commission) to database
-		AccountType commissionType = new AccountType(0, "Election Commission");
-		AccountType voterType = new AccountType(1, "Voter");
+		AccountType commissionType = new AccountType(COMMISSION, "Election Commission");
+		AccountType voterType = new AccountType(VOTER, "Voter");
 		
 		accountTypeRepository.save(commissionType);
 		accountTypeRepository.save(voterType);
@@ -44,10 +44,7 @@ public class BallotApplication extends WebMvcConfigurerAdapter implements Comman
 			String adminPassword = PasswordEncryptor.getSHA256("admin");
 			User adminUser = new User("admin@gov.com", "admin", "admin", "2018-11-07", "Government facility", adminPassword, commissionType);
 			
-			//adminUser.setUserId(1);
-			
-			userRepository.save(adminUser);
-			
+			userRepository.save(adminUser);	
 		
 		} catch (ParseException e) {
 			e.printStackTrace();

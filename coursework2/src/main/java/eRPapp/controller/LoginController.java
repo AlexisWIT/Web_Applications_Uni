@@ -68,7 +68,7 @@ public class LoginController {
 	
 	@RequestMapping("/adminLoggedIn")
 	public String commission() {
-		return "Dashboard";
+		return "redirect:/dashboard/";
 	}
 	
 	@RequestMapping("/voterLoggedIn")
@@ -90,6 +90,7 @@ public class LoginController {
 	
 	@RequestMapping("/accessDenied")
 	public String accessDenied() {
+		System.out.println("----------- Access denied ---------------");
 		return "Login";
 	}
 

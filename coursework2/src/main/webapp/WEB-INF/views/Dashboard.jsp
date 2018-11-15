@@ -11,20 +11,51 @@
 	    <style> 
 		    .error { color: red; } 
 	    	.interface { padding: 50px 100px; }
+	    	.VoteItem { padding: 10px 20px; }
+	    	.VoteOption { padding: 10px 20px; }
 	    </style>
 	</head>
 	
 	<body><div class="interface">
 		<h1>Admin Dashboard - Election Commission</h1>	
 
-		<p>
-		Welcome Admin! Below is/are the current referendum(s).
-		</p>
+		<p>Welcome Admin! Below is/are the current referendum(s).</p>
+
+		<table>
+		<tr>
+			<th>Item</th>
+			<th>Options</th>
+		</tr>
 		
-		<p>
+		<form:form action="/dashboard/edit" modelAttribute="     " method="POST">
+		<core:forEach items="${questionList}" var="question">
+		<tr>
+			<td class="VoteItem">
+				<p>
+				(<core:out value="${question.getRefId()}"/>) 
+				 <core:out value="${question.getTitle()}"/>
+				</p>
+			</td>
+			<td class="VoteOption">
+				<core:forEach items="${optionList}" var="option">
+				<p>
+				<core:out value="${option.getOptId()}"/>. 
+				<core:out value="${option.getOption()}"/>
+				</p>
+				</core:forEach>
+			</td>
+		</tr>
+		</core:forEach>
+		<tr>
+			<td>
+				<input type="submit" name="confirmEdit" class="btn"/>
+			</td>
+		</tr>
+		</form:form>
 		
-		</p>
-		
+		</table>
+			
+	</div>	
 	</body>
 	
 </html>

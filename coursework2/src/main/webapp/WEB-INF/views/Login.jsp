@@ -17,7 +17,7 @@
 	<body><div class="interface">
 		<h1>User Login</h1>
 
-		<form action="/accessCheck" modelAttribute="appDataTransferObject" method="POST" >
+		<form:form action="/accessCheck" modelAttribute="appDataTransferObject" method="POST" >
 		   
 			<core:if test="${param.error != null}">        
 				<p class="error">Invalid Email or Password.</p>
@@ -35,13 +35,13 @@
 				<td><label for="password">Password</label><br></td>
 				<td><input type="password" id="password" name="password"/></td>	
 			</tr>
-			<tr colspan="2">
+			<tr>
 				<td><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/></td>
 				<td><button id='LoginButton' type="submit" class="btn">Login</button></td>
 			</tr>
 			</table>
 			
-		</form>	
+		</form:form>	
 		<a href="/signup/">Create an account for vote</a>
 	</div>
 	</body>

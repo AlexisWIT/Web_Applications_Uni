@@ -28,11 +28,12 @@
 	
 			<form:form action="/home/vote">
 			<td>
-				<button id='GoToVoteButton' type="submit" class="btn">Vote</button>
+				<button id='GoToVoteButton' type="submit" class="btn">Vote Now</button>
 			</td >
 			</form:form>
 		</tr>
 		</table>
-
+	
+	</div>
 	</body>
 </html>

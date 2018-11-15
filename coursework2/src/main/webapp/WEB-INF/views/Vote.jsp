@@ -11,21 +11,22 @@
 	    <style> 
 		    .error { color: red; } 
 	    	.interface { padding: 50px 100px; }
-	    	.VoteItem {padding: 10px 20px;}
-	    	.VoteOption {padding: 10px;}
+	    	.VoteItem { padding: 10px 20px; }
+	    	.VoteOption { padding: 10px 20px; }
 	    </style>
 	</head>
 	
 	<body><div class="interface">
 	<h1>Vote</h1>
 	
+	<div><a href="/home/">Back</a></div>
 	<table class="VoteTable">
 	<tr>
-		<th>Item</td>
-		<th>Options</td>
+		<th>Item</th>
+		<th>Options</th>
 	</tr>
 	
-	<form:form action="/vote/confirm" modelAttribute="" method="POST">
+	<form:form action="/vote/confirm" modelAttribute="     "  method="POST">
 	<core:forEach items="${questionList}" var="question">
 	<tr>
 		<td class="VoteItem">
@@ -43,12 +44,12 @@
 			</core:forEach>
 		</td>
 	</tr>
+	</core:forEach>
 	<tr>
 		<td colspan="2">
 			<input type="submit" name="confirm" class="btn"/>
 		</td>
 	</tr>
-	</core:forEach>
 	</form:form>
 	
 	</table>

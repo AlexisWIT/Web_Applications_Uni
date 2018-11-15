@@ -16,6 +16,11 @@
 <body><div class="interface">
 <h1>Voter Sign up</h1>
 
+
+<form:form action="/signup/cancel" modelAttribute="user" method="POST">
+    <p> <input type="submit" value="Cancel" class="btn"/> </p>
+</form:form>
+
 <form:form action="/signup/register" modelAttribute="user" method="POST" >
    <table>
    <tr>
@@ -65,10 +70,6 @@
         </td>
     </tr>
 </table>  
-</form:form>
-
-<form:form action="/signup/cancel" modelAttribute="user" method="POST">
-     <input type="submit" value="Cancel" class="btn"/> 
 </form:form>
 
 </div>
