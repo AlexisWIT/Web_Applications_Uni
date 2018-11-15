@@ -25,17 +25,17 @@
    <table>
    <tr>
         <td><form:label path="email">Email</form:label></td>
-        <td><form:input path="email" size="15" /></td>
+        <td><form:input path="email" placeholder="example@domain.com"/></td>
         <td><form:errors path="email"  cssClass="error" /></td>
     </tr>
    <tr>
         <td><form:label path="familyName">Family Name</form:label></td>
-        <td><form:input path="familyName" size="15" /></td>
+        <td><form:input path="familyName" placeholder="John"/></td>
         <td><form:errors path="familyName"  cssClass="error" /></td>
     </tr>
     <tr>
         <td><form:label path="givenName">Given Name</form:label></td>
-        <td><form:input path="givenName" size="15" /></td>
+        <td><form:input path="givenName" placeholder="Doe"/></td>
         <td><form:errors path="givenName"  cssClass="error" /></td>
     </tr>
     <tr>
@@ -45,18 +45,23 @@
     </tr>
     <tr>
         <td><form:label path="address">Address</form:label></td>
-        <td><form:input path="address" size="15" /></td>
+        <td><form:input path="address" placeholder="Road, District"/></td>
         <td><form:errors path="address"  cssClass="error" /></td>
     </tr>
     <tr>
         <td><form:label path="password">Password</form:label></td>
-        <td><form:input type="password" path="password" size="15" /></td>
+        <td><form:input type="password" path="password" placeholder="********"/></td>
         <td><form:errors path="password"  cssClass="error" /></td>
     </tr>
     <tr>
         <td><form:label path="passwordCheck">Verify Password</form:label></td>
-        <td><form:input type="password" path="passwordCheck" size="15" /></td>
+        <td><form:input type="password" path="passwordCheck" placeholder="********"/></td>
         <td><form:errors path="passwordCheck"  cssClass="error" /></td>
+    </tr>
+    <tr>
+        <td><form:label path="bioIdCode">BIC Code</form:label></td>
+        <td><form:input path="bioIdCode" placeholder="AAAA-BBBB-CCCC-DDDD"/></td>
+        <td><form:errors path="bioIdCode"  cssClass="error" /></td>
     </tr>
     <tr>
     	<td colspan="1">

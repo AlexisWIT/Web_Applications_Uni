@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,7 +19,7 @@ import eRPapp.services.UserInfoService;
 
 @EnableWebSecurity
 @Configuration
-public class Config_Security {
+public class Config_Security extends WebSecurityConfigurerAdapter{
 	
 	@Autowired DataSource dataSource;
 	@Autowired private UserInfoService userInfoService;
@@ -34,27 +35,29 @@ public class Config_Security {
 		authMgrBdr.userDetailsService(userInfoService).passwordEncoder(passwordEncoder());
 	}
 	
-	public void configure(HttpSecurity http) throws Exception {
+	protected void configure(HttpSecurity http) throws Exception {
 		http
-		.httpBasic().disable()
+		//.httpBasic().disable()
 		.csrf().disable()
 		.authorizeRequests()
 			.antMatchers("/dashboard/**").hasRole("ADMIN")
-			.antMatchers("/signup/**").permitAll()
 			.antMatchers("/adminLoggedIn").hasRole("ADMIN")
-			.antMatchers("/voterLoggedIn").permitAll()
-			.antMatchers("/accessCheck").permitAll()
-			.antMatchers("/home/**").hasRole("USER")
-			.antMatchers("/vote/**").hasRole("USER")
+			.antMatchers("/voterLoggedIn").hasRole("VOTER")
+			.antMatchers("/accessCheck").hasAnyRole("ADMIN", "VOTER")
+			.antMatchers("/home/").hasRole("VOTER")
+			.antMatchers("/vote/**").hasRole("VOTER")
 				.anyRequest().authenticated()
+				
 			.and()
 				.formLogin()
 				.failureForwardUrl("/userLogin")
 					.loginPage("/")
-					.defaultSuccessUrl("/voterLoggedIn",true)
+					.usernameParameter("email")// use email as username
+					.defaultSuccessUrl("/accessCheck")
 					.loginProcessingUrl("/accessCheck")
 					.failureUrl("/accessDenied")
 					.permitAll()
+					
 			.and()
 				.logout()
 //					.logoutUrl("/userLogout")
@@ -63,19 +66,16 @@ public class Config_Security {
 					.invalidateHttpSession(true) 
 					.permitAll()
 			.and()
-				.exceptionHandling().accessDeniedPage("/accessDenied")
-//			       	.and()
-//			        	.csrf()
-			.and()
 				.authorizeRequests()
 				.antMatchers("/").permitAll()
+				.antMatchers("/signup/").permitAll()
 				.antMatchers("/views/**").permitAll()
-				.antMatchers("/userLogin").permitAll()
-				.antMatchers("/resources/**").permitAll()
+				.antMatchers("/resources/**").permitAll().anyRequest().permitAll()
 			.and()
-			    .requiresChannel()
-			    	.anyRequest()
-			    	.requiresSecure();
+				.exceptionHandling().accessDeniedPage("/accessDenied");
+//				     .and()
+//				        .csrf()
+			
 	}
 
 }

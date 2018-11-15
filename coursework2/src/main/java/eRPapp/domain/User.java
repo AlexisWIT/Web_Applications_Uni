@@ -181,7 +181,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "UserDetail [Email=" + email + ", Password=" + password + "FamilyName=" + familyName + ", GivenName=" + 
+		return "UserDetail [Email=" + email + ", Password=" + password + ", FamilyName=" + familyName + ", GivenName=" + 
 							givenName + ", DateOfBirth=" + dateOfBirth + ", Address=" + address + ", BIC=" + bioIdCode + 
 							", AccountType=" + accountType.toString() + ", Vote=" + vote +"]";
 	}

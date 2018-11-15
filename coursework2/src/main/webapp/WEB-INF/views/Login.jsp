@@ -18,22 +18,15 @@
 		<h1>User Login</h1>
 
 		<form:form action="/accessCheck" modelAttribute="appDataTransferObject" method="POST" >
-		   
-			<core:if test="${param.error != null}">        
-				<p class="error">Invalid Email or Password.</p>
-			</core:if>
-			<core:if test="${param.logout != null}">       
-				<p class="error">You have been logged out.</p>
-			</core:if>
 			
 			<table>
 			<tr>
 				<td><label for="email">Email</label></td>
-				<td><input type="email" id="email" name="email"/></td>	
+				<td><input type="email" id="email" name="email" placeholder="example@domain.com"/></td>	
 			</tr>
 			<tr>
 				<td><label for="password">Password</label><br></td>
-				<td><input type="password" id="password" name="password"/></td>	
+				<td><input type="password" id="password" name="password" placeholder="******"/></td>	
 			</tr>
 			<tr>
 				<td><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/></td>

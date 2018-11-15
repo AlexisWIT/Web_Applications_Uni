@@ -5,6 +5,8 @@ import java.text.ParseException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,7 +60,9 @@ public class SignupController {
 		System.out.println(user.toString());
 		
 		// encrypt user password
-		user.setPassword(PasswordEncryptor.getSHA256(user.getPassword()));
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		//user.setPassword(PasswordEncryptor.getSHA256(user.getPassword()));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		userRepository.save(user);
 		System.out.println("-----------  User created  ---------------");

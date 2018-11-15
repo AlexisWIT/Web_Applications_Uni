@@ -61,10 +61,15 @@ public class UserInfoService implements UserDetailsService {
 		boolean credentialsNonExpired = true;
 		boolean accountNonLocked = true;
 		
-		return new User ( domainUser.getEmail(), domainUser.getPassword(),
-			enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
-			getAuthority(domainUser.getAccountType().getId()));
-		
+		return new User ( 
+			domainUser.getEmail(), 
+			domainUser.getPassword(),
+			enabled, 
+			accountNonExpired, 
+			credentialsNonExpired, 
+			accountNonLocked,
+			getAuthority(domainUser.getAccountType().getId())
+		);
 		
 	}
 

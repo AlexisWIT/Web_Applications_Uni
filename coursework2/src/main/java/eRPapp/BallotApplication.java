@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import eRPapp.controller.PasswordEncryptor;
@@ -41,7 +43,9 @@ public class BallotApplication extends WebMvcConfigurerAdapter implements Comman
 		
 		// Add account of election commission to database
 		try {
-			String adminPassword = PasswordEncryptor.getSHA256("admin");
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			//String adminPassword = PasswordEncryptor.getSHA256(PasswordEncryptor.getJBCrypt(PasswordEncryptor.getMD5("admin")));
+			String adminPassword = passwordEncoder.encode("admin");
 			User adminUser = new User("admin@gov.com", "admin", "admin", "2018-11-07", "Government facility", adminPassword, commissionType);
 			
 			userRepository.save(adminUser);	
