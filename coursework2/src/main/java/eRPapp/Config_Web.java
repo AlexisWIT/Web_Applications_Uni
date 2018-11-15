@@ -13,6 +13,7 @@ public class Config_Web extends WebMvcConfigurerAdapter {
 	@Override
 	public void addResourceHandlers (ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+		registry.addResourceHandler("/views/**").addResourceLocations("/WEB-INF/views/");
 		
 	}
 	
