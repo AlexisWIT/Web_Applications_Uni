@@ -35,10 +35,10 @@ public class UserInfoService implements UserDetailsService {
 		
 		switch (accountType.intValue()) {
 		case BallotApplication.COMMISSION:
-			accountTypes.add("TYPE_ADMIN");
+			accountTypes.add("ROLE_ADMIN");
 			break;
 		case BallotApplication.VOTER:
-			accountTypes.add("TYPE_VOTER");
+			accountTypes.add("ROLE_VOTER");
 			break;
 		}
 		return accountTypes;
