@@ -26,7 +26,7 @@
 		<th>Options</th>
 	</tr>
 	
-	<form:form action="/vote/confirm" modelAttribute="     "  method="POST">
+	<form:form id="voteForm" name="voteForm" action="/vote/confirm" modelAttribute="     "  method="POST">
 	<core:forEach items="${questionList}" var="question">
 	<tr>
 		<td class="VoteItem">

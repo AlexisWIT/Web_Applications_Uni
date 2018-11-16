@@ -8,5 +8,6 @@ import eRPapp.domain.BioIdCode;
 @Repository
 public interface BioIdCodeRepository extends CrudRepository<BioIdCode, Integer> {
 	BioIdCode findById(int id);
+	BioIdCode findByBIC(String bioIdCode);
 
 }
