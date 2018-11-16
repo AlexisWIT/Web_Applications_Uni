@@ -30,10 +30,10 @@ public class LoginController {
 //	@Autowired
 //	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
-	@InitBinder
-	protected void initBinder(WebDataBinder binder) {
-		binder.addValidators(new LoginValidator());
-	}
+//	@InitBinder
+//	protected void initBinder(WebDataBinder binder) {
+//		binder.addValidators(new LoginValidator());
+//	}
 	
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
