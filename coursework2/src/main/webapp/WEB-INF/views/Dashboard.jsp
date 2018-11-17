@@ -15,6 +15,7 @@
 	    	.VoteOption { padding: 10px 20px; }
 	    </style>
 	</head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	
 	<body><div class="interface">
 		<h1>Admin Dashboard - Election Commission</h1>	

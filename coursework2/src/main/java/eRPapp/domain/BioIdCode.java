@@ -11,9 +11,9 @@ import javax.persistence.OneToOne;
 public class BioIdCode {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)		int id;
-	@Column(unique=true, nullable=false)				String bioIdCode;
-	@Column(name="USED", nullable=false)	int usage; // should be 0 by default, change to 1 if used.
+	@GeneratedValue(strategy=GenerationType.AUTO)	int id;
+	@Column(unique=true, nullable=false)			String bioIdCode;
+	@Column(name="USED", nullable=false)			int usage; // should be 0 by default, change to 1 if used.
 
 	public BioIdCode() {
 		

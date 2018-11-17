@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import eRPapp.domain.BioIdCode;
 import eRPapp.domain.User;
 import eRPapp.repository.*;
 
@@ -27,6 +28,7 @@ public class SignupController {
 	
 	@Autowired UserRepository userRepository;
 	@Autowired AccountTypeRepository accountTypeRepository;
+	@Autowired BioIdCodeRepository bioIdCodeRepository;
 	
 //    @InitBinder
 //    protected void initBinder(WebDataBinder binder) {
@@ -45,13 +47,16 @@ public class SignupController {
 		if (userRepository.findByEmail(user.getEmail()) != null) {
 			System.out.println("!!! Email exists !!!");
 			user.setUserRemark("Email exists, please try another one.");
-			return "redirect:/signup/";
-			
+			return "redirect:/signup/";	
 		}
-		// set account type "voter"
+		// set available BIC code to user, and set usage to 1 in domain User class
+		BioIdCode bic = bioIdCodeRepository.findByBioIdCode(user.getBioIdCodeString());
+		user.setBioIdCode(bic);
+		
+		// set account type "voter" to user
 		user.setAccountType(accountTypeRepository.findById(1));
 		
-		// parse date of birth to Date format
+		// set date of birth to user, parse date of birth to Date format
 		try {
 			user.setDateOfBirth(user.toDate(user.getDateOfBirthString()));
 		} catch (ParseException e) {
@@ -65,6 +70,8 @@ public class SignupController {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		userRepository.save(user);
+		bioIdCodeRepository.save(bic);
+		
 		System.out.println("-----------  User created  ---------------");
 		return "redirect:/userLogin";	
 

@@ -55,6 +55,8 @@ public class User {
 	private String userRemark;
 	@Transient
 	String dateOfBirthString; // Date of birth input from Signup.jsp will be saved here.
+	@Transient
+	String bioIdCodeString; // bioIdCode input from Signup.jsp will be saved here.
 	
 	public User() {
 		
@@ -151,8 +153,17 @@ public class User {
 		return bioIdCode;
 	}
 
-	public void setBioIdCode(BioIdCode bioIdCode) {
-		this.bioIdCode = bioIdCode;
+	public void setBioIdCode(BioIdCode bioidCode) {
+		this.bioIdCode = bioidCode;
+		this.bioIdCode.setUsage(1);// mark this BIC code as used
+	}
+
+	public String getBioIdCodeString() {
+		return bioIdCodeString;
+	}
+
+	public void setBioIdCodeString(String bioIdCodeString) {
+		this.bioIdCodeString = bioIdCodeString;
 	}
 
 	public AccountType getAccountType() {
@@ -182,7 +193,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "UserDetail [Email=" + email + ", Password=" + password + ", FamilyName=" + familyName + ", GivenName=" + 
-							givenName + ", DateOfBirth=" + dateOfBirth + ", Address=" + address + ", BIC=" + bioIdCode + 
+							givenName + ", DateOfBirth=" + dateOfBirthString + ", Address=" + address + ", BIC=" + bioIdCodeString + 
 							", AccountType=" + accountType.toString() + ", Vote=" + vote +"]";
 	}
 

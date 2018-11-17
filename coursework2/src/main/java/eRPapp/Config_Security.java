@@ -69,6 +69,7 @@ public class Config_Security extends WebSecurityConfigurerAdapter{
 				.authorizeRequests()
 				.antMatchers("/").permitAll()
 				.antMatchers("/signup/").permitAll()
+				.antMatchers("/scripts/**").permitAll()
 				.antMatchers("/views/**").permitAll()
 				.antMatchers("/resources/**").permitAll().anyRequest().permitAll()
 			.and()

@@ -14,6 +14,7 @@
 	    	.VoteItem { padding: 10px 20px; }
 	    	.VoteOption { padding: 10px 20px; }
 	    </style>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
 	</head>
 	
 	<body><div class="interface">
