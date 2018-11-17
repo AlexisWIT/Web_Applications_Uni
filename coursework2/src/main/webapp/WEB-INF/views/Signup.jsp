@@ -13,7 +13,8 @@
 	    	.interface { padding: 50px 100px; }
 	    </style>
 	    <script src="../scripts/signup.js"></script>
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+	    <script src="../scripts/jquery.min.js"></script> 
+	    <script src="../scripts/jquery.validate.min.js"></script> 
 	    <script type="text/javascript">
 	    	$(document).ready(function(){
 	    		
@@ -66,7 +67,7 @@
 	    			var passwordPattern = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))).{6,12}$/;
 	    			if (passwordInput.length==0) {
 	    				
-	    			} else if (passwordInput.match(emailPattern)) {
+	    			} else if (passwordInput.match(passwordPattern)) {
 	    				
 	    			} else {
 	    				
@@ -80,8 +81,24 @@
 	    		});
 	    		
 	    		$("#bioIdCodeString").keyup(function(){
-	    			// check if matched with pattern, if used, if in the database record
+	    			var bicInput = $("#bioIdCodeString").val();
+	    			// check if matched with pattern, if used (ajax), if in the database record (ajax)
+	    			var bicPattern = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
 	    			
+	    			
+	    		});
+	    		
+	    		$("#regForm").validate({
+	    			errorClass: 'error',
+	    			rules: {
+	    				"email": {
+	    					required: true,
+	    					email: true
+	    				},
+		    			messages: {
+		    				
+		    			},
+	    			}
 	    		});
 	    		
 	    	});
@@ -97,11 +114,11 @@
     <p> <input type="submit" value="Cancel" class="btn"/> </p>
 </form:form>
 
-<form:form id="registerForm" name="registerForm" action="/signup/register" modelAttribute="user" method="POST" >
+<form:form id="regForm" name="regForm" action="/signup/register" modelAttribute="user" method="POST" >
    <table>
     <tr>
         <td><form:label path="email">Email: </form:label></td>
-        <td><form:input path="email" id="email" name="email" placeholder="example@domain.com"/></td>
+        <td><form:input path="email" id="email" name="email" placeholder="example@domain.com" type="email" /></td>
         <td><form:errors path="email" class="error" /></td>
     </tr>
     <tr>
