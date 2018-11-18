@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import eRPapp.domain.BioIdCode;
 import eRPapp.domain.User;
@@ -49,7 +50,7 @@ public class SignupController {
 			user.setUserRemark("Email exists, please try another one.");
 			return "redirect:/signup/";	
 		}
-		// set available BIC code to user, and set usage to 1 in domain User class
+		// set available BIC code to user, and set usage to 1 in domain User class use 'setter' method
 		BioIdCode bic = bioIdCodeRepository.findByBioIdCode(user.getBioIdCodeString());
 		user.setBioIdCode(bic);
 		
@@ -75,6 +76,26 @@ public class SignupController {
 		System.out.println("-----------  User created  ---------------");
 		return "redirect:/userLogin";	
 
+	}
+	
+	@RequestMapping(value="/emailCheck", method=RequestMethod.POST)
+	@ResponseBody 
+	public String emailCheck(@ModelAttribute("User") User user, BindingResult emailCheckResult) {
+		String emailCheckReport ="";
+		
+		// check input email with database record
+		User userHasEmailInput = userRepository.findByEmail(user.getEmail());
+		if (userHasEmailInput!=null) {
+			emailCheckResult.reject("Email already in use.");
+		}
+		if (!emailCheckResult.hasErrors()) {
+			emailCheckReport = "<span id='emailOk' class='ok'>OK</span>";
+		} else {
+			emailCheckReport = "<span class='error'>Email aready in use!</span>";
+		}
+
+		return emailCheckReport;
+		
 	}
 	
 	@RequestMapping(value="/cancel", method=RequestMethod.POST)
