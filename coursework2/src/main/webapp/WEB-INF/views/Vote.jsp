@@ -13,12 +13,14 @@
 	    	.interface { padding: 50px 100px; }
 	    	.VoteItem { padding: 10px 20px; }
 	    	.VoteOption { padding: 10px 20px; }
+	    	.VoteButton { text-align: center }
 	    </style>
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
 	</head>
 	
 	<body><div class="interface">
 	<h1>Vote</h1>
+	<hr />
 	
 	<div><a href="/home/">Back</a></div>
 	<table class="VoteTable">
@@ -47,7 +49,7 @@
 	</tr>
 	</core:forEach>
 	<tr>
-		<td colspan="2">
+		<td class="VoteButton" colspan="2">
 			<input type="submit" name="confirm" class="btn"/>
 		</td>
 	</tr>

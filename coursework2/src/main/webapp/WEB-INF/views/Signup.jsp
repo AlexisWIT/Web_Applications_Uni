@@ -14,6 +14,8 @@
 		    .ok { color: green; }
 		    .wait { color: orange; }
 	    	.interface { padding: 50px 100px; }
+	    	.ButtonCover { padding: 1px; }
+	    	td { padding: 5px 10px; }
 	    </style>
 	    
 	    <script><%@ include file="../scripts/jquery.min.js" %></script>
@@ -26,7 +28,7 @@
 	
 <body><div id="interface" class="interface">
 <h1>Voter Sign up</h1>
-
+<hr />
 
 <form:form id="cancelForm" name="cancelForm" action="/signup/cancel" modelAttribute="user" method="POST">
     <p> <input type="submit" value="Cancel" class="btn"/> </p>
@@ -75,14 +77,22 @@
         <td><form:errors path="bioIdCodeString" class="error"/><span id="bioIdCodeStringInfo"></span></td>
     </tr>
     <tr>
-    	<td colspan="1">
+    	<td>
             
         </td>
-        <td colspan="1">
-            <input type="reset" id="reset" name="reset" class="btn"/>
+        <td>
+        	<div id="resetButtonArea" class="ButtonArea">
+        		<div id="resetButtonCover" class="ButtonCover">
+            		<input type="reset" id="reset" name="reset" class="btn"/>
+            	</div>
+            </div>
         </td>
-        <td colspan="1">
-            <input type="submit" id="register" name="register" class="btn" disabled="true"/>
+        <td>
+            <div id="registerButtonArea" class="ButtonArea">
+            	<div id="registerButtonCover" class="ButtonCover">
+            	<input type="submit" id="register" name="register" class="btn" disabled="true"/>
+            	</div>
+            </div>
         </td>
     </tr>
 </table>  

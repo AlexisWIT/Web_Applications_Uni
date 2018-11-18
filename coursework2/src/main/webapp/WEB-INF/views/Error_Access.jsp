@@ -20,6 +20,7 @@
 	<div class="interface">
 
 		<h1>Access Denied</h1>
+		<hr />
 		
 		<div>
 		<p>You don't have permission to view this page</p>

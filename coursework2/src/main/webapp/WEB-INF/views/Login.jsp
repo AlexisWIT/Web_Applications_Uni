@@ -7,10 +7,12 @@
 <html>
 	<head>
 	    <title>User Login</title> 
+	    
 	    <style> 
 		    .error { color: red; }
 		    .ok { color: green; }
 	    	.interface { padding: 50px 100px; }
+	    	td { padding: 5px 10px; }
 	    </style>
 	    <script src="../scripts/login.js"></script>
 	    <script src="../scripts/jquery.min.js"></script> 
@@ -20,7 +22,8 @@
 	
 	<body><div class="interface">
 		<h1>User Login</h1>
-
+		<hr />
+		
 		<form:form id="loginForm" name="loginForm" action="/accessCheck" modelAttribute="appDataTransferObject" method="POST" >
 			
 			<table>
@@ -39,10 +42,12 @@
 				<td><button id='LoginButton' type="submit" class="btn" disabled>Login</button></td>
 				<td></td>
 			</tr>
+			<tr>
+				<td colspan="2"><i><a href="/signup/">Create an account for vote</i></p></td>
+			</tr>
 			</table>
 			
-		</form:form>	
-		<p><a href="/signup/">Create an account for vote</a></p>
+		</form:form>
 	</div>
 	</body>
 	

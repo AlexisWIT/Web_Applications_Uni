@@ -59,9 +59,10 @@ public class LoginController {
 		User userForCheck = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();	
 		userForCheck.getAuthorities().stream().forEach(c -> System.out.println (c));
 		
-		System.out.println("----- User "+ userForCheck.getUsername() +" logged in -----");
+		System.out.println("----- User ["+userForCheck.getUsername()+"] logged in -----");
 		String view;
 		user = userRepository.findByEmail(userForCheck.getUsername());
+		
 		switch (user.getAccountType().getId()) {
 		case BallotApplication.COMMISSION:
 			view = "redirect:/adminLoggedIn";

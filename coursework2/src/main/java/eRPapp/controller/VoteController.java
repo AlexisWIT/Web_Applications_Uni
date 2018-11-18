@@ -30,7 +30,7 @@ public class VoteController {
 	@RequestMapping("/confirm")
 	public String confirmVote(@ModelAttribute("option") Option option, Model model) {
 		
-		return "Vote";
+		return "redirect:/home/";
 	}
 	
 	@RequestMapping("/voteFailed")

@@ -31,5 +31,10 @@ public class AdminController {
 		model.addAttribute("optionList", (List<Option>) optionRepository.findAll());
 		return "Dashboard";
 	}
-
+	
+	@RequestMapping("/logout")
+	public String adminLogout() {
+		System.out.println("------ Admin logged out -----");
+		return "redirect:/userLogout";
+	}
 }

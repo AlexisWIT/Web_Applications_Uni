@@ -124,6 +124,11 @@ public class User {
 	public void setDateOfBirthString(String dateOfBirthString) {
 		this.dateOfBirthString = dateOfBirthString;
 	}
+	
+	public String getDateOfBirthForHome() {
+		String dateOfBirthForHome = format.format(dateOfBirth);
+		return dateOfBirthForHome;
+	}
 
 	public String getAddress() {
 		return address;

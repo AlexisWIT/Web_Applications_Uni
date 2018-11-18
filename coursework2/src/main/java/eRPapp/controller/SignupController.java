@@ -80,21 +80,67 @@ public class SignupController {
 	
 	@RequestMapping(value="/emailCheck", method=RequestMethod.POST)
 	@ResponseBody 
-	public String emailCheck(@ModelAttribute("User") User user, BindingResult emailCheckResult) {
-		String emailCheckReport ="";
+	public String emailCheck(@ModelAttribute("user") User user, BindingResult emailCheckResult) {
+		String emailReport ="";
+		String emailCheckResultErrorInfo = "";
+		String emailForCheck = user.getEmail();
 		
-		// check input email with database record
-		User userHasEmailInput = userRepository.findByEmail(user.getEmail());
-		if (userHasEmailInput!=null) {
-			emailCheckResult.reject("Email already in use.");
+		System.out.println("---- Checking Email ["+emailForCheck+"] with database ----");
+		
+		// check input email with database record if already in use
+		User userHasEmail = userRepository.findByEmail(emailForCheck);
+		if (userHasEmail!=null) {
+			System.out.println("---- Email ["+emailForCheck+"] already in use ----");
+			emailCheckResult.reject("EMAIL_IN_USE");
+			emailCheckResultErrorInfo = "Email already in use!";
 		}
 		if (!emailCheckResult.hasErrors()) {
-			emailCheckReport = "<span id='emailOk' class='ok'>OK</span>";
+			emailReport = "<span id='emailOk' class='ok'>OK</span>";
 		} else {
-			emailCheckReport = "<span class='error'>Email aready in use!</span>";
+			emailReport = "<span class='error'>"+emailCheckResultErrorInfo+"</span>";
 		}
-
-		return emailCheckReport;
+		
+		System.out.println("---- Sent emailReport ----\n");
+		return emailReport;
+		
+	}
+	
+	@RequestMapping(value="/bicCheck", method=RequestMethod.POST)
+	@ResponseBody
+	public String bicCheck(@ModelAttribute("user") User user, BindingResult bicCheckResult) {
+		String bicReport ="";
+		String bicCheckResultErrorInfo = "";
+		String bicForCheck = user.getBioIdCodeString();
+		
+		System.out.println("---- Checking BIC ["+bicForCheck+"] with database ----");
+		
+		// check input BIC with database record if already in use	
+		if (bioIdCodeRepository.findByBioIdCode(bicForCheck)!=null) { // BIC input match with any in database	
+			
+			System.out.println("---- Found BIC ["+bicForCheck+"] in database ----");
+			BioIdCode bicInUse = bioIdCodeRepository.findByBioIdCode(bicForCheck);
+			int usage = bicInUse.getUsage();
+			
+			if (usage!=0) {
+				System.out.println("---- BIC ["+bicForCheck+"] in use ----");
+				bicCheckResult.reject("BIC_IN_USE");
+				bicCheckResultErrorInfo = "BIC already in use!";
+			}
+			
+		} else { // BIC not match with any in database
+			System.out.println("---- BIC ["+bicForCheck+"] not found ----");
+			bicCheckResult.reject("BIC_NOT_FOUND");
+			bicCheckResultErrorInfo = "BIC not found in database!";
+		}
+		
+		if (!bicCheckResult.hasErrors()) {
+			bicReport = "<span id='bicOk' class='ok'>OK</span>";
+		} else {
+			bicReport = "<span class='error'>"+bicCheckResultErrorInfo+"</span>";
+		}
+		
+		System.out.println("---- Sent bicReport ----");
+		return bicReport;
 		
 	}
 	
