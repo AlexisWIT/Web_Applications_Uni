@@ -233,7 +233,7 @@ $(document).ready(function () {
 				url: "/signup/bicCheck",
 				data: "bioIdCodeString=" + bicInput,
 				success: function (response) {
-					console.log("Received bicReport for [" + bicInput + "]")
+					console.log("Received bicReport for [" + bicInput + "]");
 					$("#bioIdCodeStringInfo").html(response);
 					// if BIC available, response should be "\<span id='bicOk' class='ok'\>OK\</span\>"
 					// otherwise, should be "\<span class='error'\>BIC aready in use!\</span\>"

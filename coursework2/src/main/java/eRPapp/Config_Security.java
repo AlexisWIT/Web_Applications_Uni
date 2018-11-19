@@ -44,7 +44,7 @@ public class Config_Security extends WebSecurityConfigurerAdapter{
 			.antMatchers("/adminLoggedIn").hasRole("ADMIN")
 			.antMatchers("/voterLoggedIn").hasRole("VOTER")
 			.antMatchers("/accessCheck").hasAnyRole("ADMIN", "VOTER")
-			.antMatchers("/home/").hasRole("VOTER")
+			.antMatchers("/home/**").hasRole("VOTER")
 			.antMatchers("/vote/**").hasRole("VOTER")
 				.anyRequest().authenticated()
 				

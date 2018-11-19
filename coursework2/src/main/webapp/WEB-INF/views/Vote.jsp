@@ -10,16 +10,36 @@
 	    <title>Vote</title> 
 	    <style> 
 		    .error { color: red; } 
+		    .ok { color: green; }
+		    .unknown { color: orange; }
 	    	.interface { padding: 50px 100px; }
 	    	.VoteItem { padding: 10px 20px; }
 	    	.VoteOption { padding: 10px 20px; }
 	    	.VoteButton { text-align: center }
 	    </style>
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	    <script>
+	    $(document).ready(function(){
+	    	
+	    	var questionStatusCode = $("#statusCode").html();
+	    	$("#statusCode").hide();
+	    	console.log("Vote status ["+questionStatusCode+"]");
+	    	
+	    	if (questionStatusCode==1) {
+	    		$("#statusOpen").html("OPEN");
+	    	} else if (questionStatusCode==0) {
+	    		$("#statusClosed").html("CLOSED");
+	    	} else {
+	    		$("#statusUnknown").html("UNKNOWN");
+	    	}
+	    	
+	    });
+	    
+	    </script>
 	</head>
 	
 	<body><div class="interface">
-	<h1>Vote</h1>
+	<h1>Vote for Your Future</h1>
 	<hr />
 	
 	<div><a href="/home/">Back</a></div>
@@ -27,24 +47,33 @@
 	<tr>
 		<th>Item</th>
 		<th>Options</th>
+		<th>Status</th>
 	</tr>
 	
 	<form:form id="voteForm" name="voteForm" action="/vote/confirm" modelAttribute="     "  method="POST">
 	<core:forEach items="${questionList}" var="question">
 	<tr>
-		<td class="VoteItem">
+		<td id="VoteItem" class="VoteItem">
 			<p>
 			(<core:out value="${question.getRefId()}"/>) 
 			 <core:out value="${question.getTitle()}"/>
 			</p>
 		</td>
-		<td class="VoteOption">
+		<td id="VoteOption" class="VoteOption">
 			<core:forEach items="${optionList}" var="option">
-			<p><input type="radio" name="options" value="${option.getOptId()}">
+			<p><input type="radio" id="options" name="options" value="${option.getOptId()}">
 			<core:out value="${option.getOptId()}"/>. 
 			<core:out value="${option.getOption()}"/>
 			</p>
 			</core:forEach>
+		</td>
+		<td id="VoteStatus" class="VoteStatus">
+			<span id="statusCode"><core:out value="${question.getStatus()}"/></span>
+			<span id="statusString">
+				<span id="statusClosed" class="error"></span>
+				<span id="statusOpen" class="ok"></span>
+				<span id="statusUnknown" class="unknown"></span>
+			</span>
 		</td>
 	</tr>
 	</core:forEach>

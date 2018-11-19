@@ -10,8 +10,9 @@
 	    <title>Home</title> 
 	    <style> 
 		    .error { color: red; } 
+		    .ok { color: green }
 	    	.interface { padding: 50px 100px; }
-	    	th { padding: 15px 10px 0px 10px; 
+	    	th { padding: 20px 10px 0px 10px; 
 	    			text-align: left; }
 	    	td { padding: 0px 10px;
 	    			text-align: center; }
@@ -25,13 +26,32 @@
 	    <script>
 	    	$(document).ready(function(){
 	    		
+	    		// auto check for vote eligibility
+	    		var voteRecord = $(this).closest("#VoteList").children("#VoteQuestion").text();
+	    		console.log("Vote record found: ["+voteRecord+"]");
+	    		if (voteRecord != '') { // user havs made vote
+	    			console.log("Vote prohibited");
+	    			$("#GoToVoteButton").prop('disabled', true); // disable the button to vote page
+	    			$("#VoteProhibited").html("Unable to vote again, you have made your choice.");
+	    			$("#VoteAvailable").html("");
+	    		} else {
+	    			console.log("Vote available");
+	    			$("#GoToVoteButton").prop('disabled', false);
+	    			$("#VoteProhibited").html("");
+	    			$("#VoteAvailable").html("You can vote now.")
+	    		}
 	    		
-	    		
-	    		
+	    		// advanced check for vote eligibility
+//	    		$("#GoToVoteButton").click(function({
+//	    			var userEmail = $("#userEmail").html();
+//Optional Todo	    			
+//	    			$.ajax({
+//	    				
+//	    			});
+//	    			
+//	    		});
 	    		
 	    	});
-	    
-	    
 	    </script>
 	</head>
 	
@@ -52,8 +72,8 @@
 				<th>[ Date of Birth ]</th>	
 			</tr>
 			<tr>
-				<td><core:out value="${user.getEmail()}"/></td>
-				<td><core:out value="${user.getDateOfBirthForHome()}"/></td>
+				<td><span id="userEmail"><core:out value="${user.getEmail()}"/></span></td>
+				<td><span id="userBirthday"><core:out value="${user.getDateOfBirthForHome()}"/></span></td>
 			</tr>
 			<tr>
 				<th colspan="2">[ Address ]</th>
@@ -68,27 +88,34 @@
 				<td><i>Question</i></td>
 				<td><i>Your Choice</i></td>
 			</tr>
+			<core:forEach items="${questionList}" var="question">
 			<tr id="VoteList">
-				<core:forEach items="${questionList}" var="question">
-					<td>(<core:out value="${question.getRefId()}"/>) <core:out value="${question.getTitle()}"/></td>
-					<core:forEach items="${optionList}" var="option">
-					<td><core:out value="${option.getOptId()}"/>. <core:out value="${option.getOption()}"/></td>
-					</core:forEach>
+				<td id="VoteQuestion">
+				(<core:out value="${question.getRefId()}"/>)
+				 <core:out value="${question.getTitle()}"/>
+				</td>
+				<td id="VoteOptions">
+				<core:forEach items="${optionList}" var="option">
+				<core:out value="${option.getOptId()}"/>. 
+				<core:out value="${option.getOption()}"/>
 				</core:forEach>
+				</td>	
 			</tr>
-			<tr>
-				<td></td>
-			</tr>
+			</core:forEach>
 			
 			<tr>
-				<form:form action="/home/vote">
-				<td colspan="2"><p><button id='GoToVoteButton' type="submit" class="btn">Vote Now</button></p></td >
-				</form:form>
+				<td colspan="2">
+					<form:form action="/home/vote">
+					<p><button id="GoToVoteButton" type="submit" class="btn" disabled="true">Vote Now</button></p>
+					</form:form>
+					<span id="VoteProhibited" class="error"></span>
+					<span id="VoteAvailable" class="ok"></span>
+				</td >
 			</tr>
+			
 			</table>
 		</core:forEach>
 		
-	
 	</div>
 	</body>
 </html>

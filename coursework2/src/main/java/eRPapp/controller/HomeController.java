@@ -9,10 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import eRPapp.domain.*;
 import eRPapp.repository.*;
@@ -33,9 +35,10 @@ public class HomeController {
 	@Autowired VoteRepository voteRepository;
 	
 	@RequestMapping("/")
-	public String home(Model model) {	
+	public String home(Model model) {
+		
 		// load user personal information in their home page
-		String currentUserEmail = getCurrentUsername();
+		String currentUserEmail = getCurrentUserEmail();
 		System.out.println("User ["+currentUserEmail+"] logged into Home");
 		
 		User user = userRepository.findByEmail(currentUserEmail);
@@ -64,16 +67,16 @@ public class HomeController {
 	
 	@RequestMapping("/vote")
 	public String vote() {
-		return "redirect:/vote/";
+		return "redirect:/home/voteAccessCheck";
 	}
 	
 	@RequestMapping("/logout")
 	public String logout() {
-		System.out.println("------ Voter logged out -----");
+		System.out.println("------ Voter ["+ getCurrentUserEmail()+"] logged out -----");
 		return "redirect:/userLogout";
 	}
 	
-	public String getCurrentUsername() {
+	public String getCurrentUserEmail() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 		    String userName = authentication.getName();
@@ -81,6 +84,22 @@ public class HomeController {
 		} else {
 			return "null";
 		}
+	}
+	
+	@RequestMapping("/voteAccessCheck")
+	public String voteAccessCheck() {
+		String voterEmailForCheck = getCurrentUserEmail();
+		System.out.println(" --- Check vote eligibility for user ["+voterEmailForCheck+"] ---");
+		User voterForCheck = userRepository.findByEmail(voterEmailForCheck);
+		
+		if (voterForCheck.getVote()!=null) { // User has made vote before
+			System.out.println("---- User ["+voterEmailForCheck+"] has made vote already ----");
+			return "redirect:/home/";
+		} else {
+			System.out.println("---- User ["+voterEmailForCheck+"] eligible to vote ----");
+			return "redirect:/vote/";
+		}
+		
 	}
 
 }

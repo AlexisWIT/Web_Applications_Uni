@@ -23,7 +23,7 @@
 		<hr />
 		
 		<div>
-		<p>You don't have permission to view this page</p>
+		<p>You don't have permission to view this page.</p>
 		</div>
 		
 		<div><a href="/userLogin">Back</a></div>
