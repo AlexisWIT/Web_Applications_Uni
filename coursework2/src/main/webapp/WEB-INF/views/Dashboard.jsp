@@ -13,6 +13,7 @@
 	    	.interface { padding: 50px 100px; }
 	    	.VoteItem { padding: 10px 20px; }
 	    	.VoteOption { padding: 10px 20px; }
+	    	.ButtonZone { text-align: center; }
 	    </style>
 	</head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -31,6 +32,7 @@
 		<tr>
 			<th>Item</th>
 			<th>Options</th>
+			<th>Status</th>
 		</tr>
 		
 		<form:form action="/dashboard/edit" modelAttribute="     " method="POST">
@@ -53,7 +55,7 @@
 		</tr>
 		</core:forEach>
 		<tr>
-			<td>
+			<td class="ButtonZone">
 				<input type="submit" name="startEdit" class="btn"/>
 				<input type="submit" name="confirmEdit" class="btn"/>
 			</td>
