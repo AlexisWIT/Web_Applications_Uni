@@ -18,55 +18,14 @@
 	    	.ButtonZone { text-align: center; }
 	    </style>
 	</head>
+	
+	<script><%@ include file="../scripts/jquery.min.js" %></script>
+    <script><%@ include file="../scripts/jquery.validate.min.js" %></script>
+    <script><%@ include file="../scripts/jquery.validate.additional.min.js" %></script>
+	    
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-	    	
-	    	var questionStatusCode = $("#statusCode").html();
-	    	$("#statusCode").hide();
-	    	console.log("Vote status ["+questionStatusCode+"]");
-	    	
-	    	if (questionStatusCode==1) { // Status 1 means vote is currently open
-	    		$("#statusOpen").html("OPEN");
-	    		$("#changeStatusButton").val("Close");
-	    	} else if (questionStatusCode==0) { // Status 0 means vote is closed
-	    		$("#statusClosed").html("CLOSED");
-	    		$("#changeStatusButton").val("Open");
-	    	} else { // Button will be disabled in case of unknown status (which normally not gonna happen)
-	    		$("#statusUnknown").html("UNKNOWN");
-	    		$("#changeStatusButton").prop('disabled', true);
-	    	}
-	    	
-	    	$("#changeStatusButton").click(function(){
-	    		var buttonLabel = $("#changeStatusButton").val();
-	    		var statusCode = $("#statusCode").html();
-	    		if (buttonLabel == "Close") {
-	    			$("#statusOpen").html("");
-		    		$("#statusClosed").html("CLOSED")
-		    		
-		    		$.ajax({
-		    			type: "POST",
-		    			url: "",
-		    			data: "status="+statusCode,
-		    			success: function(response){
-		    				console.log("Question closed successfully")
-		    			}
-		    		});
-		    		
-		    		
-		    		$("#changeStatusButton").val("Open");
-	    		} else {
-	    			$("#statusOpen").html("OPEN");
-		    		$("#statusClosed").html("")
-		    		
-		    		
-		    		$("#changeStatusButton").val("Close");
-	    		}
-	    		
-	    	});
-	    	
-	    });
-	</script>
+	
+	<script><%@ include file="../scripts/dashboard.js" %></script>
 	
 	<body><div class="interface">
 		<h1>Admin Dashboard - Election Commission</h1>	
@@ -83,50 +42,59 @@
 			<th>Item</th>
 			<th>Options</th>
 			<th>Status</th>
+			<th> </th>
 		</tr>
 		
-		<form:form action="/dashboard/edit" modelAttribute="question" method="POST">
+		<!--<form:form action="/dashboard/edit" modelAttribute="question" method="POST">-->
 		<core:forEach items="${questionList}" var="question">
 		<tr>
 			<td class="VoteItem">
+			
 				<p>
-				(<span id=""><core:out value="${question.getRefId()}"/></span>) 
-				 <core:out value="${question.getTitle()}"/>
+				 (<form:label path="refId" id="questionRefId"><core:out value="${question.getRefId()}"/></form:label>) 
+				  <form:label path="title" id="questionTitle"><span id="editableQuestionTitle"><core:out value="${question.getTitle()}"/></span></form:label>
 				</p>
 			</td>
 			<td class="VoteOption">
 				<core:forEach items="${optionList}" var="option">
 				<p>
-				<core:out value="${option.getOptId()}"/>. 
-				<core:out value="${option.getOption()}"/>
+				<form:label path="optId" id="optionOptId"><core:out value="${option.getOptId()}"/></form:label>. 
+				<form:label path="option" id="optionOpt"><span id="editableOption"><core:out value="${option.getOption()}"/></span></form:label>
 				</p>
 				</core:forEach>
 			</td>
 			<td id="VoteStatus" class="VoteStatus">
-			
-				<span id="statusCode">
-					<core:out value="${question.getStatus()}"/>
-				</span>
+				<span id="statusCode"><core:out value="${question.getStatus()}"/></span>
 				<span id="statusString">
 					<span id="statusClosed" class="error"></span>
 					<span id="statusOpen" class="ok"></span>
-					<span id="statusUnknown" class="unknown"></span>
-				</span>
-				<p>
-					<input type="submit" id="changeStatusButton" name="changeStatusButton" value="Close" class="btn">
-				</p>
+					<span id="statusUnknown" class="unknown"></span></span>
+			</td>
+			<td>
+				<p><input type="button" id="changeStatusButton" name="changeStatus" value="Close" class="btn"></p>
+				
+				
+				
+				
+				<!--  To do: edit question and options -->
+				
+				
+				
+				
 				
 			</td>
 		</tr>
 		</core:forEach>
 		<tr>
-			<td></td>
-			<td class="ButtonZone">
-				<input type="submit" id="changeStatusButton" name="startEdit" value="Edit" class="btn"/>
-				<input type="submit" name="confirmEdit" value="Confirm" class="btn"/>
+			<td>
+				<input type="button" id="editQuestionButton" name="editQuestion" value="Edit Question" class="btn"/>
+			</td>
+			<td colspan="2" class="ButtonZone">
+				<input type="button" id="editOptionButton" name="editOption" value="Edit Options" class="btn"/>
+				<input type="button" id="showChartButton" name="showChart" value="Chart" class="btn"/>
 			</td>
 		</tr>
-		</form:form>
+		<!--</form:form>-->
 		
 		</table>
 			

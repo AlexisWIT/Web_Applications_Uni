@@ -137,7 +137,7 @@ $(document).ready(function () {
 	// ADDRESS VALIDITY
 	$("#address").keyup(function () {
 		// check if empty or contains space only
-		var addressLengthLimit = 97;
+		var addressLengthLimit = 96;
 		var addressInput = $("#address").val();
 
 		// if empty value
@@ -145,9 +145,9 @@ $(document).ready(function () {
 			$("#addressInfo").html("<span class='error'>Please enter your address!</span>");
 			$("#register").prop('disabled', true);
 
-			// if input address has more than 64 chars	
-		} else if (addressInput.length >= addressLengthLimit) {
-			$("#addressInfo").html("<span class='error'>No more than 32 characters!</span>");
+			// if input address has more than 96 chars	
+		} else if (addressInput.length > addressLengthLimit) {
+			$("#addressInfo").html("<span class='error'>No more than 96 characters!</span>");
 			$("#register").prop('disabled', true);
 
 			// else (valid address)
@@ -242,7 +242,7 @@ $(document).ready(function () {
 					}
 				},
 				error: function (error) {
-					alert("Error occured: " + error);
+					alert("Error occured: " + error + "\n Please check your database connection.");
 				}
 
 			});

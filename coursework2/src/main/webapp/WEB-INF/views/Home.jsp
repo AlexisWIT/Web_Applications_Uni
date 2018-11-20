@@ -12,10 +12,11 @@
 		    .error { color: red; } 
 		    .ok { color: green }
 	    	.interface { padding: 50px 100px; }
-	    	th { padding: 20px 10px 0px 10px; 
-	    			text-align: left; }
-	    	td { padding: 0px 10px;
-	    			text-align: center; }
+	    	th { text-align: left; 
+	    			padding: 20px 0px 0px;}
+	    	.td-normal { text-align: left; 
+	    			padding: 20px 0px 0px;}
+	    	.td-buttons { text-align: center; }
 	    </style>
 	    
 	    <script><%@ include file="../scripts/jquery.min.js" %></script>
@@ -26,7 +27,7 @@
 	    <script>
 	    	$(document).ready(function(){
 	    		
-	    		// auto check for vote eligibility
+	    		// fast check for vote eligibility
 	    		var voteRecord = $(this).closest("#VoteList").children("#VoteQuestion").text();
 	    		console.log("Vote record found: ["+voteRecord+"]");
 	    		if (voteRecord != '') { // user havs made vote
@@ -40,16 +41,6 @@
 	    			$("#VoteProhibited").html("");
 	    			$("#VoteAvailable").html("You can vote now.")
 	    		}
-	    		
-	    		// advanced check for vote eligibility
-//	    		$("#GoToVoteButton").click(function({
-//	    			var userEmail = $("#userEmail").html();
-//Optional Todo	    			
-//	    			$.ajax({
-//	    				
-//	    			});
-//	    			
-//	    		});
 	    		
 	    	});
 	    </script>
@@ -69,24 +60,23 @@
 			<table>
 			<tr>
 				<th>[ Email ]</th>
-				<th>[ Date of Birth ]</th>	
+				<td class="td-normal"><span id="userEmail"><core:out value="${user.getEmail()}"/></span></td>
+				<th>[ Date of Birth ]</th>
+				<td class="td-normal"><span id="userBirthday"><core:out value="${user.getDateOfBirthForHome()}"/></span></td>
 			</tr>
 			<tr>
-				<td><span id="userEmail"><core:out value="${user.getEmail()}"/></span></td>
-				<td><span id="userBirthday"><core:out value="${user.getDateOfBirthForHome()}"/></span></td>
-			</tr>
-			<tr>
-				<th colspan="2">[ Address ]</th>
+				<th colspan="4">[ Address ]</th>
 			</tr>
 			<tr>
 				<td colspan="2"><core:out value="${user.getAddress()}"/></td>
+				<td colspan="2"></td>
 			</tr>
 			<tr>
-				<th colspan="2">[ Your Vote ]</th>
+				<th colspan="2">[ Voted Item ]</th>
 			</tr>
 			<tr>
-				<td><i>Question</i></td>
-				<td><i>Your Choice</i></td>
+				<td colspan="2"><i>Question</i></td>
+				<td colspan="2"><i>Your Choice</i></td>
 			</tr>
 			<core:forEach items="${questionList}" var="question">
 			<tr id="VoteList">
@@ -104,7 +94,7 @@
 			</core:forEach>
 			
 			<tr>
-				<td colspan="2">
+				<td colspan="4" class="td-buttons">
 					<form:form action="/home/vote">
 					<p><button id="GoToVoteButton" type="submit" class="btn" disabled="true">Vote Now</button></p>
 					</form:form>

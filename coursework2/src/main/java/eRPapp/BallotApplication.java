@@ -52,7 +52,8 @@ public class BallotApplication extends WebMvcConfigurerAdapter implements Comman
 			
 			// Voter account for test 
 			String voterPassword = passwordEncoder.encode("voter");
-			User testVoter = new User("voter@gov.com", "Tang", "Yifan", "1970-11-18", "Office of Voter Representative, Room 303, Block A, Shangri-La Government Facility", voterPassword, voterType);
+			User testVoter = new User("voter@gov.com", "Doe", "John", "1970-11-18", "Office of Voter Representative, Room 303, Block A, Shangri-La Government Facility", voterPassword, voterType);
+			
 			userRepository.save(testVoter);
 		
 		} catch (ParseException e) {

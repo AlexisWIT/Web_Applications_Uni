@@ -17,6 +17,11 @@
 	    	.VoteOption { padding: 10px 20px; }
 	    	.VoteButton { text-align: center }
 	    </style>
+	    
+	    <script><%@ include file="../scripts/jquery.min.js" %></script>
+	    <script><%@ include file="../scripts/jquery.validate.min.js" %></script>
+	    <script><%@ include file="../scripts/jquery.validate.additional.min.js" %></script>
+	    
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	    <script>
 	    $(document).ready(function(){
