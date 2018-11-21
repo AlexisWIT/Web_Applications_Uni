@@ -1,18 +1,11 @@
 package eRPapp.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -117,16 +110,19 @@ public class LoginController {
 			
 			System.out.println("--- Found record of user ["+emailForCheck+"] in database");
 			
-			String encryptedPasswordForCheck = passwordEncoder.encode(user.getPassword());
+			String encryptedPasswordForCheck = passwordEncoder.encode(passwordForCheck);
 			// If passwordInput does NOT match the password in Database
 			if (encryptedPasswordForCheck != userInDB.getPassword()) {
 				System.out.println("--- User ["+emailForCheck+"] input wrong password");
 				credentialCheckResult.reject("ERROR_INCORRECT_PASSWORD");
 				response.setStatus("FAILED");
+				
+			} else {
+				// All correct
+				response.setStatus("CHECKED");
+				
 			}
-			
-			// All correct
-			response.setStatus("CHECKED");
+
 			
 		// Else, email is incorrect
 		} else {

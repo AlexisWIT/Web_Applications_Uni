@@ -69,63 +69,79 @@ $(document).ready(function () {
 	});
 	
 	
-	// Check Login Credential
-	//$("LoginButton").click(function(){
-
-		$("#loginForm").validate({				
-			errorClass: 'error',
-			rules: { 
-				"email": {
-					required: true,
-					email: true,
-				}, 
-				"password": {
-					required: true
-				}
-				
-			}, messages: {
-				"email": {
-					email: "Please enter a valid email!"
-				}
-			
-			}, submitHandler: function (form) {
-				var emailInput = $("#email").val();
-				var passwordInput = $("#password").val();
-				var result = "";
-				
-				$("#passwordOk").html("");
-				$("#passwordError").html("");
-				$("#emailOk").html("");
-				$("#emailError").html("");
-
-				$.ajax({
-					async: false,
-					type: "GET",
-					url: "/credentialCheck",
-					data: "email="+emailInput+"&password="+passwordInput,
-					success: function (response) {
-						console.log("Received report ["+response.status+"]");
-						if (response.status == "CHECKED") {
-							result = response.status;
-							success = true;
-						} else {
-							result = response.status;
-							$("#ErrorMsg").text("["+result+"] "+response.result[0].code);
-							$("#ErrorMsg").slideDown(500);
-							
-						}
-					},
-
-				});
-
-				if (result == "CHECKED") {
-					form.submit();
-				}
-			
-			}
 	
-		});
+
+	$("#loginForm").validate({				
+		errorClass: 'error',
+		rules: { 
+			"email": {
+				required: true,
+				email: true,
+			}, 
+			"password": {
+				required: true
+			}
+			
+		}, messages: {
+			"email": {
+				email: "Please enter a valid email!"
+			}
 		
-	//});	
+		}, submitHandler: function (form) {
+			var emailInput = $("#email").val();
+			var passwordInput = $("#password").val();
+			var result = "";
+			
+			$("#passwordOk").html("");
+			$("#passwordError").html("");
+			$("#emailOk").html("");
+			$("#emailError").html("");
+
+			$.ajax({
+				async: false,
+				type: "GET",
+				url: "/credentialCheck",
+				data: "email="+emailInput+"&password="+passwordInput,
+				success: function (response) {
+					console.log("Received report ["+response.status+"]");
+					if (response.status == "CHECKED") {
+						result = response.status;
+						success = true;
+					} else {
+						result = response.status;
+						$("#ErrorMsg").text("["+result+"] "+response.result[0].code);
+						$("#ErrorMsg").slideDown(500);
+						
+					}
+				},
+
+			});
+
+			if (result == "CHECKED") {
+				form.submit();
+			}
 		
+		}
+
+	});
+	
 });
+
+function getCookies () {
+	var cookiePattern = 
+	
+}
+
+function setCookies (cookieName, cookieValue, expireDays) {
+	var expireDate = new Date();
+	expireDate.setDate(expireDate.getDate()+expireDays);
+	document.cookie = cookieName+","+cookieValue+","expireDate;
+};
+
+function delCookies (cookieName) {
+	setCookies (cookieName, "", 0)
+	
+};
+
+
+
