@@ -37,12 +37,13 @@
 			<p><button id='AdminSignOutButton' type="submit" class="btn">Sign Out</button></p>
 		</form:form>
 			
+		<h2>Referendum Content</h2>
 		<table>
 		<tr>
 			<th>Item</th>
 			<th>Options</th>
 			<th>Status</th>
-			<th> </th>
+			<th></th>
 		</tr>
 		
 		<!--<form:form action="/dashboard/edit" modelAttribute="question" method="POST">-->
@@ -56,12 +57,14 @@
 				</p>
 			</td>
 			<td class="VoteOption">
+			<form:form modelAttribute="options">
 				<core:forEach items="${optionList}" var="option">
 				<p>
-				<form:label path="optId" id="optionOptId"><core:out value="${option.getOptId()}"/></form:label>. 
-				<form:label path="option" id="optionOpt"><span id="editableOption"><core:out value="${option.getOption()}"/></span></form:label>
+				<form:label path="id" id="optionOptId-${option.getId()}"><core:out value="${option.getId()}"/></form:label>. 
+				<form:label path="option" id="optionOpt-${option.getId()}"><span id="editableOption-${option.getId()}"><core:out value="${option.getOption()}"/></span></form:label>
 				</p>
 				</core:forEach>
+			</form:form>
 			</td>
 			<td id="VoteStatus" class="VoteStatus">
 				<span id="statusCode"><core:out value="${question.getStatus()}"/></span>
@@ -70,29 +73,35 @@
 					<span id="statusOpen" class="ok"></span>
 					<span id="statusUnknown" class="unknown"></span></span>
 			</td>
-			<td>
+			<td class="ButtonZone">
 				<p><input type="button" id="changeStatusButton" name="changeStatus" value="Close" class="btn"></p>
-				
-				
-				
-				
-				<!--  To do: edit question and options -->
-				
-				
-				
-				
-				
 			</td>
 		</tr>
 		</core:forEach>
 		<tr>
-			<td>
+			<td class="ButtonZone">
 				<input type="button" id="editQuestionButton" name="editQuestion" value="Edit Question" class="btn"/>
 			</td>
-			<td colspan="2" class="ButtonZone">
-				<input type="button" id="editOptionButton" name="editOption" value="Edit Options" class="btn"/>
-				<input type="button" id="showChartButton" name="showChart" value="Chart" class="btn"/>
+			<td class="ButtonZone">
+				<br><input type="button" id="editOptionButton" name="editOption" value="Edit Options" class="btn"/>
 			</td>
+			
+			<td>
+			</td>
+			<td>
+			
+			</td>
+		</tr>
+		</table>
+		
+		<h2>Statistics</h2>
+		<table>
+		<tr>
+			<td>
+				<input type="button" id="showChartButton" name="showChart" value="View Charts" class="btn"/>
+			</td>
+		</tr>
+		<tr>
 		</tr>
 		<!--</form:form>-->
 		

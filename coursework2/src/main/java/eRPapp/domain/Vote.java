@@ -39,6 +39,11 @@ public class Vote {
 	// Mapping
 	@OneToOne(mappedBy="vote")
 	private User user;
+	
+	public Vote(User user, Option option) {
+		this.user = user;
+		this.option = option;
+	}
 
 	public Option getOption() {
 		return option;

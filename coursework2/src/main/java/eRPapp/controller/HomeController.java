@@ -49,6 +49,7 @@ public class HomeController {
 		
 		// load user vote information in their home page
 		if (user.getVote() != null) {
+			user.setUserRemark("VOTED");
 			Vote currentVote = user.getVote();
 			Option currentOption = currentVote.getOption();
 			List<Option> optionList = new ArrayList<Option>();
@@ -60,6 +61,8 @@ public class HomeController {
 			
 			model.addAttribute("optionList", optionList);
 			model.addAttribute("questionList", questionList);
+			
+		} else {
 			
 		}
 		return "Home";

@@ -14,10 +14,10 @@ import javax.persistence.OneToMany;
 @Entity(name="REFERENDUM_OPTIONS")
 public class Option {
 	
-	@Id															private int id;
+	@Id											private int id;
 
 	@ManyToOne
-	@JoinColumn(name="REF_ID")									private Question question;
+	@JoinColumn(name="REF_ID")					private Question question;
 	@Column(name="OPTIONS", nullable=false)		String option;
 	@Column(name="VOTE_COUNT",nullable=false)	int count;
 	
@@ -37,10 +37,10 @@ public class Option {
 	@OneToMany(mappedBy="option")
 	private Set<Vote> vote;
 	
-	public int getOptId() {
+	public int getId() {
 		return id;
 	}
-	public void setOptId(int optId) {
+	public void setId(int optId) {
 		this.id = optId;
 	}
 	public Question getQuestion() {
@@ -58,8 +58,8 @@ public class Option {
 	public int getCount() {
 		return count;
 	}
-	public void setCount(int count) {
-		this.count = count;
+	public void setCount(int inCount) {
+		this.count = count+inCount;
 	}
 
 	public Set<Vote> getVote() {

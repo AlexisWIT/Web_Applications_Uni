@@ -32,11 +32,16 @@
 	    	
 	    	if (questionStatusCode==1) {
 	    		$("#statusOpen").html("OPEN");
+	    		$("#confirmButton").prop('disabled', false);
 	    	} else if (questionStatusCode==0) {
 	    		$("#statusClosed").html("CLOSED");
+	    		$("#confirmButton").prop('disabled', true);
 	    	} else {
 	    		$("#statusUnknown").html("UNKNOWN");
+	    		$("#confirmButton").prop('disabled', true);
 	    	}
+	    	
+	    	
 	    	
 	    });
 	    
@@ -44,9 +49,14 @@
 	</head>
 	
 	<body><div class="interface">
-	<h1>Vote for Your Future</h1>
+	<h1>VOTE CENTRE</h1>
 	<hr />
 	
+	<core:forEach items="${userList}" var="user">
+		<p>Hello <i><core:out value="${user.getGivenName()}"/> <core:out value="${user.getFamilyName()}"/></i> ! Vote for your future.</p>
+		<p><span id="userStatus"><core:out value="${user.getUserRemark()}"></core:out></span></p>
+	</core:forEach>
+		
 	<div><a href="/home/">Back</a></div>
 	<table class="VoteTable">
 	<tr>
@@ -55,7 +65,7 @@
 		<th>Status</th>
 	</tr>
 	
-	<form:form id="voteForm" name="voteForm" action="/vote/confirm" modelAttribute="     "  method="POST">
+	<form:form id="voteForm" name="voteForm" action="/vote/confirm" modelAttribute="option"  method="POST">
 	<core:forEach items="${questionList}" var="question">
 	<tr>
 		<td id="VoteItem" class="VoteItem">
@@ -66,8 +76,8 @@
 		</td>
 		<td id="VoteOption" class="VoteOption">
 			<core:forEach items="${optionList}" var="option">
-			<p><input type="radio" id="options" name="options" value="${option.getOptId()}">
-			<core:out value="${option.getOptId()}"/>. 
+			<p><form:radiobutton path="id" id="options" name="options" value="${option.getId()}"/>
+			<core:out value="${option.getId()}"/>. 
 			<core:out value="${option.getOption()}"/>
 			</p>
 			</core:forEach>
@@ -84,7 +94,7 @@
 	</core:forEach>
 	<tr>
 		<td class="VoteButton" colspan="2">
-			<input type="submit" name="confirm" class="btn"/>
+			<input type="submit" id="confirmButton" name="confirm" class="btn"/>
 		</td>
 	</tr>
 	</form:form>

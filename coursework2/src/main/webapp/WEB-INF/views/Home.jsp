@@ -17,6 +17,7 @@
 	    	.td-normal { text-align: left; 
 	    			padding: 20px 0px 0px;}
 	    	.td-buttons { text-align: center; }
+	    	#VoteVoteOptions { text-align: left; }
 	    </style>
 	    
 	    <script><%@ include file="../scripts/jquery.min.js" %></script>
@@ -28,7 +29,7 @@
 	    	$(document).ready(function(){
 	    		
 	    		// fast check for vote eligibility
-	    		var voteRecord = $(this).closest("#VoteList").children("#VoteQuestion").text();
+	    		var voteRecord = $("#VoteOptions").text();
 	    		console.log("Vote record found: ["+voteRecord+"]");
 	    		if (voteRecord != '') { // user havs made vote
 	    			console.log("Vote prohibited");
@@ -52,7 +53,8 @@
 		
 		<core:forEach items="${userList}" var="user">
 			<p>Hello <i><core:out value="${user.getGivenName()}"/> <core:out value="${user.getFamilyName()}"/></i> ! Welcome to your homepage.</p>
-			
+		</core:forEach>
+		
 			<form:form action="/home/logout">
 				<p><button id='SignOutButton' type="submit" class="btn">Sign Out</button></p>
 			</form:form>
@@ -80,13 +82,13 @@
 			</tr>
 			<core:forEach items="${questionList}" var="question">
 			<tr id="VoteList">
-				<td id="VoteQuestion">
+				<td id="VoteQuestion" colspan="2">
 				(<core:out value="${question.getRefId()}"/>)
 				 <core:out value="${question.getTitle()}"/>
 				</td>
-				<td id="VoteOptions">
+				<td id="VoteOptions" colspan="2">
 				<core:forEach items="${optionList}" var="option">
-				<core:out value="${option.getOptId()}"/>. 
+				<core:out value="${option.getId()}"/>. 
 				<core:out value="${option.getOption()}"/>
 				</core:forEach>
 				</td>	
@@ -104,7 +106,7 @@
 			</tr>
 			
 			</table>
-		</core:forEach>
+		
 		
 	</div>
 	</body>
