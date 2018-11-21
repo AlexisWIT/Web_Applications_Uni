@@ -1,6 +1,9 @@
 $("#Sheets").hide();
 $("#Charts").hide();
 
+$("#BarChartButton").hide();
+$("#PieChartButton").hide();
+
 $(document).ready(function () {
 
 	// GET VOTE STATUS
@@ -40,7 +43,13 @@ $(document).ready(function () {
 						console.log("Question [" + questionId + "] closed successfully");
 						$("#changeStatusButton").val("Open");
 
+					} else if (response.includes("ERROR_VOTE_RATE")) { // Vote rate less than 80%
+						$("#statusOpen").html("OPEN");
+						console.log("Unable to close Question [" + questionId + "] due to Vote Rate less than 80%");
+						alert("Unable to close Question [" + questionId + "]: \nVote Rate less than 80%");
+						
 					} else { // Response: Failed to close vote in database
+						$("#statusOpen").html("OPEN");
 						console.log("Failed to close Question [" + questionId + "]");
 						$("#changeStatusButton").val("Close");
 					}
@@ -85,18 +94,27 @@ $(document).ready(function () {
 	$("#editQuestionButton").click(function () {
 		var buttonLabel = $("#editQuestionButton").val();
 		var questionId = $("#questionRefId").html();
+		var voteStatus = $("#statusString").html() 
 		var editedQuestionTitle = "";
 
 		console.log(buttonLabel);
 
 		// Make the question title editable
 		if (buttonLabel == "Edit Question") {
-			currentQuestionTitle = $("#editableQuestionTitle").html();
+			
+			// If vote is open, admin can't edit question
+			if (!voteStatus.includes("CLOSED")) {
+				console.log("Unable to edit Question [" + questionId + "]");
+				alert("Unable to edit Question [" + questionId + "]: \nVote is open")
+				
+			} else {
+				currentQuestionTitle = $("#editableQuestionTitle").html();
 
-			$("#editableQuestionTitle").replaceWith("<textarea id='titleEditBox' rows='6' cols='40'>" + currentQuestionTitle + "</textarea>");
-			console.log("Start edit question [" + questionId + "]");
+				$("#editableQuestionTitle").replaceWith("<textarea id='titleEditBox' rows='6' cols='40'>" + currentQuestionTitle + "</textarea>");
+				console.log("Start edit question [" + questionId + "]");
 
-			$("#editQuestionButton").val("Confirm Edit"); // Change button label to [Confirm Edit]
+				$("#editQuestionButton").val("Confirm Edit"); // Change button label to [Confirm Edit]
+			}
 
 		// Confirm the edited question
 		} else if (buttonLabel == "Confirm Edit") {
@@ -150,6 +168,7 @@ $(document).ready(function () {
 	var currentOptionContent3 = "";
 	$("#editOptionButton").click(function () {
 		var buttonLabel = $("#editOptionButton").val();
+		var voteStatus = $("#statusString").html()
 		var optionId1 = $("#optionOptId-1").html();
 		var optionId2 = $("#optionOptId-2").html();
 		var optionId3 = $("#optionOptId-3").html();
@@ -161,24 +180,35 @@ $(document).ready(function () {
 		
 		// Make the options editable
 		if (buttonLabel == "Edit Options") {
-			currentOptionContent1 = $("#editableOption-1").html();
-			currentOptionContent2 = $("#editableOption-2").html();
-			currentOptionContent3 = $("#editableOption-3").html();
 			
-			$("#editableOption-1").replaceWith("<input type='text' id='optionEditBox1' value=''>");
-			$("#optionEditBox1").val(currentOptionContent1)
-			console.log("Option [" + optionId1 + "] ready for edit");
+			// If vote is open, admin can't edit options
+			if (!voteStatus.includes("CLOSED")) {
+				console.log("Unable to edit Options");
+				alert("Unable to edit Options: \nVote is open")
+				
+			} else {
+				
+				currentOptionContent1 = $("#editableOption-1").html();
+				currentOptionContent2 = $("#editableOption-2").html();
+				currentOptionContent3 = $("#editableOption-3").html();
+				
+				$("#editableOption-1").replaceWith("<input type='text' id='optionEditBox1' value=''>");
+				$("#optionEditBox1").val(currentOptionContent1)
+				console.log("Option [" + optionId1 + "] ready for edit");
+				
+				$("#editableOption-2").replaceWith("<input type='text' id='optionEditBox2' value=''>");
+				$("#optionEditBox2").val(currentOptionContent2)
+				console.log("Option [" + optionId2 + "] ready for edit");
+				
+				$("#editableOption-3").replaceWith("<input type='text' id='optionEditBox3' value=''>");
+				$("#optionEditBox3").val(currentOptionContent3)
+				console.log("Option [" + optionId3 + "] ready for edit");
+				
+				// Change button label to [Confirm Edit]
+				$("#editOptionButton").val("Confirm Edit");
+				
+			}
 			
-			$("#editableOption-2").replaceWith("<input type='text' id='optionEditBox2' value=''>");
-			$("#optionEditBox2").val(currentOptionContent2)
-			console.log("Option [" + optionId2 + "] ready for edit");
-			
-			$("#editableOption-3").replaceWith("<input type='text' id='optionEditBox3' value=''>");
-			$("#optionEditBox3").val(currentOptionContent3)
-			console.log("Option [" + optionId3 + "] ready for edit");
-			
-			// Change button label to [Confirm Edit]
-			$("#editOptionButton").val("Confirm Edit");
 			
 		// Confirm edited options	
 		} else if (buttonLabel == "Confirm Edit") {
@@ -218,7 +248,7 @@ $(document).ready(function () {
 							console.log("Unable to update Option [" + optionId1 + "] with content [" + editedOptionContent1 + "] in database");
 							$("#optionEditBox1").replaceWith("<span id='editableOption-1'>" + currentOptionContent1 + "</span>");
 							console.log("Edit for Option [" + optionId1 + "] failed");
-							alert("Error occured: \nUnable to update Option [" + optionId1 + "] with content [" + editedOptionContent1 + "] in database.\nPlease check your database connection and try again.");
+							alert("Error occured: \nUnable to update Option [" + optionId1 + "] with content [" + editedOptionContent1 + "] in database.\nPlease make sure the Vote is closed and check your database connection and try again.");
 						}
 						
 					}
@@ -254,7 +284,7 @@ $(document).ready(function () {
 							console.log("Unable to update Option [" + optionId2 + "] with content [" + editedOptionContent2 + "] in database");
 							$("#optionEditBox2").replaceWith("<span id='editableOption-2'>" + currentOptionContent2 + "</span>");
 							console.log("Edit for Option [" + optionId2 + "] failed");
-							alert("Error occured: \nUnable to update Option [" + optionId2 + "] with content [" + editedOptionContent2 + "] in database.\nPlease check your database connection and try again.");
+							alert("Error occured: \nUnable to update Option [" + optionId2 + "] with content [" + editedOptionContent2 + "] in database.\nPlease make sure the Vote is closed and check your database connection and try again.");
 						}
 						
 					}
@@ -291,7 +321,7 @@ $(document).ready(function () {
 							console.log("Unable to update Option [" + optionId3 + "] with content [" + editedOptionContent3 + "] in database");
 							$("#optionEditBox3").replaceWith("<span id='editableOption-3'>" + currentOptionContent3 + "</span>");
 							console.log("Edit for Option [" + optionId3 + "] failed");
-							alert("Error occured: \nUnable to update Option [" + optionId3 + "] with content [" + editedOptionContent3 + "] in database.\nPlease check your database connection and try again.");
+							alert("Error occured: \nUnable to update Option [" + optionId3 + "] with content [" + editedOptionContent3 + "] in database.\nPlease make sure the Vote is closed and check your database connection and try again.");
 						}
 						
 					}
@@ -311,9 +341,9 @@ $(document).ready(function () {
 	});
 	
 	
-	// CREATE STATS SHEET & BAR CHART & PIE CHART
-	$("#ChartsButton").click(function(){
-		var buttonLabel = $("#ChartsButton").val();
+	// CREATE STATS SHEET
+	$("#ResultSheetButton").click(function(){
+		var buttonLabel = $("#ResultSheetButton").val();
 		var QuestionTitle = $("#editableQuestionTitle").html();
 		var OptionContent1 = $("#editableOption-1").html();
 		var OptionContent2 = $("#editableOption-2").html();
@@ -333,7 +363,7 @@ $(document).ready(function () {
 		$("#Stats-Option-2").text(OptionContent2);
 		$("#Stats-Option-3").text(OptionContent3);
 		
-		if (buttonLabel == "View Charts") {
+		if (buttonLabel == "View Results") {
 			
 			// Create data sheets
 			// Option 1 vote count
@@ -345,14 +375,9 @@ $(document).ready(function () {
 				success: function(response) {
 					if (response.status >= 0) {
 						optionCount1 = response.status;
-						console.log("Option 1 count ["+optionCount1+"]");
-						
-					} else {
-						console.log("Option 1 count [ERROR]");
-					}
-					
-				}
-			
+						console.log("Option 1 count ["+optionCount1+"]");		
+					} else { console.log("Option 1 count [ERROR]"); }			
+				}	
 			});
 			
 			// Option 2 vote count
@@ -364,14 +389,9 @@ $(document).ready(function () {
 				success: function(response) {
 					if (response.status >= 0) {
 						optionCount2 = response.status;
-						console.log("Option 2 count ["+optionCount2+"]");
-						
-					} else {
-						console.log("Option 2 count [ERROR]");
-					}
-					
-				}
-			
+						console.log("Option 2 count ["+optionCount2+"]");	
+					} else { console.log("Option 2 count [ERROR]"); }	
+				}	
 			});
 			
 			// Option 3 vote count
@@ -383,14 +403,9 @@ $(document).ready(function () {
 				success: function(response) {
 					if (response.status >= 0) {
 						optionCount3 = response.status;
-						console.log("Option 3 count ["+optionCount3+"]");
-						
-					} else {
-						console.log("Option 3 count [ERROR]");
-					}
-					
+						console.log("Option 3 count ["+optionCount3+"]");	
+					} else { console.log("Option 3 count [ERROR]"); }	
 				}
-			
 			});
 			
 			// Option count in table
@@ -399,11 +414,47 @@ $(document).ready(function () {
 			$("#Stats-Option-3-Count").text(optionCount3);
 			
 			$("#Sheets").show();
+			$("#Charts").show();
+			
+			$("#BarChartButton").show();
+			$("#PieChartButton").show();
+			
+			$("#ResultSheetButton").val("Hide Results");
+			
+		} else {
+			
+			$("#BarChartButton").hide();
+			$("#PieChartButton").hide();
+			
+			$("#Charts").hide();
+			$("#Sheets").hide();
+			
+			$("#ResultSheetButton").val("View Results");
+		}
+		
+	});
+		
+	
+	
+	// CREATE PIE CHART
+	$("#PieChartButton").click(function(){
+		
+		var buttonLabel = $("#PieChartButton").val();
+		
+		if (buttonLabel=="View Pie Chart") {
+			var pieChartTitle = $("#Stats-QuestionTitle").text();
+			var pieOption1 =  $("#Stats-Option-1").text();
+			var pieOption2 =  $("#Stats-Option-2").text();
+			var pieOption3 =  $("#Stats-Option-3").text();
+			
+			var pieOption1Count = $("#Stats-Option-1-Count").text();
+			var pieOption2Count = $("#Stats-Option-2-Count").text();
+			var pieOption3Count = $("#Stats-Option-3-Count").text();
 			
 			// Parse string data to int
-			var count1 = parseInt(optionCount1);
-			var count2 = parseInt(optionCount2);
-			var count3 = parseInt(optionCount3);
+			var count1 = parseInt(pieOption1Count);
+			var count2 = parseInt(pieOption2Count);
+			var count3 = parseInt(pieOption3Count);
 			
 			// Create Google Charts
 			google.charts.load('current', {'packages':['corechart']});
@@ -411,13 +462,11 @@ $(document).ready(function () {
 
 			function drawChart() {
 				
-				
-				
-				var data = google.visualization.arrayToDataTable([
+				var pieData = google.visualization.arrayToDataTable([
 				  ['Options','Vote Count'],
-				  [OptionContent1, count1],
-				  [OptionContent2, count2],
-				  [OptionContent3, count3],
+				  [pieOption1, count1],
+				  [pieOption2, count2],
+				  [pieOption3, count3],
 				]);
 				
 				var pieOptions = {
@@ -427,29 +476,78 @@ $(document).ready(function () {
 				};
 			  
 				var pieChart = new google.visualization.PieChart(document.getElementById('GooglePieChart'));
-				pieChart.draw(data, pieOptions);
+				pieChart.draw(pieData, pieOptions);
 				  
-				var barOptions = {
-					'title': currentQuestionTitle, 
-					'width':600, 
-					'height':500,
-				};
-				  
-				var barChart = new google.visualization.BarChart(document.getElementById('GoogleBarChart'));
-				barChart.draw(data, barOptions);
 			}
 			
-			$("#Charts").show();
-			$("#ChartsButton").val("Hide Charts");
+			$("#PieChartZone").show();
+			$("#PieChartButton").val("Hide Pie Chart");
+			
+		} else {
+		
+			$("#PieChartZone").hide();
+			$("#PieChartButton").val("View Pie Chart");
+		
+		}
+	
+
+	});
+	
+	
+	// CREATE BAR CHART
+	$("#BarChartButton").click(function(){
+		var buttonLabel = $("#BarChartButton").val();
+		
+		if (buttonLabel=="View Bar Chart") {
+			var barChartTitle = $("#Stats-QuestionTitle").text();
+			var barOption1 =  $("#Stats-Option-1").text();
+			var barOption2 =  $("#Stats-Option-2").text();
+			var barOption3 =  $("#Stats-Option-3").text();
+			
+			var barOption1Count = $("#Stats-Option-1-Count").text();
+			var barOption2Count = $("#Stats-Option-2-Count").text();
+			var barOption3Count = $("#Stats-Option-3-Count").text();
+			
+			// Parse string data to int
+			var count1 = parseInt(barOption1Count);
+			var count2 = parseInt(barOption2Count);
+			var count3 = parseInt(barOption3Count);
+			
+			// Create Google Charts
+			google.charts.load('current', {'packages':['corechart']});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				
+				var barData = google.visualization.arrayToDataTable([
+				  ['Options','Vote Count'],
+				  [barOption1, count1],
+				  [barOption2, count2],
+				  [barOption3, count3],
+				]);
+			
+				var barOptions = {
+						'title': currentQuestionTitle, 
+						'width':600, 
+						'height':500,
+					};
+					  
+				var barChart = new google.visualization.BarChart(document.getElementById('GoogleBarChart'));
+				barChart.draw(barData, barOptions);
+
+			} 
+			
+			$("#BarChartZone").show();
+			$("#BarChartButton").val("Hide Bar Chart");
 			
 		} else {
 			
-			$("#Charts").hide();
-			$("#Sheets").hide();
-			$("#ChartsButton").val("View Charts");
+			$("#BarChartZone").hide();
+			$("#BarChartButton").val("View Bar Chart");
 			
 		}
-		
+
+
 	});
 	
 });

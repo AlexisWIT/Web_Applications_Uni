@@ -6,6 +6,7 @@ public class Response {
 	
 	private String status;
 	private Option data;
+	private Object result;
 	
 	public Response() {
 		
@@ -32,5 +33,14 @@ public class Response {
 	public void setData(Option data) {
 		this.data = data;
 	}
+
+	public Object getResult() {
+		return result;
+	}
+
+	public void setResult(Object result) {
+		this.result = result;
+	}
+	
 	
 }

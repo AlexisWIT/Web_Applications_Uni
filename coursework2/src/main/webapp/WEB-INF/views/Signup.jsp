@@ -24,7 +24,6 @@
 	    
 	    <script><%@ include file="../scripts/jquery.min.js" %></script>
 	    <script><%@ include file="../scripts/jquery.validate.min.js" %></script>
-	    <script><%@ include file="../scripts/jquery.validate.additional.min.js" %></script>
 	    
 	    <script><%@ include file="../scripts/signup.js" %></script>
 	      
@@ -68,8 +67,8 @@
     <tr>
         <td><form:label path="password">Password: </form:label></td>
         <td><form:input path="password" id="password" name="password" type="password" placeholder="********"/>
-        	<p id="passwordTips">Password must be 6-12 characters, contains: <br>At least 1 lowercase and 1 uppercase alphabetical character;
-        	<br>Or at least 1 lowercase and 1 numeric character;<br>Or at least 1 uppercase and 1 numeric character.</p></td>
+        	<p id="passwordTips">Password must be 6-16 characters. Must contains: <br>At least 1 lowercase alphabetical character,
+        	<br>At least 1 uppercase alphabetical character,<br>At least 1 numeric character.<br>May contains: <br>Special characters [ -!@#$%_ ]</p></td>
         <td><form:errors path="password" class="error"/><span id="passwordInfo"></span></td>
     </tr>
     <tr>

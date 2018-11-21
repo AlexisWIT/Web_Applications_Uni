@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import eRPapp.BallotApplication;
 import eRPapp.repository.*;
@@ -98,6 +99,50 @@ public class LoginController {
 	public String accessDenied() {
 		System.out.println("----------- Access Denied ---------------");
 		return "Error_Access";
+	}
+	
+	@RequestMapping(value="/credentialCheck", method=RequestMethod.GET)
+	@ResponseBody
+	public Response credentialCheck(@ModelAttribute("user") eRPapp.domain.User user, BindingResult credentialCheckResult) {
+		
+		System.out.println("--- Received request for checking user credential ---");
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		Response response = new Response();
+		String emailForCheck = user.getEmail();
+		String passwordForCheck = user.getPassword();
+		eRPapp.domain.User userInDB = userRepository.findByEmail(emailForCheck);
+		
+		// If found user in database, then email must be correct.
+		if (userInDB != null) {
+			
+			System.out.println("--- Found record of user ["+emailForCheck+"] in database");
+			
+			String encryptedPasswordForCheck = passwordEncoder.encode(user.getPassword());
+			// If passwordInput does NOT match the password in Database
+			if (encryptedPasswordForCheck != userInDB.getPassword()) {
+				System.out.println("--- User ["+emailForCheck+"] input wrong password");
+				credentialCheckResult.reject("ERROR_INCORRECT_PASSWORD");
+				response.setStatus("FAILED");
+			}
+			
+			// All correct
+			response.setStatus("CHECKED");
+			
+		// Else, email is incorrect
+		} else {
+			System.out.println("--- User ["+emailForCheck+"] does NOT exist");
+			credentialCheckResult.reject("ERROR_INCORRECT_EMAIL");
+			response.setStatus("FAILED");
+			
+		}
+		
+		if (credentialCheckResult.hasErrors()) {
+			response.setResult(credentialCheckResult.getAllErrors());
+			
+		}
+		
+		return response;
+		
 	}
 
 }

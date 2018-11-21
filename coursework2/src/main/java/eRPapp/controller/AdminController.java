@@ -1,5 +1,7 @@
 package eRPapp.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eRPapp.domain.*;
-import eRPapp.repository.OptionRepository;
-import eRPapp.repository.QuestionRepository;
+import eRPapp.repository.*;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -21,6 +22,8 @@ public class AdminController {
 	
 	@Autowired QuestionRepository questionRepository;
 	@Autowired OptionRepository optionRepository;
+	@Autowired UserRepository userRepository;
+	@Autowired VoteRepository voteRepository;
 	
 	@RequestMapping(value="/", method = RequestMethod.GET)
 	public String initAdmin(@ModelAttribute("questions") Question question, Model model) {
@@ -43,6 +46,7 @@ public class AdminController {
 	public String changeVoteStatus(@ModelAttribute("questions") Question question, BindingResult changeStatusResult) {
 		String changeVoteStatusReport = "";
 		int currentQuestionId = question.getRefId();
+		double voteRateLimit = 0.8;
 		
 		Question currentQuestion = questionRepository.findByRefId(currentQuestionId);
 		
@@ -55,11 +59,29 @@ public class AdminController {
 				System.out.println("--- Vote opened successfully ---");
 				
 			} else if (currentQuestion.getStatus()==1) { // If vote is open
-				currentQuestion.setStatus(0);// Close the vote
-				questionRepository.save(currentQuestion);
-				changeVoteStatusReport = "CLOSED";
-				System.out.println("--- Vote closed successfully ---");
 				
+				Collection<User> regUser = makeCollection(userRepository.findAll());
+				int registeredUser = regUser.size()-1; // -1 admin user
+				
+				Collection<Vote> vote = makeCollection(voteRepository.findAll());
+				int countedVote = vote.size();
+				
+				double voteRate = (double)countedVote/registeredUser;
+				
+				System.out.println("--- Counted Vote ["+countedVote+"] Registered User ["+registeredUser+"] \n--- Vote Rate ["+voteRate+"]");
+				
+				if (voteRate < voteRateLimit) {
+					changeStatusResult.reject("VOTE_RATE_ERROR");
+					changeVoteStatusReport = "ERROR_VOTE_RATE";
+					System.out.println("--- Unable to close vote: Vote Rate less than 80% ---");
+					
+				} else {
+					currentQuestion.setStatus(0);// Close the vote
+					questionRepository.save(currentQuestion);
+					changeVoteStatusReport = "CLOSED";
+					System.out.println("--- Vote closed successfully ---");
+				}
+					
 			} else { // If status error (neither 0 nor 1)
 				changeStatusResult.reject("QUESTION_STATUS_ERROR");
 				changeVoteStatusReport = "ERROR_STATUS_ERROR";
@@ -90,10 +112,21 @@ public class AdminController {
 		
 		// If found question record in database
 		if (currentQuestion != null) {
-			currentQuestion.setTitle(editedQuestionTitle);
-			questionRepository.save(currentQuestion);
-			editQuestionReport = "Question ["+currentQuestionId+"] Title changed to ["+editedQuestionTitle+"]";
-			System.out.println("--- Title of Question ["+currentQuestionId+"] changed to ["+editedQuestionTitle+"]");
+			
+			// If question is still open
+			if (currentQuestion.getStatus() != 0) {
+				editQuestionResult.reject("QUESTION_"+currentQuestionId+"_IS_OPEN");
+				editQuestionReport = "ERROR_QUESTION_"+currentQuestionId+"_IS_OPEN";
+				System.out.println("--- Unable to edit: Question ["+currentQuestionId+"] is open ---");
+				
+			// If question is closed	
+			} else {
+				currentQuestion.setTitle(editedQuestionTitle);
+				questionRepository.save(currentQuestion);
+				editQuestionReport = "Question ["+currentQuestionId+"] Title changed to ["+editedQuestionTitle+"]";
+				System.out.println("--- Title of Question ["+currentQuestionId+"] changed to ["+editedQuestionTitle+"]");
+			}
+			
 			
 		// If question not found in database	
 		} else {
@@ -119,10 +152,22 @@ public class AdminController {
 		
 		// If found option record in database
 		if (currentOption != null) {
-			currentOption.setOption(editedOptionContent);
-			optionRepository.save(currentOption);
-			editOptionReport = "Option ["+currentOptionId+"] content changed to ["+editedOptionContent+"]";
-			System.out.println("--- Content of Option ["+currentOptionId+"] changed to ["+editedOptionContent+"]");
+			
+			// If question associated with this option is still open
+			if (currentOption.getQuestion().getStatus() !=0 ) {
+				
+				editOptionResult.reject("VOTE_IS_OPEN");
+				editOptionReport = "ERROR_VOTE_IS_OPEN";
+				System.out.println("--- Unable to edit: Vote is open ---");
+				
+			} else {
+				
+				currentOption.setOption(editedOptionContent);
+				optionRepository.save(currentOption);
+				editOptionReport = "Option ["+currentOptionId+"] content changed to ["+editedOptionContent+"]";
+				System.out.println("--- Content of Option ["+currentOptionId+"] changed to ["+editedOptionContent+"]");
+			}
+			
 			
 		// If option not found in database	
 		} else {
@@ -149,6 +194,15 @@ public class AdminController {
 		response.setStatus(voteCount);
 		
 		return response;
+	}
+	
+	// Convert Iterable of all registered user in repository to List
+	public static <E> Collection<E> makeCollection(Iterable<E> iter) {
+	    Collection<E> list = new ArrayList<E>();
+	    for (E item : iter) {
+	        list.add(item);
+	    }
+	    return list;
 	}
 	
 	

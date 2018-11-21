@@ -100,13 +100,13 @@
 		<table>
 		<tr>
 			<td colspan="2">
-				<input type="button" id="ChartsButton" name="showChart" value="View Charts" class="btn"/>
+				<input type="button" id="ResultSheetButton" name="ResultSheet" value="View Results" class="btn"/>
 			</td>
 		</tr>
 		<tr id="Sheets">
 			<td colspan="2">
 			<table id="Stats-Table">
-				<th colspan="2" id="Stats-QuestionTitle"></th>
+				<tr><th colspan="2" id="Stats-QuestionTitle"></th></tr>
 				
 				<tr><td id="Stats-Option-1"></td><td id="Stats-Option-1-Count"></td>
 				</tr>
@@ -114,7 +114,10 @@
 				</tr>
 				<tr><td id="Stats-Option-3"></td><td id="Stats-Option-3-Count"></td>
 				</tr>	
-			</table>	
+			</table>
+			<br>
+			<input type="button" id="PieChartButton" name="showPieChart" value="View Pie Chart" class="btn" style="display: none;"/>
+			<input type="button" id="BarChartButton" name="showBarChart" value="View Bar Chart" class="btn" style="display: none;"/>	
 			</td>
 		</tr>
 		<tr id="Charts">

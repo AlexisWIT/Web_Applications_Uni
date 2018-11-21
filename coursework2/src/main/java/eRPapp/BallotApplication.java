@@ -45,13 +45,13 @@ public class BallotApplication extends WebMvcConfigurerAdapter implements Comman
 		try {
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			//String adminPassword = PasswordEncryptor.getSHA256(PasswordEncryptor.getJBCrypt(PasswordEncryptor.getMD5("admin")));
-			String adminPassword = passwordEncoder.encode("admin");
+			String adminPassword = passwordEncoder.encode("Admin123");
 			User adminUser = new User("admin@gov.com", "admin", "admin", "1970-11-18", "Office of Election, Shangri-La Government Facility", adminPassword, commissionType);
 			
 			userRepository.save(adminUser);	
 			
 			// Voter account for test 
-			String voterPassword = passwordEncoder.encode("voter");
+			String voterPassword = passwordEncoder.encode("Voter123");
 			User testVoter = new User("voter@gov.com", "Doe", "John", "1970-11-18", "Office of Voter Representative, Room 303, Block A, Shangri-La Government Facility", voterPassword, voterType);
 			
 			userRepository.save(testVoter);

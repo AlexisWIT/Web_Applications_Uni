@@ -160,12 +160,14 @@ $(document).ready(function () {
 
 	// PASSWORD VALIDITY
 	$("#password").keyup(function () {
-		// check password strength
+		//check password strength
 		var passwordInput = $("#password").val();
-		// must be 6-12 characters, contains at least 1 lowercase and 1 uppercase alphabetical character 
-		// or has at least 1 lowercase and 1 numeric character 
-		// or has at least 1 uppercase and 1 numeric character.
-		var passwordPattern = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))).{6,12}$/;
+		// Password must be 6-16 characters. 
+		// Must contains: 
+		// At least 1 lowercase alphabetical character, At least 1 uppercase alphabetical character, At least 1 numeric character. 
+		// May contains: 
+		// Special characters [ -!@#$%_ ]
+		var passwordPattern = /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])[\w\d!@#$%_]{6,16}$/;
 
 		// if empty value
 		if (passwordInput.length == 0) {
