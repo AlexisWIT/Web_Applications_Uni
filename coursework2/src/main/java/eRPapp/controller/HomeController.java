@@ -59,12 +59,12 @@ public class HomeController {
 			List<Question> questionList = new ArrayList<Question>();
 			questionList.add(currentQuestion);
 			
+			//model.addAttribute("currentQuestion", currentQuestion);
 			model.addAttribute("optionList", optionList);
 			model.addAttribute("questionList", questionList);
 			
-		} else {
-			
 		}
+		
 		return "Home";
 	}
 	

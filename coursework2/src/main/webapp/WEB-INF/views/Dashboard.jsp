@@ -24,11 +24,12 @@
     <script><%@ include file="../scripts/jquery.validate.additional.min.js" %></script>
 	    
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
 	
 	<script><%@ include file="../scripts/dashboard.js" %></script>
 	
 	<body><div class="interface">
-		<h1>Admin Dashboard - Election Commission</h1>	
+		<h1>ADMIN DASHBOARD - ELECTION COMMISSION</h1>	
 		<hr />
 
 		<p>Welcome Admin! Below is/are the current referendum(s).</p>
@@ -46,15 +47,16 @@
 			<th></th>
 		</tr>
 		
-		<!--<form:form action="/dashboard/edit" modelAttribute="question" method="POST">-->
+
 		<core:forEach items="${questionList}" var="question">
 		<tr>
 			<td class="VoteItem">
-			
+			<form:form modelAttribute="questions">
 				<p>
 				 (<form:label path="refId" id="questionRefId"><core:out value="${question.getRefId()}"/></form:label>) 
 				  <form:label path="title" id="questionTitle"><span id="editableQuestionTitle"><core:out value="${question.getTitle()}"/></span></form:label>
 				</p>
+			</form:form>
 			</td>
 			<td class="VoteOption">
 			<form:form modelAttribute="options">
@@ -97,13 +99,33 @@
 		<h2>Statistics</h2>
 		<table>
 		<tr>
-			<td>
-				<input type="button" id="showChartButton" name="showChart" value="View Charts" class="btn"/>
+			<td colspan="2">
+				<input type="button" id="ChartsButton" name="showChart" value="View Charts" class="btn"/>
 			</td>
 		</tr>
-		<tr>
+		<tr id="Sheets">
+			<td colspan="2">
+			<table id="Stats-Table">
+				<th colspan="2" id="Stats-QuestionTitle"></th>
+				
+				<tr><td id="Stats-Option-1"></td><td id="Stats-Option-1-Count"></td>
+				</tr>
+				<tr><td id="Stats-Option-2"></td><td id="Stats-Option-2-Count"></td>
+				</tr>
+				<tr><td id="Stats-Option-3"></td><td id="Stats-Option-3-Count"></td>
+				</tr>	
+			</table>	
+			</td>
 		</tr>
-		<!--</form:form>-->
+		<tr id="Charts">
+			<td id="PieChartZone">
+				<div id="GooglePieChart"></div>
+			</td>
+			<td id="BarChartZone">
+				<div id="GoogleBarChart"></div>
+			</td>
+		</tr>
+
 		
 		</table>
 			

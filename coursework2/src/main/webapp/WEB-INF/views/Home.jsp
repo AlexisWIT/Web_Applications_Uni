@@ -48,12 +48,12 @@
 	</head>
 	
 	<body><div class="interface">
-		<h1>Voter Home</h1>
+		<h1>VOTER HOME</h1>
 		<hr />
 		
 		<core:forEach items="${userList}" var="user">
 			<p>Hello <i><core:out value="${user.getGivenName()}"/> <core:out value="${user.getFamilyName()}"/></i> ! Welcome to your homepage.</p>
-		</core:forEach>
+		
 		
 			<form:form action="/home/logout">
 				<p><button id='SignOutButton' type="submit" class="btn">Sign Out</button></p>
@@ -106,7 +106,7 @@
 			</tr>
 			
 			</table>
-		
+		</core:forEach>
 		
 	</div>
 	</body>

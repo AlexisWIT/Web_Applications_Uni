@@ -21,7 +21,7 @@
 	</head>
 	
 	<body><div class="interface">
-		<h1>User Login</h1>
+		<h1>USER LOGIN</h1>
 		<hr />
 		
 		<form:form id="loginForm" name="loginForm" action="/accessCheck" modelAttribute="appDataTransferObject" method="POST" >

@@ -50,7 +50,6 @@ public class SignupController {
 		System.out.println("-----------  Processing register info  ---------------");
 		if (userRepository.findByEmail(user.getEmail()) != null) {
 			System.out.println("!!! Email exists !!!");
-			user.setUserRemark("Email exists, please try another one.");
 			return "redirect:/signup/";
 		}
 		// set available BIC code to user, and set usage to 1 in domain User class use

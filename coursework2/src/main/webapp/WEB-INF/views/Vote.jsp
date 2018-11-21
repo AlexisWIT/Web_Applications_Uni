@@ -26,18 +26,22 @@
 	    <script>
 	    $(document).ready(function(){
 	    	
+	    	var userStatus = $("#userStatus").html();
 	    	var questionStatusCode = $("#statusCode").html();
 	    	$("#statusCode").hide();
 	    	console.log("Vote status ["+questionStatusCode+"]");
 	    	
-	    	if (questionStatusCode==1) {
+	    	if (questionStatusCode==1 && userStatus!="VOTED") {
 	    		$("#statusOpen").html("OPEN");
+	    		$("#greeting").html("Vote for your future.")
 	    		$("#confirmButton").prop('disabled', false);
 	    	} else if (questionStatusCode==0) {
 	    		$("#statusClosed").html("CLOSED");
+	    		$("#greeting").html("Vote is closed, you can't vote now.")
 	    		$("#confirmButton").prop('disabled', true);
 	    	} else {
 	    		$("#statusUnknown").html("UNKNOWN");
+	    		$("#greeting").html("Vote is currently unavilable.")
 	    		$("#confirmButton").prop('disabled', true);
 	    	}
 	    	
@@ -53,8 +57,8 @@
 	<hr />
 	
 	<core:forEach items="${userList}" var="user">
-		<p>Hello <i><core:out value="${user.getGivenName()}"/> <core:out value="${user.getFamilyName()}"/></i> ! Vote for your future.</p>
-		<p><span id="userStatus"><core:out value="${user.getUserRemark()}"></core:out></span></p>
+		<p>Welcome to vote page, <i><core:out value="${user.getGivenName()}"/> <core:out value="${user.getFamilyName()}"/></i> ! <span id="greeting">Vote for your future.</span></p>
+		<p><span style="visibility:hidden" id="userStatus"><core:out value="${user.getUserRemark()}"/></span></p>
 	</core:forEach>
 		
 	<div><a href="/home/">Back</a></div>

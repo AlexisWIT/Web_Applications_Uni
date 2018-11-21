@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
 
 	// EMAIL VALIDITY + AVAILABLITY
@@ -170,15 +171,18 @@ $(document).ready(function () {
 		if (passwordInput.length == 0) {
 			$("#passwordInfo").html("<span class='error'>Please enter your password!</span>");
 			$("#register").prop('disabled', true);
+			$("#passwordTips").slideUp();
 
 			// if valid	
 		} else if (passwordInput.match(passwordPattern)) {
 			$("#passwordInfo").html("<span id='passwordOk' class='ok'>OK</span>");
+			$("#passwordTips").slideUp();
 
 			// else (invalid input characters or exceed the max char number)	
 		} else {
 			$("#passwordInfo").html("<span class='error'>Invalid password!</span>");
 			$("#register").prop('disabled', true);
+			$("#passwordTips").slideDown();
 		}
 
 	});
@@ -299,6 +303,21 @@ $(document).ready(function () {
 			$("#register").prop('disabled', false);
 		}
 
+	});
+	
+	
+	// RESET FUNCTION
+	$("#reset").click(function(){
+		$("#register").prop('disabled', true);
+		$("#emailInfo span").html("");
+		$("#familyNameInfo span").html("");
+		$("#givenNameInfo span").html("");
+		$("#dateOfBirthStringInfo span").html("");
+		$("#addressInfo span").html("");
+		$("#passwordInfo span").html("");
+		$("#passwordCheckInfo span").html("");
+		$("#bioIdCodeStringInfo span").html("");
+		
 	});
 
 });

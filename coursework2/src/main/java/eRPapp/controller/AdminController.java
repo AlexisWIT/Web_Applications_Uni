@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +23,7 @@ public class AdminController {
 	@Autowired OptionRepository optionRepository;
 	
 	@RequestMapping(value="/", method = RequestMethod.GET)
-	public String initAdmin(@ModelAttribute("question") Question question, Model model) {
+	public String initAdmin(@ModelAttribute("questions") Question question, Model model) {
 		
 		model.addAttribute("options", new Option());
 		//load questions and corresponding options
@@ -42,7 +40,7 @@ public class AdminController {
 	
 	@RequestMapping(value="/changeVoteStatus", method = RequestMethod.POST)
 	@ResponseBody
-	public String changeVoteStatus(@ModelAttribute("question") Question question, BindingResult changeStatusResult) {
+	public String changeVoteStatus(@ModelAttribute("questions") Question question, BindingResult changeStatusResult) {
 		String changeVoteStatusReport = "";
 		int currentQuestionId = question.getRefId();
 		
@@ -82,7 +80,7 @@ public class AdminController {
 	
 	@RequestMapping(value="/editQuestion", method = RequestMethod.POST)
 	@ResponseBody
-	public String editQuestion (@ModelAttribute("question") Question question, BindingResult editQuestionResult) {
+	public String editQuestion (@ModelAttribute("questions") Question question, BindingResult editQuestionResult) {
 		System.out.println("--- Received request for change Question Title ---");
 		String editQuestionReport = "";
 		int currentQuestionId = question.getRefId();
@@ -137,5 +135,21 @@ public class AdminController {
 		return editOptionReport;
 		
 	}
+	
+	@RequestMapping(value="/getVoteCount", method = RequestMethod.GET)
+	@ResponseBody
+	public Response getVoteCount(Option option) {
+		int optionId = option.getId();
+		System.out.println("--- Received vote count request for Option ["+optionId+"] ---");
+		Option optionForCount = optionRepository.findById(optionId);
+		
+		String voteCount = String.valueOf(optionForCount.getCount());
+		System.out.println("--- Option ["+optionId+"] vote count ["+voteCount+"] ---");
+		Response response = new Response ();
+		response.setStatus(voteCount);
+		
+		return response;
+	}
+	
 	
 }

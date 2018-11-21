@@ -1,3 +1,6 @@
+$("#Sheets").hide();
+$("#Charts").hide();
+
 $(document).ready(function () {
 
 	// GET VOTE STATUS
@@ -306,5 +309,147 @@ $(document).ready(function () {
 		}
 			
 	});
+	
+	
+	// CREATE STATS SHEET & BAR CHART & PIE CHART
+	$("#ChartsButton").click(function(){
+		var buttonLabel = $("#ChartsButton").val();
+		var QuestionTitle = $("#editableQuestionTitle").html();
+		var OptionContent1 = $("#editableOption-1").html();
+		var OptionContent2 = $("#editableOption-2").html();
+		var OptionContent3 = $("#editableOption-3").html();
+		
+		var optionId1 = $("#optionOptId-1").html();
+		var optionId2 = $("#optionOptId-2").html();
+		var optionId3 = $("#optionOptId-3").html();
 
+		var optionCount1 = 0;
+		var optionCount2 = 0;
+		var optionCount3 = 0;
+		
+		// Table header
+		$("#Stats-QuestionTitle").text(QuestionTitle);
+		$("#Stats-Option-1").text(OptionContent1);
+		$("#Stats-Option-2").text(OptionContent2);
+		$("#Stats-Option-3").text(OptionContent3);
+		
+		if (buttonLabel == "View Charts") {
+			
+			// Create data sheets
+			// Option 1 vote count
+			$.ajax({
+				async: false,
+				type: "GET",
+				url: "/dashboard/getVoteCount",
+				data: "id="+optionId1,
+				success: function(response) {
+					if (response.status >= 0) {
+						optionCount1 = response.status;
+						console.log("Option 1 count ["+optionCount1+"]");
+						
+					} else {
+						console.log("Option 1 count [ERROR]");
+					}
+					
+				}
+			
+			});
+			
+			// Option 2 vote count
+			$.ajax({
+				async: false,
+				type: "GET",
+				url: "/dashboard/getVoteCount",
+				data: "id="+optionId2,
+				success: function(response) {
+					if (response.status >= 0) {
+						optionCount2 = response.status;
+						console.log("Option 2 count ["+optionCount2+"]");
+						
+					} else {
+						console.log("Option 2 count [ERROR]");
+					}
+					
+				}
+			
+			});
+			
+			// Option 3 vote count
+			$.ajax({
+				async: false,
+				type: "GET",
+				url: "/dashboard/getVoteCount",
+				data: "id="+optionId3,
+				success: function(response) {
+					if (response.status >= 0) {
+						optionCount3 = response.status;
+						console.log("Option 3 count ["+optionCount3+"]");
+						
+					} else {
+						console.log("Option 3 count [ERROR]");
+					}
+					
+				}
+			
+			});
+			
+			// Option count in table
+			$("#Stats-Option-1-Count").text(optionCount1);
+			$("#Stats-Option-2-Count").text(optionCount2);
+			$("#Stats-Option-3-Count").text(optionCount3);
+			
+			$("#Sheets").show();
+			
+			// Parse string data to int
+			var count1 = parseInt(optionCount1);
+			var count2 = parseInt(optionCount2);
+			var count3 = parseInt(optionCount3);
+			
+			// Create Google Charts
+			google.charts.load('current', {'packages':['corechart']});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+				
+				
+				
+				var data = google.visualization.arrayToDataTable([
+				  ['Options','Vote Count'],
+				  [OptionContent1, count1],
+				  [OptionContent2, count2],
+				  [OptionContent3, count3],
+				]);
+				
+				var pieOptions = {
+					'title': currentQuestionTitle, 
+					'width':600, 
+					'height':500,
+				};
+			  
+				var pieChart = new google.visualization.PieChart(document.getElementById('GooglePieChart'));
+				pieChart.draw(data, pieOptions);
+				  
+				var barOptions = {
+					'title': currentQuestionTitle, 
+					'width':600, 
+					'height':500,
+				};
+				  
+				var barChart = new google.visualization.BarChart(document.getElementById('GoogleBarChart'));
+				barChart.draw(data, barOptions);
+			}
+			
+			$("#Charts").show();
+			$("#ChartsButton").val("Hide Charts");
+			
+		} else {
+			
+			$("#Charts").hide();
+			$("#Sheets").hide();
+			$("#ChartsButton").val("View Charts");
+			
+		}
+		
+	});
+	
 });

@@ -13,6 +13,10 @@
 		    .error { color: red; } 
 		    .ok { color: green; }
 		    .wait { color: orange; }
+		    #passwordTips { color: red;
+		    				display:none;
+		    				font-size: 10px; }
+		    #dateOfBirthString{ width: 97%; } 
 	    	.interface { padding: 50px 100px; }
 	    	.ButtonCover { padding: 1px; }
 	    	td { padding: 5px 10px; }
@@ -27,7 +31,7 @@
 	</head>
 	
 <body><div id="interface" class="interface">
-<h1>Voter Sign up</h1>
+<h1>VOTER SIGN UP</h1>
 <hr />
 
 <form:form id="cancelForm" name="cancelForm" action="/signup/cancel" modelAttribute="user" method="POST">
@@ -63,7 +67,9 @@
     </tr>
     <tr>
         <td><form:label path="password">Password: </form:label></td>
-        <td><form:input path="password" id="password" name="password" type="password" placeholder="********"/></td>
+        <td><form:input path="password" id="password" name="password" type="password" placeholder="********"/>
+        	<p id="passwordTips">Password must be 6-12 characters, contains: <br>At least 1 lowercase and 1 uppercase alphabetical character;
+        	<br>Or at least 1 lowercase and 1 numeric character;<br>Or at least 1 uppercase and 1 numeric character.</p></td>
         <td><form:errors path="password" class="error"/><span id="passwordInfo"></span></td>
     </tr>
     <tr>

@@ -19,7 +19,7 @@
 <body>
 	<div class="interface">
 
-		<h1>Access Denied</h1>
+		<h1>ACCESS DENIED</h1>
 		<hr />
 		
 		<div>
