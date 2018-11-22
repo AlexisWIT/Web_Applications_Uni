@@ -13,7 +13,7 @@
 		    .ok { color: green }
 	    	.interface { padding: 50px 100px; }
 	    	th { text-align: left; 
-	    			padding: 20px 0px 0px;}
+	    			padding: 20px 10px 0px 5px;}
 	    	.td-normal { text-align: left; 
 	    			padding: 20px 0px 0px;}
 	    	.td-buttons { text-align: center; }
@@ -70,23 +70,23 @@
 				<th colspan="4">[ Address ]</th>
 			</tr>
 			<tr>
-				<td colspan="2"><core:out value="${user.getAddress()}"/></td>
-				<td colspan="2"></td>
+				<td colspan="4"><core:out value="${user.getAddress()}"/></td>
+				<td colspan="4"></td>
 			</tr>
 			<tr>
 				<th colspan="2">[ Voted Item ]</th>
 			</tr>
 			<tr>
-				<td colspan="2"><i>Question</i></td>
-				<td colspan="2"><i>Your Choice</i></td>
+				<td colspan="3"><i>Question</i></td>
+				<td colspan="1"><i>Your Choice</i></td>
 			</tr>
 			<core:forEach items="${questionList}" var="question">
 			<tr id="VoteList">
-				<td id="VoteQuestion" colspan="2">
+				<td id="VoteQuestion" colspan="3">
 				(<core:out value="${question.getRefId()}"/>)
 				 <core:out value="${question.getTitle()}"/>
 				</td>
-				<td id="VoteOptions" colspan="2">
+				<td id="VoteOptions" colspan="1">
 				<core:forEach items="${optionList}" var="option">
 				<core:out value="${option.getId()}"/>. 
 				<core:out value="${option.getOption()}"/>

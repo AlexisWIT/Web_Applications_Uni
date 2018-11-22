@@ -470,7 +470,7 @@ $(document).ready(function () {
 				]);
 				
 				var pieOptions = {
-					'title': currentQuestionTitle, 
+					'title': pieChartTitle, 
 					'width':600, 
 					'height':500,
 				};
@@ -527,7 +527,7 @@ $(document).ready(function () {
 				]);
 			
 				var barOptions = {
-						'title': currentQuestionTitle, 
+						'title': barChartTitle, 
 						'width':600, 
 						'height':500,
 					};
