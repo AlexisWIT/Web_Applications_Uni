@@ -101,7 +101,7 @@ $(document).ready(function () {
 	});
 
 	// BIRTHDAY VALIDITY
-	$("#dateOfBirthString").focusout(function () {
+	$("#dateOfBirthString").keyup(function () {
 		// check if less than 16 years old
 		var ageLimit = 16;
 		var todayDate = new Date();
@@ -169,6 +169,7 @@ $(document).ready(function () {
 	$("#password").keyup(function () {
 		//check password strength
 		var passwordInput = $("#password").val();
+		var passwordInputCheck = $("#passwordCheck").val();
 		// Password must be 6-16 characters. 
 		// Must contains: 
 		// At least 1 lowercase alphabetical character, At least 1 uppercase alphabetical character, At least 1 numeric character. 
@@ -184,9 +185,21 @@ $(document).ready(function () {
 
 			// if valid	
 		} else if (passwordInput.match(passwordPattern)) {
-			$("#passwordInfo").html("<span id='passwordOk' class='ok'>OK</span>");
-			$("#passwordTips").slideUp();
-			finalCheck();
+			
+			// If match with Password Input check
+			if (passwordInputCheck!= null && passwordInput == passwordInputCheck) {
+				$("#passwordInfo").html("<span id='passwordOk' class='ok'>OK</span>");
+				$("#passwordCheckInfo").html("<span id='passwordCheckOk' class='ok'>OK</span>");
+				$("#passwordTips").slideUp();
+				finalCheck();
+				
+			} else {
+				$("#passwordInfo").html("<span class='error'>Password doesn't match!</span>");
+				$("#passwordCheckInfo").html("<span class='error'>Password doesn't match!</span>");
+				$("#passwordTips").slideUp();
+				$("#register").prop('disabled', true);
+			}
+			
 
 			// else (invalid input characters or exceed the max char number)	
 		} else {
@@ -210,7 +223,9 @@ $(document).ready(function () {
 
 			// if match	
 		} else if (passwordInputCheck == passwordInput) {
+			$("#passwordInfo").html("<span id='passwordOk' class='ok'>OK</span>");
 			$("#passwordCheckInfo").html("<span id='passwordCheckOk' class='ok'>OK</span>");
+			$("#passwordTips").slideUp();
 			finalCheck();
 
 			// if mismatch	
@@ -269,6 +284,12 @@ $(document).ready(function () {
 
 	});
 	
+	// SUBMIT ANTI DOUBLE-CLICKING
+	$("#register").click(function(){
+		$("#register").prop('disabled', true);
+		$("#regForm").submit();
+		
+	});
 	
 	// RESET FUNCTION
 	$("#reset").click(function(){

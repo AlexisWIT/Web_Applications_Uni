@@ -83,7 +83,7 @@ $(document).ready(function () {
 			$("#LoginButton").prop('disabled', true);
 
 		// if valid	
-		} else if (passwordInput.match(passwordPattern)) {
+		} else {
 			$("#passwordOk").html("OK");
 			$("#passwordError").html("");
 			if ($("#email").val() == emailInCookies) {
@@ -93,12 +93,6 @@ $(document).ready(function () {
 			if ($("#emailOk").html()=="OK") {
 				$("#LoginButton").prop('disabled', false);
 			}
-			
-		// Prevent SQL Injection only [A-Za-z0-9-!@#$%_] allowed
-		} else {
-			$("#passwordOk").html("");
-			$("#passwordError").html("Invalid password!");
-			$("#LoginButton").prop('disabled', true);
 		}
 		
 	});

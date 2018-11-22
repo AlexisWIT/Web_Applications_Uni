@@ -44,9 +44,20 @@ public class SignupController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String signup(@Valid @ModelAttribute("user") User user, Model model) {
+		
 		System.out.println("-----------  Processing register info  ---------------");
 		if (userRepository.findByEmail(user.getEmail()) != null) {
-			System.out.println("!!! Email exists !!!");
+			System.out.println("---- Email exists ----");
+			return "redirect:/signup/";
+		}
+		
+		if (bioIdCodeRepository.findByBioIdCode(user.getBioIdCodeString()) == null) {
+			System.out.println("---- BIC Code exists ----");
+			return "redirect:/signup/";
+		}
+		
+		if (bioIdCodeRepository.findByBioIdCode(user.getBioIdCodeString()).getUsage() == 1) {
+			System.out.println("---- BIC Code used ----");
 			return "redirect:/signup/";
 		}
 		// set available BIC code to user, and set usage to 1 in domain User class use
@@ -93,7 +104,10 @@ public class SignupController {
 			System.out.println("---- Email [" + emailForCheck + "] already in use ----");
 			emailCheckResult.reject("EMAIL_IN_USE");
 			emailCheckResultErrorInfo = "Email already in use!";
+		} else {
+			System.out.println("---- Email available, no record found for [" + emailForCheck + "] in database ----");
 		}
+		
 		if (!emailCheckResult.hasErrors()) {
 			emailReport = "<span id='emailOk' class='ok'>OK</span>";
 		} else {
@@ -118,6 +132,7 @@ public class SignupController {
 		if (bioIdCodeRepository.findByBioIdCode(bicForCheck) != null) { // BIC input match with any in database
 
 			System.out.println("---- Found BIC [" + bicForCheck + "] in database ----");
+			
 			BioIdCode bicInUse = bioIdCodeRepository.findByBioIdCode(bicForCheck);
 			int usage = bicInUse.getUsage();
 
@@ -125,6 +140,8 @@ public class SignupController {
 				System.out.println("---- BIC [" + bicForCheck + "] in use ----");
 				bicCheckResult.reject("BIC_IN_USE");
 				bicCheckResultErrorInfo = "BIC already in use!";
+			} else {
+				System.out.println("---- BIC [" + bicForCheck + "] unused with status [" + usage + "] ----");
 			}
 
 		} else { // BIC not match with any in database
