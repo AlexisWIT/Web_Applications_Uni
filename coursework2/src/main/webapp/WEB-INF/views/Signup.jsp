@@ -41,17 +41,17 @@
    <table>
     <tr>
         <td><form:label path="email">Email: </form:label></td>
-        <td><form:input path="email" id="email" name="email" placeholder="example@domain.com" type="email" /></td>
+        <td><form:input path="email" id="email" name="email" placeholder="example@domain.com" type="email" size="30" /></td>
         <td><form:errors path="email" class="error"/><span id="emailInfo"></span></td>
     </tr>
     <tr>
         <td><form:label path="familyName">Family Name: </form:label></td>
-        <td><form:input path="familyName" id="familyName" name="familyName" placeholder="John"/></td>
+        <td><form:input path="familyName" id="familyName" name="familyName" placeholder="John" size="30" /></td>
         <td><form:errors path="familyName" class="error"/><span id="familyNameInfo"></span></td>
     </tr>
     <tr>
         <td><form:label path="givenName">Given Name: </form:label></td>
-        <td><form:input path="givenName" id="givenName" placeholder="Doe"/></td>
+        <td><form:input path="givenName" id="givenName" placeholder="Doe" size="30" /></td>
         <td><form:errors path="givenName" class="error"/><span id="givenNameInfo"></span></td>
     </tr>
     <tr>
@@ -61,24 +61,24 @@
     </tr>
     <tr>
         <td><form:label path="address">Address: </form:label></td>
-        <td><form:input path="address" id="address" name="address" placeholder="Road, District"/></td>
+        <td><form:input path="address" id="address" name="address" placeholder="Road, District" size="30" /></td>
         <td><form:errors path="address" class="error"/><span id="addressInfo"></span></td>
     </tr>
     <tr>
         <td><form:label path="password">Password: </form:label></td>
-        <td><form:input path="password" id="password" name="password" type="password" placeholder="********"/>
-        	<p id="passwordTips">Password must be 6-16 characters. Must contains: <br>At least 1 lowercase alphabetical character,
-        	<br>At least 1 uppercase alphabetical character,<br>At least 1 numeric character.<br>May contains: <br>Special characters [ -!@#$%_ ]</p></td>
+        <td><form:input path="password" id="password" name="password" type="password" placeholder="********" size="30" />
+        	<p id="passwordTips">Password must be 6-16 characters.<br><u>Must contains:</u><br>At least 1 lowercase alphabetical character,
+        	<br>At least 1 uppercase alphabetical character,<br>At least 1 numeric character.<br><u>May contains:</u><br>Special characters [ -!@#$%_ ]</p></td>
         <td><form:errors path="password" class="error"/><span id="passwordInfo"></span></td>
     </tr>
     <tr>
         <td><form:label path="passwordCheck">Verify Password: </form:label></td>
-        <td><form:input path="passwordCheck" id="passwordCheck" name="passwordCheck" type="password" placeholder="********"/></td>
+        <td><form:input path="passwordCheck" id="passwordCheck" name="passwordCheck" type="password" placeholder="********" size="30" /></td>
         <td><form:errors path="passwordCheck" class="error"/><span id="passwordCheckInfo"></span></td>
     </tr>
     <tr>
         <td><form:label path="bioIdCodeString">BIC Code: </form:label></td>
-        <td><form:input path="bioIdCodeString" id="bioIdCodeString" name="bioIdCodeString" placeholder="AAAA-BBBB-CCCC-DDDD"/></td>
+        <td><form:input path="bioIdCodeString" id="bioIdCodeString" name="bioIdCodeString" placeholder="AAAA-BBBB-CCCC-DDDD" size="30" /></td>
         <td><form:errors path="bioIdCodeString" class="error"/><span id="bioIdCodeStringInfo"></span></td>
     </tr>
     <tr>

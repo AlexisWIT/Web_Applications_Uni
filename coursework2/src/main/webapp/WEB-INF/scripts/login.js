@@ -5,12 +5,15 @@ $(document).ready(function () {
 	
 	// (1) USE COOKIES TO SAVE EMAIL & PASSWORD & LOGIN STATUS
 	var emailInCookies = getCookies("email");
+	console.log("Email get from cookie ["+emailInCookies+"]")
 	var passwordInCookies = getCookies("password");
+	console.log("Password get from cookie ["+passwordInCookies+"]")
 	
 	// If found email & password saved in cookies
 	if(emailInCookies && passwordInCookies) {
 		$("#email").val(emailInCookies);
 		$("#password").val(passwordInCookies);
+		$("#LoginButton").prop('disabled', false);
 		$("#rememberLogin").prop('checked', true); 
 	}
 	
@@ -146,8 +149,10 @@ $(document).ready(function () {
 			if (result == "CHECKED") {
 				// If login with "Remember Login Credentials" checked
 				if ($("#rememberLogin").prop('checked')) {
-					setCookies("email",emailInput,1);
-					setCookies("password",passwordInput,1);
+					setCookies("email",emailInput,5);
+					console.log("Save Email to cookie ["+emailInput+"]");
+					setCookies("password",passwordInput,5);
+					console.log("Save Password to cookie ["+passwordInput+"]")
 				}
 				form.submit();
 			}
@@ -159,20 +164,22 @@ $(document).ready(function () {
 });
 
 function getCookies(cookieName) {
-	var cookieSaparater = "|";
+	var cookiePattern = RegExp(cookieName+'=([^;]+)');
 	var cookieData = document.cookie;
-	var dataArray = cookieData.split(cookieSaparater);
+	var dataArray = cookieData.match(cookiePattern);
 	if (!dataArray) {
 		return "N/A";
-	} else {
-		return dataArray[1]; // 0 is cookieName, 1 is cookieValue, 2 is expireDate
+	} else if (cookieData.includes(cookieName)){
+		console.log("Found ["+cookieName+"] in cookie Name=["+dataArray[0]+"] Value=["+dataArray[1]+"]")
+		return dataArray[1]; // 0 = cookieName, 1 = cookieValue
 	}
 }
 
 function setCookies(cookieName, cookieValue, expireDays) {
 	var expireDate = new Date();
 	expireDate.setDate(expireDate.getDate()+expireDays);
-	document.cookie = cookieName+"|"+cookieValue+"|"+expireDate;
+	document.cookie = cookieName+"="+cookieValue+";expire="+expireDate;
+	console.log(document.cookie);
 };
 
 function delCookies(cookieName) {
