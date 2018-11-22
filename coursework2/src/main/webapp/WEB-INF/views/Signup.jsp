@@ -16,7 +16,7 @@
 		    #passwordTips { color: red;
 		    				display:none;
 		    				font-size: 10px; }
-		    #dateOfBirthString{ width: 97%; } 
+		    #dateOfBirthString{ width: 98%; } 
 	    	.interface { padding: 50px 100px; }
 	    	.ButtonCover { padding: 1px; }
 	    	td { padding: 5px 10px; }
@@ -67,8 +67,8 @@
     <tr>
         <td><form:label path="password">Password: </form:label></td>
         <td><form:input path="password" id="password" name="password" type="password" placeholder="********" size="30" />
-        	<p id="passwordTips">Password must be 6-16 characters.<br><u>Must contains:</u><br>At least 1 lowercase alphabetical character,
-        	<br>At least 1 uppercase alphabetical character,<br>At least 1 numeric character.<br><u>May contains:</u><br>Special characters [ -!@#$%_ ]</p></td>
+        	<p id="passwordTips">Password must be 6-16 characters.<br><u>Must contains:</u><br>- 1 lowercase alphabetical character,
+        	<br>- 1 uppercase alphabetical character,<br>- 1 numeric character.<br><u>May contains:</u><br>- Special characters [ -!@#$%_ ]</p></td>
         <td><form:errors path="password" class="error"/><span id="passwordInfo"></span></td>
     </tr>
     <tr>

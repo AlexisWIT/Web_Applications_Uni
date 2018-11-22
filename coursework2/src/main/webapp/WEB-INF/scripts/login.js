@@ -168,7 +168,7 @@ function getCookies(cookieName) {
 	var cookieData = document.cookie;
 	var dataArray = cookieData.match(cookiePattern);
 	if (!dataArray) {
-		return "N/A";
+		return "";
 	} else if (cookieData.includes(cookieName)){
 		console.log("Found ["+cookieName+"] in cookie Name=["+dataArray[0]+"] Value=["+dataArray[1]+"]")
 		return dataArray[1]; // 0 = cookieName, 1 = cookieValue
