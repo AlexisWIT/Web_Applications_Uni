@@ -13,6 +13,10 @@ $(document).ready(function () {
 	if(emailInCookies && passwordInCookies) {
 		$("#email").val(emailInCookies);
 		$("#password").val(passwordInCookies);
+		$("#emailOk").html("OK");
+		$("#emailError").html("");
+		$("#passwordOk").html("OK");
+		$("#passwordError").html("");
 		$("#LoginButton").prop('disabled', false);
 		$("#rememberLogin").prop('checked', true); 
 	}
