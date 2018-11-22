@@ -48,7 +48,7 @@
 				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2"><i><a href="/signup/">Create an account for vote</i></p></td>
+				<td colspan="2"><i><a href="/signup/">Create an account for vote</a></i></td>
 			</tr>
 			</table>
 			

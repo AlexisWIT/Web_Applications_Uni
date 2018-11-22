@@ -100,4 +100,12 @@ public class AppDataTransferObject {
 		this.remark = remark;
 	}
 
+	public AccountType getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+
 }

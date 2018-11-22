@@ -10,11 +10,17 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class PasswordEncryptor {
 	
+	
+	
+	// This class is no longer in use
+	
+	
+	
+	
 	// SHA256 Encryption
 	//public static String getSHA256 (String data, int key) {
 	public static String getSHA256 (String data, int key) {         
-		String resultSHA256 = null; 
-		int cipherKey = 0;
+		String resultSHA256 = null;
 		//int cipherKey = key;
 		
 		try {             
