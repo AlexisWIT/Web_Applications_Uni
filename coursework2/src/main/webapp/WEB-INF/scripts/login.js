@@ -30,6 +30,7 @@ $(document).ready(function () {
 
 	// (2) EMAIL VALIDITY
 	$("#email").keyup(function(){
+		
 		$("#ErrorMsg").slideUp();
 		
 		// Check validation of the email entered
@@ -46,6 +47,10 @@ $(document).ready(function () {
 		} else if (emailInput.match(emailPattern)) {
 			$("#emailOk").html("OK");
 			$("#emailError").html("");
+			if ($("#password").val() == passwordInCookies) {
+				$("#passwordOk").html("OK");
+				$("#LoginButton").prop('disabled', false);
+			}
 			if ($("#passwordOk").html()=="OK") {
 				$("#LoginButton").prop('disabled', false);
 			}
@@ -61,6 +66,7 @@ $(document).ready(function () {
 	
 	// (3) PASSWORD VALIDITY
 	$("#password").keyup(function(){
+		
 		$("#ErrorMsg").slideUp();
 		
 		var passwordInput = $("#password").val();
@@ -80,6 +86,10 @@ $(document).ready(function () {
 		} else if (passwordInput.match(passwordPattern)) {
 			$("#passwordOk").html("OK");
 			$("#passwordError").html("");
+			if ($("#email").val() == emailInCookies) {
+				$("#emailOk").html("OK");
+				$("#LoginButton").prop('disabled', false);
+			}
 			if ($("#emailOk").html()=="OK") {
 				$("#LoginButton").prop('disabled', false);
 			}
@@ -168,7 +178,7 @@ function getCookies(cookieName) {
 	var cookieData = document.cookie;
 	var dataArray = cookieData.match(cookiePattern);
 	if (!dataArray) {
-		return "";
+		return null;
 	} else if (cookieData.includes(cookieName)){
 		console.log("Found ["+cookieName+"] in cookie Name=["+dataArray[0]+"] Value=["+dataArray[1]+"]")
 		return dataArray[1]; // 0 = cookieName, 1 = cookieValue

@@ -25,6 +25,8 @@ $(document).ready(function () {
 				success: function (response) {
 					console.log("Received emailReport for [" + emailInput + "]")
 					$("#emailInfo").html(response);
+					finalCheck();
+					
 					// if email available, response should be "\<span id='emailOk' class='ok'\>OK\</span\>"
 					// otherwise, should be "\<span class='error'\>Email aready in use!\</span\>"
 					if (!response.includes("OK")) {
@@ -66,6 +68,7 @@ $(document).ready(function () {
 			// if family name entered with valid characters	(which is OK)
 		} else if (familyNameInput.match(namePattern)) {
 			$("#familyNameInfo").html("<span id='familyNameOk' class='ok'>OK</span>");
+			finalCheck();
 
 			// else (invalid characters detected)
 		} else {
@@ -88,6 +91,7 @@ $(document).ready(function () {
 			// if given name entered with valid characters (which is OK)
 		} else if (givenNameInput.match(namePattern)) {
 			$("#givenNameInfo").html("<span id='givenNameOk' class='ok'>OK</span>");
+			finalCheck();
 
 			// else (invalid characters detected)
 		} else {
@@ -116,6 +120,7 @@ $(document).ready(function () {
 			// if 16+ years old	
 		} else if (yearDiff > ageLimit) {
 			$("#dateOfBirthStringInfo").html("<span id='dateOfBirthStringOk' class='ok'>OK</span>");
+			finalCheck();
 
 			// if 16- years old 
 		} else if (yearDiff < ageLimit) {
@@ -125,6 +130,7 @@ $(document).ready(function () {
 			// if depends on months or dates
 		} else if ((monthDiff === 0 && dateDiff >= 0) || monthDiff > 0) {
 			$("#dateOfBirthStringInfo").html("<span id='dateOfBirthStringOk' class='ok'>OK</span>");
+			finalCheck();
 
 			// else less than 15 years old
 		} else {
@@ -154,6 +160,7 @@ $(document).ready(function () {
 			// else (valid address)
 		} else {
 			$("#addressInfo").html("<span id='addressOk' class='ok'>OK</span>");
+			finalCheck();
 		}
 
 	});
@@ -179,6 +186,7 @@ $(document).ready(function () {
 		} else if (passwordInput.match(passwordPattern)) {
 			$("#passwordInfo").html("<span id='passwordOk' class='ok'>OK</span>");
 			$("#passwordTips").slideUp();
+			finalCheck();
 
 			// else (invalid input characters or exceed the max char number)	
 		} else {
@@ -203,6 +211,7 @@ $(document).ready(function () {
 			// if match	
 		} else if (passwordInputCheck == passwordInput) {
 			$("#passwordCheckInfo").html("<span id='passwordCheckOk' class='ok'>OK</span>");
+			finalCheck();
 
 			// if mismatch	
 		} else {
@@ -241,6 +250,8 @@ $(document).ready(function () {
 				success: function (response) {
 					console.log("Received bicReport for [" + bicInput + "]");
 					$("#bioIdCodeStringInfo").html(response);
+					finalCheck();
+					
 					// if BIC available, response should be "\<span id='bicOk' class='ok'\>OK\</span\>"
 					// otherwise, should be "\<span class='error'\>BIC aready in use!\</span\>"
 					if (!response.includes("OK")) {
@@ -254,55 +265,6 @@ $(document).ready(function () {
 			});
 
 			//$("#bioIdCodeStringInfo").html("<span id='bioIdCodeStringOk' class='ok'>OK</span>");
-		}
-
-	});
-
-
-	// Disabled button can't fire mouse event, so use surrounding div to detect mouse activity
-	$("#registerButtonCover").hover(function (evt) {
-		var emailInfo = $("#emailInfo span").html();
-		var familyNameInfo = $("#familyNameInfo span").html();
-		var givenNameInfo = $("#givenNameInfo span").html();
-		var dateOfBirthStringInfo = $("#dateOfBirthStringInfo span").html();
-		var addressInfo = $("#addressInfo span").html();
-		var passwordInfo = $("#passwordInfo span").html();
-		var passwordCheckInfo = $("#passwordCheckInfo span").html();
-		var bioIdCodeStringInfo = $("#bioIdCodeStringInfo span").html();
-
-		console.log("==== Checking infos ====");
-		console.log("Email = [" + emailInfo + "]");
-		console.log("Family Name = [" + familyNameInfo + "]");
-		console.log("Given Name = [" + givenNameInfo + "]");
-		console.log("Date of Birth = [" + dateOfBirthStringInfo + "]");
-		console.log("Address = [" + addressInfo + "]");
-		console.log("Password = [" + passwordInfo + "]");
-		console.log("Verify Password = [" + passwordCheckInfo + "]");
-		console.log("BIC Code = [" + bioIdCodeStringInfo + "]");
-
-		if ((emailInfo === "OK") &&
-			(familyNameInfo === "OK") &&
-			(givenNameInfo === "OK") &&
-			(dateOfBirthStringInfo === "OK") &&
-			(addressInfo === "OK") &&
-			(passwordInfo === "OK") &&
-			(passwordCheckInfo === "OK") &&
-			(bioIdCodeStringInfo === "OK")) {
-			console.log("==== All Done, Unlock the Button ====");
-			$("#register").prop('disabled', false);
-		}
-
-	}, function () { // mouse out function
-		if ((emailInfo === "OK") &&
-			(familyNameInfo === "OK") &&
-			(givenNameInfo === "OK") &&
-			(dateOfBirthStringInfo === "OK") &&
-			(addressInfo === "OK") &&
-			(passwordInfo === "OK") &&
-			(passwordCheckInfo === "OK") &&
-			(bioIdCodeStringInfo === "OK")) {
-			console.log("==== All Done, Unlock the Button ====");
-			$("#register").prop('disabled', false);
 		}
 
 	});
@@ -323,3 +285,44 @@ $(document).ready(function () {
 	});
 
 });
+
+// Check if all fields
+function finalCheck(){
+	var emailInfo = $("#emailInfo span").html();
+	var familyNameInfo = $("#familyNameInfo span").html();
+	var givenNameInfo = $("#givenNameInfo span").html();
+	var dateOfBirthStringInfo = $("#dateOfBirthStringInfo span").html();
+	var addressInfo = $("#addressInfo span").html();
+	var passwordInfo = $("#passwordInfo span").html();
+	var passwordCheckInfo = $("#passwordCheckInfo span").html();
+	var bioIdCodeStringInfo = $("#bioIdCodeStringInfo span").html();
+
+	console.log("==== Checking infos ====");
+	console.log("Email = [" + emailInfo + "]");
+	console.log("Family Name = [" + familyNameInfo + "]");
+	console.log("Given Name = [" + givenNameInfo + "]");
+	console.log("Date of Birth = [" + dateOfBirthStringInfo + "]");
+	console.log("Address = [" + addressInfo + "]");
+	console.log("Password = [" + passwordInfo + "]");
+	console.log("Verify Password = [" + passwordCheckInfo + "]");
+	console.log("BIC Code = [" + bioIdCodeStringInfo + "]");
+	console.log("==== ============== ====");
+	
+	if (dateOfBirthStringInfo == null) {
+		$("#dateOfBirthStringInfo").html("<span class='error'>Please enter your birthday!</span>");
+		$("#register").prop('disabled', true);
+	}
+
+	if ((emailInfo === "OK") &&
+		(familyNameInfo === "OK") &&
+		(givenNameInfo === "OK") &&
+		(dateOfBirthStringInfo === "OK") &&
+		(addressInfo === "OK") &&
+		(passwordInfo === "OK") &&
+		(passwordCheckInfo === "OK") &&
+		(bioIdCodeStringInfo === "OK")) {
+		console.log("==== All Done, Unlock the Button ====");
+		$("#register").prop('disabled', false);
+	}
+	
+}
