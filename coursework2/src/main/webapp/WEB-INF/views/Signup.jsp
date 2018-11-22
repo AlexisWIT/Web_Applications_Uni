@@ -12,10 +12,13 @@
 		<style> 
 		    .error { color: red; } 
 		    .ok { color: green; }
+		    .weak { color: red }
+		    .medium { color: orange }
+		    .strong { color: lime }
+		    .veryStrong { color: green }
 		    .wait { color: orange; }
-		    #passwordTips { color: red;
-		    				display:none;
-		    				font-size: 10px; }
+		    #passwordMeter { font-size: 10px; }
+		    #passwordTips { color: red; display:none; font-size: 10px; }
 		    #dateOfBirthString{ width: 98%; } 
 	    	.interface { padding: 50px 100px; }
 	    	.ButtonCover { padding: 1px; }
@@ -69,7 +72,7 @@
         <td><form:input path="password" id="password" name="password" type="password" placeholder="********" size="30" />
         	<p id="passwordTips">Password must be 6-16 characters.<br><u>Must contains:</u><br>- 1 lowercase alphabetical character,
         	<br>- 1 uppercase alphabetical character,<br>- 1 numeric character.<br><u>May contains:</u><br>- Special characters [ -!@#$%_ ]</p></td>
-        <td><form:errors path="password" class="error"/><span id="passwordInfo"></span></td>
+        <td><form:errors path="password" class="error"/><span id="passwordInfo"></span><br><span id="passwordMeter"></span></td>
     </tr>
     <tr>
         <td><form:label path="passwordCheck">Verify Password: </form:label></td>

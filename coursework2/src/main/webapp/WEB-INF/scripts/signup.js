@@ -101,6 +101,13 @@ $(document).ready(function () {
 	});
 
 	// BIRTHDAY VALIDITY
+	// Add fallback JQuery datepicker for browser my not support HTML Datepicker
+	$("input[type=date]").each(function() {
+	    if (this.type != 'date' ) {
+	    	$(this).datepicker();
+	    }   	
+	});
+	
 	$("#dateOfBirthString").keyup(function () {
 		// check if less than 16 years old
 		var ageLimit = 16;
@@ -175,35 +182,53 @@ $(document).ready(function () {
 		// At least 1 lowercase alphabetical character, At least 1 uppercase alphabetical character, At least 1 numeric character. 
 		// May contains: 
 		// Special characters [ -!@#$%_ ]
-		var passwordPattern = /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])[\w\d!@#$%_]{6,16}$/;
+		var passwordPattern = /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])[\w\d\-!@#\$%_]{6,16}$/;
 
 		// if empty value
 		if (passwordInput.length == 0) {
+			$("#passwordMeter").html(""); // No meter
 			$("#passwordInfo").html("<span class='error'>Please enter your password!</span>");
 			$("#register").prop('disabled', true);
 			$("#passwordTips").slideUp();
 
-			// if valid	
+		// if valid	
 		} else if (passwordInput.match(passwordPattern)) {
 			
 			// If match with Password Input check
 			if (passwordInputCheck!= null && passwordInput == passwordInputCheck) {
 				$("#passwordInfo").html("<span id='passwordOk' class='ok'>OK</span>");
+				passwordMeter(passwordInput);
 				$("#passwordCheckInfo").html("<span id='passwordCheckOk' class='ok'>OK</span>");
 				$("#passwordTips").slideUp();
 				finalCheck();
-				
+			
+			// If doesn't match	
 			} else {
 				$("#passwordInfo").html("<span class='error'>Password doesn't match!</span>");
+				passwordMeter(passwordInput);
 				$("#passwordCheckInfo").html("<span class='error'>Password doesn't match!</span>");
 				$("#passwordTips").slideUp();
 				$("#register").prop('disabled', true);
 			}
-			
 
-			// else (invalid input characters or exceed the max char number)	
-		} else {
-			$("#passwordInfo").html("<span class='error'>Invalid password!</span>");
+		// If less than 6 chars	
+		} else if (passwordInput.length < 6) {
+			$("#passwordInfo").html("<span class='error'>Weak password!</span>");
+			passwordMeter(passwordInput);
+			$("#register").prop('disabled', true);
+			$("#passwordTips").slideDown();
+			
+		// If more than 16 chars		
+		} else if (passwordInput.length > 16) {
+			$("#passwordInfo").html("<span class='error'>Too long password!</span>");
+			$("#passwordMeter").html("");
+			$("#register").prop('disabled', true);
+			$("#passwordTips").slideDown();
+			
+		// else (invalid input characters)	
+		}else {
+			$("#passwordMeter").html("");  // No meter
+			$("#passwordInfo").html("<span class='error'>Invalid characters in password!</span>");
 			$("#register").prop('disabled', true);
 			$("#passwordTips").slideDown();
 		}
@@ -306,6 +331,40 @@ $(document).ready(function () {
 	});
 
 });
+
+// Check password strength
+function passwordMeter(passwordForCheck) {
+	
+	var specialChar = /^[\-!@#\$%_]$/;
+	
+	if (passwordForCheck.length < 6) {
+		$("#passwordMeter").html("[<span class='weak'>Weak</span>]");
+		
+	} else if (passwordForCheck.length < 9) {
+		
+		if (passwordForCheck.match(specialChar)) {
+			$("#passwordMeter").html("[<span class='strong'>Strong</span>]");
+			
+		} else {
+			$("#passwordMeter").html("[<span class='medium'>Medium</span>]");
+		}
+		
+	} else if (passwordForCheck.length < 13) {
+		
+		if (passwordForCheck.match(specialChar)) {
+			$("#passwordMeter").html("[<span class='veryStrong'>Very Strong</span>]");
+			
+		} else {
+			$("#passwordMeter").html("[<span class='strong'>Strong</span>]");
+		}
+		
+	// If 12 < password.length < 16	
+	} else { 
+		$("#passwordMeter").html("[<span class='veryStrong'>Very Strong</span>]");
+	}
+	
+	
+}
 
 // Check if all fields
 function finalCheck(){

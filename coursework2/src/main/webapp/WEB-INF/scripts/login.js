@@ -17,7 +17,7 @@ $(document).ready(function () {
 		$("#rememberLogin").prop('checked', true); 
 	}
 	
-	// If unchecked "Remember Login Credentials"
+	// If unchecked "Remember Login Credentials" cookies will be deleted
 	$("#rememberLogin").change(function(){ 
 		if (!$("#rememberLogin").prop('checked')) {
 			delCookies("email");
@@ -151,7 +151,7 @@ $(document).ready(function () {
 			});
 
 			if (result == "CHECKED") {
-				// If login with "Remember Login Credentials" checked
+				// If login with "Remember Login Credentials" checked,cookies will be saved and valid in 5 days
 				if ($("#rememberLogin").prop('checked')) {
 					setCookies("email",emailInput,5);
 					console.log("Save Email to cookie ["+emailInput+"]");
