@@ -2,8 +2,30 @@
 $("#ErrorMsg").slideUp();
 
 $(document).ready(function () {
+	
+	// (1) USE COOKIES TO SAVE EMAIL & PASSWORD & LOGIN STATUS
+	var emailInCookies = getCookies("email");
+	var passwordInCookies = getCookies("password");
+	
+	// If found email & password saved in cookies
+	if(emailInCookies && passwordInCookies) {
+		$("#email").val(emailInCookies);
+		$("#password").val(passwordInCookies);
+		$("#rememberLogin").prop('checked', true); 
+	}
+	
+	// If unchecked "Remember Login Credentials"
+	$("#rememberLogin").change(function(){ 
+		if (!$("#rememberLogin").prop('checked')) {
+			delCookies("email");
+			delCookies("password");
+		}
+		
+	});
+	
+	
 
-	// EMAIL VALIDITY
+	// (2) EMAIL VALIDITY
 	$("#email").keyup(function(){
 		$("#ErrorMsg").slideUp();
 		
@@ -34,7 +56,7 @@ $(document).ready(function () {
 		
 	})
 	
-	// PASSWORD VALIDITY
+	// (3) PASSWORD VALIDITY
 	$("#password").keyup(function(){
 		$("#ErrorMsg").slideUp();
 		
@@ -70,7 +92,7 @@ $(document).ready(function () {
 	
 	
 	
-
+	// (4) FINAL CHECK FOR ALL CREDENTIALS BEFORE SUBMIT
 	$("#loginForm").validate({				
 		errorClass: 'error',
 		rules: { 
@@ -84,7 +106,11 @@ $(document).ready(function () {
 			
 		}, messages: {
 			"email": {
+				required: "",
 				email: "Please enter a valid email!"
+			},
+			"password": {
+				required: ""
 			}
 		
 		}, submitHandler: function (form) {
@@ -118,6 +144,11 @@ $(document).ready(function () {
 			});
 
 			if (result == "CHECKED") {
+				// If login with "Remember Login Credentials" checked
+				if ($("#rememberLogin").prop('checked')) {
+					setCookies("email",emailInput,1);
+					setCookies("password",passwordInput,1);
+				}
 				form.submit();
 			}
 		
@@ -127,18 +158,24 @@ $(document).ready(function () {
 	
 });
 
-function getCookies () {
-	var cookiePattern = 
-	
+function getCookies(cookieName) {
+	var cookieSaparater = "|";
+	var cookieData = document.cookie;
+	var dataArray = cookieData.split(cookieSaparater);
+	if (!dataArray) {
+		return "N/A";
+	} else {
+		return dataArray[1]; // 0 is cookieName, 1 is cookieValue, 2 is expireDate
+	}
 }
 
-function setCookies (cookieName, cookieValue, expireDays) {
+function setCookies(cookieName, cookieValue, expireDays) {
 	var expireDate = new Date();
 	expireDate.setDate(expireDate.getDate()+expireDays);
-	document.cookie = cookieName+","+cookieValue+","expireDate;
+	document.cookie = cookieName+"|"+cookieValue+"|"+expireDate;
 };
 
-function delCookies (cookieName) {
+function delCookies(cookieName) {
 	setCookies (cookieName, "", 0)
 	
 };

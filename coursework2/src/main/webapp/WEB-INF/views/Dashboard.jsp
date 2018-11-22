@@ -34,7 +34,7 @@
 
 		<p>Welcome Admin! Below is/are the current referendum(s).</p>
 		
-		<form:form action="/dashboard/logout">
+		<form:form action="/userLogout">
 			<p><button id='AdminSignOutButton' type="submit" class="btn">Sign Out</button></p>
 		</form:form>
 			

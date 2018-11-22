@@ -55,7 +55,7 @@
 			<p>Hello <i><core:out value="${user.getGivenName()}"/> <core:out value="${user.getFamilyName()}"/></i> ! Welcome to your homepage.</p>
 		
 		
-			<form:form action="/home/logout">
+			<form:form action="/userLogout">
 				<p><button id='SignOutButton' type="submit" class="btn">Sign Out</button></p>
 			</form:form>
 				

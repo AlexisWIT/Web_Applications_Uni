@@ -110,9 +110,9 @@ public class LoginController {
 			
 			System.out.println("--- Found record of user ["+emailForCheck+"] in database");
 			
-			String encryptedPasswordForCheck = passwordEncoder.encode(passwordForCheck);
+			//String encryptedPasswordForCheck = passwordEncoder.encode(passwordForCheck);
 			// If passwordInput does NOT match the password in Database
-			if (encryptedPasswordForCheck != userInDB.getPassword()) {
+			if (!passwordEncoder.matches(passwordForCheck, userInDB.getPassword())) {
 				System.out.println("--- User ["+emailForCheck+"] input wrong password");
 				credentialCheckResult.reject("ERROR_INCORRECT_PASSWORD");
 				response.setStatus("FAILED");
