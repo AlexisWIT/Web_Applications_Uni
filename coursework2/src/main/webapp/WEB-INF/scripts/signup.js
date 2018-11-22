@@ -108,45 +108,13 @@ $(document).ready(function () {
 	    }   	
 	});
 	
-	$("#dateOfBirthString").keyup(function () {
-		// check if less than 16 years old
-		var ageLimit = 16;
-		var todayDate = new Date();
-		var dateOfBirthStringInput = $("#dateOfBirthString").val();
-		var dateOfBirthInput = new Date($("#dateOfBirthString").val());
-		var yearDiff = todayDate.getFullYear() - dateOfBirthInput.getFullYear();
-		var monthDiff = todayDate.getMonth() - dateOfBirthInput.getMonth();
-		var dateDiff = todayDate.getDate() - dateOfBirthInput.getDate();
-
-		// if empty value
-		if (dateOfBirthStringInput.length == 0) {
-			console.log("Age=NULL: Failed");
-			$("#dateOfBirthStringInfo").html("<span class='error'>Please enter your birthday!</span>");
-			$("#register").prop('disabled', true);
-
-			// if 16+ years old	
-		} else if (yearDiff > ageLimit) {
-			$("#dateOfBirthStringInfo").html("<span id='dateOfBirthStringOk' class='ok'>OK</span>");
-			finalCheck();
-
-			// if 16- years old 
-		} else if (yearDiff < ageLimit) {
-			$("#dateOfBirthStringInfo").html("<span class='error'>You must be at least 16 years old!</span>");
-			$("#register").prop('disabled', true);
-
-			// if depends on months or dates
-		} else if ((monthDiff === 0 && dateDiff >= 0) || monthDiff > 0) {
-			$("#dateOfBirthStringInfo").html("<span id='dateOfBirthStringOk' class='ok'>OK</span>");
-			finalCheck();
-
-			// else less than 15 years old
-		} else {
-			$("#dateOfBirthStringInfo").html("<span class='error'>You must be at least 16 years old!</span>");
-			$("#register").prop('disabled', true);
-		}
-
+	$("#dateOfBirthString").change(function () {	
+		checkBirthday();
 	});
-
+	
+	$("#dateOfBirthString").keyup(function () {
+		checkBirthday();
+	});
 
 	// ADDRESS VALIDITY
 	$("#address").keyup(function () {
@@ -332,6 +300,46 @@ $(document).ready(function () {
 
 });
 
+function checkBirthday() {
+	
+	// check if less than 16 years old
+	var ageLimit = 16;
+	var todayDate = new Date();
+	var dateOfBirthStringInput = $("#dateOfBirthString").val();
+	var dateOfBirthInput = new Date($("#dateOfBirthString").val());
+	var yearDiff = todayDate.getFullYear() - dateOfBirthInput.getFullYear();
+	var monthDiff = todayDate.getMonth() - dateOfBirthInput.getMonth();
+	var dateDiff = todayDate.getDate() - dateOfBirthInput.getDate();
+
+	// if empty value
+	if (dateOfBirthStringInput.length == 0) {
+		console.log("Age=NULL: Failed");
+		$("#dateOfBirthStringInfo").html("<span class='error'>Please enter your birthday!</span>");
+		$("#register").prop('disabled', true);
+
+		// if 16+ years old	
+	} else if (yearDiff > ageLimit) {
+		$("#dateOfBirthStringInfo").html("<span id='dateOfBirthStringOk' class='ok'>OK</span>");
+		finalCheck();
+
+		// if 16- years old 
+	} else if (yearDiff < ageLimit) {
+		$("#dateOfBirthStringInfo").html("<span class='error'>You must be at least 16 years old!</span>");
+		$("#register").prop('disabled', true);
+
+		// if depends on months or dates
+	} else if ((monthDiff === 0 && dateDiff >= 0) || monthDiff > 0) {
+		$("#dateOfBirthStringInfo").html("<span id='dateOfBirthStringOk' class='ok'>OK</span>");
+		finalCheck();
+
+		// else less than 15 years old
+	} else {
+		$("#dateOfBirthStringInfo").html("<span class='error'>You must be at least 16 years old!</span>");
+		$("#register").prop('disabled', true);
+	}
+	
+}
+
 // Check password strength
 function passwordMeter(passwordForCheck) {
 	
@@ -376,7 +384,6 @@ function finalCheck(){
 	var passwordInfo = $("#passwordInfo span").html();
 	var passwordCheckInfo = $("#passwordCheckInfo span").html();
 	var bioIdCodeStringInfo = $("#bioIdCodeStringInfo span").html();
-
 	console.log("==== Checking infos ====");
 	console.log("Email = [" + emailInfo + "]");
 	console.log("Family Name = [" + familyNameInfo + "]");
