@@ -73,7 +73,7 @@ public class BallotApplication extends WebMvcConfigurerAdapter implements Comman
 		
 		
 		// Add the question of referendum to database
-		Question question1 = new Question(1,"How should Shangri-La proceed to the next stage? (choose ONE)",1);
+		Question question1 = new Question(1,"How should Shangri-La proceed to the next stage? (choose ONE)",0);
 		questionRepository.save(question1);
 		
 		

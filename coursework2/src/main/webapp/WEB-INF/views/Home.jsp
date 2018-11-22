@@ -40,7 +40,7 @@
 	    			console.log("Vote available");
 	    			$("#GoToVoteButton").prop('disabled', false);
 	    			$("#VoteProhibited").html("");
-	    			$("#VoteAvailable").html("You can vote now.")
+	    			$("#VoteAvailable").html("You have not made your choice yet.")
 	    		}
 	    		
 	    	});
