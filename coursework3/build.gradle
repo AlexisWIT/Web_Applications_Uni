@@ -5,15 +5,38 @@
  * For more details take a look at the Java Libraries chapter in the Gradle
  * user guide available at https://docs.gradle.org/4.3/userguide/java_library_plugin.html
  */
+buildscript {
+	ext {
+		springBootVersion = '1.5.6.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework:springloaded:1.2.7.RELEASE")
+	}
+}
 
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java-library'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
 
-// In this section you declare where to find the dependencies of your project
+group = 'co3098'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+
 repositories {
-    // Use jcenter for resolving your dependencies.
+    // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
+}
+
+ext {
+	jasperVersion = '9.0.0.M26'
 }
 
 dependencies {
@@ -25,5 +48,28 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    
+    // Spring Boot
+	compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") 
+	compile("org.springframework.boot:spring-boot-devtools")
+	
+	// JSP
+	compile("org.apache.tomcat.embed:tomcat-embed-jasper:$jasperVersion")
+	compile("javax.servlet:jstl:1.2")
+	
+	// Spring
+	testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+	testCompile('org.springframework.security:spring-security-test:4.0.0.RELEASE')
+	
+	// Security
+	compile("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+	compile("org.springframework.security:spring-security-taglibs:4.2.3.RELEASE")
+	
+	// Persistence
+	compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+	runtime("mysql:mysql-connector-java")
+	
+	compileOnly('org.projectlombok:lombok')
+	
 }
 
