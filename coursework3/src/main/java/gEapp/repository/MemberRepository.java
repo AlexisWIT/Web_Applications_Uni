@@ -6,7 +6,7 @@ import gEapp.domain.Member;
 
 public interface MemberRepository extends CrudRepository<Member, Integer> {
 	
-	Member findById(int id);
-	Member findByMum(int mumKey);
+//	Member findById(int id);
+//	Member findByMum(int mumKey);
 
 }

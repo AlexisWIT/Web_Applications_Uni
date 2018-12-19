@@ -11,19 +11,31 @@ public class Member {
 	
 	@Id
 	@Column(name="key")
-	int id;
+	Integer id;
 	
 	String name;
-	int mumKey;
-	int dadKey;
-	int birthday;
+	Integer mumKey;
+	Integer dadKey;
+	Integer birthday;
 	String gender;
 	
-	public int getId() {
+	
+	
+	public Member(Integer id, String name, Integer mumKey, Integer dadKey, Integer birthday, String gender) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.mumKey = mumKey;
+		this.dadKey = dadKey;
+		this.birthday = birthday;
+		this.gender = gender;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
@@ -36,11 +48,11 @@ public class Member {
 	}
 	
 	@JsonProperty("m")
-	public int getMumKey() {
+	public Integer getMumKey() {
 		return mumKey;
 	}
 	
-	public void setMumKey(int mumKey) {
+	public void setMumKey(Integer mumKey) {
 		this.mumKey = mumKey;
 	}
 	
@@ -49,16 +61,16 @@ public class Member {
 		return dadKey;
 	}
 	
-	public void setDadKey(int dadKey) {
+	public void setDadKey(Integer dadKey) {
 		this.dadKey = dadKey;
 	}
 	
 	@JsonProperty("dob")
-	public int getBirthday() {
+	public Integer getBirthday() {
 		return birthday;
 	}
 	
-	public void setBirthday(int birthday) {
+	public void setBirthday(Integer birthday) {
 		this.birthday = birthday;
 	}
 	
