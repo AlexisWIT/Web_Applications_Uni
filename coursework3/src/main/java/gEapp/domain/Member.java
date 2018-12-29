@@ -21,7 +21,7 @@ public class Member {
 	
 	
 	
-	public Member(Integer id, String name, Integer mumKey, Integer dadKey, Integer birthday, String gender) {
+	public Member(Integer id, String name, Integer birthday, String gender,Integer mumKey, Integer dadKey) {
 		super();
 		this.id = id;
 		this.name = name;

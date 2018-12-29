@@ -20,8 +20,8 @@
 	<link rel="stylesheet"
 		href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
 		
-	<!-- Animation -->
-	<link rel="stylesheet" href="/resources/css/animate.css">
+	<!-- Home css -->
+	<link rel="stylesheet" href="../css/home.css">
 		
 </head>
 
@@ -37,8 +37,8 @@
               <h3 class="masthead-brand">Genealogy Explorer</h3>
               <nav>
                 <ul class="nav masthead-nav">
-                  <li class="active"><a href="#">Home</a></li>
-                  <li><a href="#">Features</a></li>
+                  <li class="active"><a href="/GE/">Home</a></li>
+                  <li><a href="/GE/person/">Member</a></li>
                   <li><a href="#">Family Tree</a></li>
                 </ul>
               </nav>
@@ -49,7 +49,7 @@
 	          <h1 class="cover-heading">Find your family</h1>
 	          <p class="lead">Genealogy Explorer is an online tool for building a family tree and tracking ancestry.</p>
 	          <p class="lead">
-	            <a href="#" class="btn btn-lg btn-default">Start</a>
+	            <a href="/GE/person/" class="btn btn-lg btn-default">Start</a>
 	          </p>
           </div>
 
