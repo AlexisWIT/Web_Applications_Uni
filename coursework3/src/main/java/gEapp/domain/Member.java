@@ -67,7 +67,7 @@ public class Member {
 	}
 	
 	@JsonProperty("f")
-	public int getDadKey() {
+	public Integer getDadKey() {
 		return dadKey;
 	}
 	

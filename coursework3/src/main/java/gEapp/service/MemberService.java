@@ -16,6 +16,10 @@ public class MemberService {
 		return memberRepository.findAll();
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public Iterable findAllIter() {
+		return memberRepository.findAll();
+	}
 	
 	public Member findById(Integer i){
 		return memberRepository.findOne(i);

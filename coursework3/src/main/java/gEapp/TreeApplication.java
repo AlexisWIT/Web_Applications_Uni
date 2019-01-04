@@ -24,9 +24,19 @@ public class TreeApplication extends WebMvcConfigurerAdapter implements CommandL
 	
 	@Override
 	public void run (String... args) throws Exception {
-		
-		Member member = new Member(1, "JohnSmith");
-		memberRepository.save(member);
+
+		//Member(Integer id, String name, Integer birthday, String gender,Integer mumKey, Integer dadKey)
+		memberRepository.save(new Member(1, "King George VI"));
+		memberRepository.save(new Member(2, "Queen Elizabeth"));
+		memberRepository.save(new Member(3, "Queen Elizabeth II", null, null, 2, 1));
+		memberRepository.save(new Member(5, "Prince Philip Duke of Edinburgh"));
+		memberRepository.save(new Member(4, "Princess Margaret", null, null, 2, 1));
+		memberRepository.save(new Member(6, "Prince Charles", null, null, 3, 5));
+		memberRepository.save(new Member(7, "Princess Diana"));
+		memberRepository.save(new Member(8, "Prince William", null, null, 7, 6));
+		memberRepository.save(new Member(9, "Prince Harry", null, null, 7, 6));
+		memberRepository.save(new Member(10, "Catherine Duchess of Cambridge"));
+		memberRepository.save(new Member(11, "Prince George", null, null, 10, 8));
 		
 	}
 	

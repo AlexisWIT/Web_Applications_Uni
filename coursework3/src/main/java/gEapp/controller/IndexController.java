@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -42,26 +44,43 @@ public class IndexController {
 	
 	//(a) Adding a person
 	@RequestMapping(value="/add", method=RequestMethod.GET)
-	public String addMember(@RequestParam(value="key", required=true) int keyId,
+	@ResponseBody
+	public Object addMember(@RequestParam(value="key", required=true) int keyId,
 							@RequestParam(value="name", required=true) String name,
-							@RequestParam(value="m") int mumKey,
-							@RequestParam(value="f") int dadKey,
-							@RequestParam(value="dob") int birthday,
-							@RequestParam(value="g") String gender) {
+							@RequestParam(value="m", required=false) Integer mumKey,
+							@RequestParam(value="f", required=false) Integer dadKey,
+							@RequestParam(value="dob", required=false) Integer birthday,
+							@RequestParam(value="g", required=false) String gender) {
+		
+		JSONObject jsonResponseAdd = new JSONObject();
+		
+		// Make the first letter to lower case
+		if (gender!=null) {
+			gender = gender.substring(0, 1).toLowerCase()+gender.substring(1);
+		}
+		
+		if (!isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
+			System.out.println("Person ["+keyId+"] input is NOT VALID");
+			return jsonResponse.toMap();
+		}
 		
 		Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
 		memberService.save(member);
 		
-		return "redirect:/GE/person";
+		System.out.println("SAVED: "+member.toString());
+		System.out.println("SUCCESS: The person input have been saved!");
+		jsonResponseAdd.put("result", true);
+		return jsonResponseAdd.toMap();
 	}
 
 	@RequestMapping(value="/addJSON", method=RequestMethod.POST)
 	@ResponseBody
-	public JSONObject addMemberJSON(@RequestBody String memberInput) throws ParseException {
+	public Object addMemberJSON(@RequestBody String memberInput) throws ParseException {
 		
 		final Gson gson = new Gson();
 		//final ObjectMapper objectMapper = new ObjectMapper();
 		JSONParser jsonParser = new JSONParser();
+		//JSONObject jsonResponse = new JSONObject();
 		
 		// Check if it's empty/blank string
 		if (StringUtils.isBlank(memberInput)) {
@@ -78,110 +97,36 @@ public class IndexController {
 				// If only one person to be added - JSON Object
 				if (isJSONObject(memberInput)) {
 					
-					Integer mumBirthday = 0;
-					Integer dadBirthday = 0;
-					
 					jsonResponse = new JSONObject();
 					JSONObject jsonObject = (JSONObject) jsonParser.parse(memberInput);
 					
 					// Get Key ID
 					int keyId = (Integer) jsonObject.get("key");
-					if (memberService.findById(keyId)!=null) {
-						System.out.println("---- Person ID exists ----");
-						jsonResponse.put("result", false);
-						jsonResponse.put("message", "person id ["+keyId+"] already exists");
-						return jsonResponse;
-						
-					}
 					
 					// Get Name
 					String name = (String) jsonObject.get("name");
-					if (memberRepository.findByName(name)!=null) {
-						System.out.println("---- Person Name exists ----");
-						jsonResponse.put("result", false);
-						jsonResponse.put("message", "person name ["+name+"] already exists");
-						return jsonResponse;
-						
-					}
 					
 					// Get Birthday
 					Integer birthday = (Integer) jsonObject.get("dob");
-					if (!isValidDate(birthday)) {
-						System.out.println("---- Invalid Birthday ----");
-						jsonResponse.put("result", false);
-						jsonResponse.put("message", "Date ["+birthday+"] is NOT valid");
-						return jsonResponse;
-						
-					}
 					
 					// Get Gender
 					String gender = (String) jsonObject.get("g");				
 						// Make the first letter to lower case
-						gender = gender.substring(0, 1).toLowerCase()+gender.substring(1);		
-					if (!(gender=="male")&&!(gender=="female")) {
-						System.out.println("---- Invalid Gender ----");
-						jsonResponse.put("result", false);
-						jsonResponse.put("message", "gender ["+gender+"] is NOT valid");
-						return jsonResponse;
+						if (gender!=null) {
+							gender = gender.substring(0, 1).toLowerCase()+gender.substring(1);
+						}
 						
-					}
 					
 					// Get Mother Key
-					int mumKey = (Integer) jsonObject.get("m");
-					if (mumKey!=0) {
-						Member mum = memberService.findById(mumKey);
-						if (mum!=null) {
-							if (mum.getGender()!="female") {
-								System.out.println("---- Invalid Mum Gender ----");
-								jsonResponse.put("result", false);
-								jsonResponse.put("message", "person(mum) with key ID ["+mumKey+"] may have a wrong gender");
-								return jsonResponse;
-								
-							}
-							mumBirthday = mum.getBirthday();
-							
-						} else {
-							System.out.println("---- Invalid Mum Key ----");
-							jsonResponse.put("result", false);
-							jsonResponse.put("message", "person with key ID ["+mumKey+"] does NOT exist");
-							return jsonResponse;
-						}
-						
-					}
+					Integer mumKey = (Integer) jsonObject.get("m");
 					
 					// Get Father Key
-					int dadKey = (Integer) jsonObject.get("f");
-					if (dadKey!=0) {
-						Member dad = memberService.findById(dadKey);
-						if (dad!=null) {
-							if (dad.getGender()!="male") {
-								System.out.println("---- Invalid Dad Gender ----");
-								jsonResponse.put("result", false);
-								jsonResponse.put("message", "person(dad) with key ID ["+dadKey+"] may have a wrong gender");
-								return jsonResponse;
-								
-							}
-							dadBirthday = dad.getBirthday();
-							
-						} else {
-							System.out.println("---- Invalid Dad Key ----");
-							jsonResponse.put("result", false);
-							jsonResponse.put("message", "person with key ID ["+dadKey+"] does NOT exist");
-							return jsonResponse;
-						}
-						
-					}
+					Integer dadKey = (Integer) jsonObject.get("f");
 					
-					// Check birthday with parents
-					if (mumBirthday!=0 && dadBirthday!=0) {
-						
-						if (!isBornAfterParents(birthday, mumBirthday, dadBirthday)){
-							System.out.println("---- Invalid Birthday ----");
-							jsonResponse.put("result", false);
-							jsonResponse.put("message", "person may not be born before parents' birthday");
-							return jsonResponse;
-						}
-						
+					if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
+						System.out.println("Person ["+keyId+"] input is VALID");
+					} else {
+						return jsonResponse.toMap();
 					}
 					
 					Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
@@ -190,7 +135,7 @@ public class IndexController {
 					System.out.println("SAVED: "+member.toString());
 					System.out.println("SUCCESS: The person input have been saved!");
 					jsonResponse.put("result", true);
-					return jsonResponse;
+					return jsonResponse.toMap();
 					
 				// Else (multiple persons) - JSON Array	
 				} else if (isJSONArray(memberInput)) {
@@ -199,110 +144,35 @@ public class IndexController {
 					
 					for (int i = 0; i < jsonArray.length(); i++) {
 						
-						Integer mumBirthday = 0;
-						Integer dadBirthday = 0;
-						
 						jsonResponse = new JSONObject();
 					    JSONObject extractedJsonObject = jsonArray.getJSONObject(i);
 					    
 					    // Get Key ID
 						int keyId = (Integer) extractedJsonObject.get("key");
-						if (memberService.findById(keyId)!=null) {
-							System.out.println("---- Person ID exists ----");
-							jsonResponse.put("result", false);
-							jsonResponse.put("message", "person id ["+keyId+"] already exists");
-							return jsonResponse;
-							
-						}
 						
 						// Get Name
 						String name = (String) extractedJsonObject.get("name");
-						if (memberRepository.findByName(name)!=null) {
-							System.out.println("---- Person Name exists ----");
-							jsonResponse.put("result", false);
-							jsonResponse.put("message", "person name ["+name+"] already exists");
-							return jsonResponse;
-							
-						}
 						
 						// Get Birthday
 						Integer birthday = (Integer) extractedJsonObject.get("dob");
-						if (!isValidDate(birthday)) {
-							System.out.println("---- Invalid Birthday ----");
-							jsonResponse.put("result", false);
-							jsonResponse.put("message", "Date ["+birthday+"] is NOT valid");
-							return jsonResponse;
-							
-						}
 						
 						// Get Gender
 						String gender = (String) extractedJsonObject.get("g");				
 							// Make the first letter to lower case
-							gender = gender.substring(0, 1).toLowerCase()+gender.substring(1);		
-						if (!(gender=="male")&&!(gender=="female")) {
-							System.out.println("---- Invalid Gender ----");
-							jsonResponse.put("result", false);
-							jsonResponse.put("message", "gender ["+gender+"] is NOT valid");
-							return jsonResponse;
-							
-						}
+							if (gender!=null) {
+								gender = gender.substring(0, 1).toLowerCase()+gender.substring(1);
+							}
 						
 						// Get Mother Key
-						int mumKey = (Integer) extractedJsonObject.get("m");
-						if (mumKey!=0) {
-							Member mum = memberService.findById(mumKey);
-							if (mum!=null) {
-								if (mum.getGender()!="female") {
-									System.out.println("---- Invalid Mum Gender ----");
-									jsonResponse.put("result", false);
-									jsonResponse.put("message", "person(mum) with key ID ["+mumKey+"] may have a wrong gender");
-									return jsonResponse;
-									
-								}
-								mumBirthday = mum.getBirthday();
-								
-							} else {
-								System.out.println("---- Invalid Mum Key ----");
-								jsonResponse.put("result", false);
-								jsonResponse.put("message", "person with key ID ["+mumKey+"] does NOT exist");
-								return jsonResponse;
-							}
-							
-						}
+						Integer mumKey = (Integer) extractedJsonObject.get("m");
 						
 						// Get Father Key
-						int dadKey = (Integer) extractedJsonObject.get("f");
-						if (dadKey!=0) {
-							Member dad = memberService.findById(dadKey);
-							if (dad!=null) {
-								if (dad.getGender()!="male") {
-									System.out.println("---- Invalid Dad Gender ----");
-									jsonResponse.put("result", false);
-									jsonResponse.put("message", "person(dad) with key ID ["+dadKey+"] may have a wrong gender");
-									return jsonResponse;
-									
-								}
-								dadBirthday = dad.getBirthday();
-								
-							} else {
-								System.out.println("---- Invalid Dad Key ----");
-								jsonResponse.put("result", false);
-								jsonResponse.put("message", "person with key ID ["+dadKey+"] does NOT exist");
-								return jsonResponse;
-							}
-							
-						}
+						Integer dadKey = (Integer) extractedJsonObject.get("f");
 						
-						// Check birthday with parents
-						if (mumBirthday!=0 && dadBirthday!=0) {
-							
-							if (!isBornAfterParents(birthday, mumBirthday, dadBirthday)){
-								System.out.println("---- Invalid Birthday ----");
-								jsonResponse.put("result", false);
-								jsonResponse.put("message", "person may not be born before parents' birthday");
-								return jsonResponse;
-							}
-							
+						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
+							System.out.println("Person ["+keyId+"] input is VALID");
+						} else {
+							return jsonResponse.toMap();
 						}
 						
 						Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
@@ -313,13 +183,13 @@ public class IndexController {
 					}
 					System.out.println("SUCCESS: All the person input have been saved!");
 					jsonResponse.put("result", true);
-					return jsonResponse;
+					return jsonResponse.toMap();
 					
 				} else {
 					System.out.println("FAILED: Error occured!");
 					jsonResponse.put("result", false);
 					jsonResponse.put("message", "Error occured");
-					return jsonResponse;
+					return jsonResponse.toMap();
 					
 				}
 				
@@ -327,7 +197,7 @@ public class IndexController {
 				System.out.println("FAILED: Invalid Input String!");
 				jsonResponse.put("result", false);
 				jsonResponse.put("message", "Cannot parse Input String into JSON, please check syntex");
-				return jsonResponse;
+				return jsonResponse.toMap();
 				
 			}
 			
@@ -373,16 +243,22 @@ public class IndexController {
 	
 	public boolean isValidDate (Integer dateInput) {
 		Date date;
-		try {
-			date = dateFormat.parse(dateInput.toString());
-//			SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
-//			String formatedDate = newFormat.format(date);	
-			return true;
+		if (dateInput!=null) {
+			try {
+				date = dateFormat.parse(dateInput.toString());
+//				SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
+//				String formatedDate = newFormat.format(date);	
+				return true;
+				
+			} catch (java.text.ParseException e) {
+				e.printStackTrace();
+				System.out.println("Invalid Date input");
+				return false;
+				
+			}
 			
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
-			System.out.println("Invalid Date input");
-			return false;
+		} else {
+			return true;
 			
 		}
 		
@@ -395,13 +271,36 @@ public class IndexController {
 		
 		try {
 			birthday = dateFormat.parse(dateInput.toString());
-			mumbirthday = dateFormat.parse(mumBirthday.toString());
-			dadbirthday = dateFormat.parse(dadBirthday.toString());
-			
-			if (birthday.after(mumbirthday) && birthday.after(dadbirthday)) {
-				return true;
+			if (mumBirthday!=null && dadBirthday!=null) {
+				mumbirthday = dateFormat.parse(mumBirthday.toString());
+				dadbirthday = dateFormat.parse(dadBirthday.toString());
+				
+				if (birthday.after(mumbirthday) && birthday.after(dadbirthday)) {
+					return true;
+				} else {
+					return false;
+				}
+					
+			} else if (mumBirthday!=null && dadBirthday==null) {
+				mumbirthday = dateFormat.parse(mumBirthday.toString());
+				
+				if (birthday.after(mumbirthday)) {
+					return true;
+				} else {
+					return false;
+				}
+				
+			} else if (mumBirthday==null && dadBirthday!=null) {
+				dadbirthday = dateFormat.parse(dadBirthday.toString());
+				
+				if (birthday.after(dadbirthday)) {
+					return true;
+				} else {
+					return false;
+				}
+				
 			} else {
-				return false;
+				return true;
 			}
 			
 		} catch (java.text.ParseException e) {
@@ -446,19 +345,24 @@ public class IndexController {
 		}
 		
 		// Check Gender	
-		if (!(gender=="male")&&!(gender=="female")) {
-			System.out.println("---- Invalid Gender ----");
-			jsonResponse.put("result", false);
-			jsonResponse.put("message", "gender ["+gender+"] is NOT valid");
-			return false;
+		if (!StringUtils.isBlank(gender)) {
+			
+			if (!(gender.equals("male")) && !(gender.equals("female"))) {
+
+				System.out.println("---- Invalid Gender ----");
+				jsonResponse.put("result", false);
+				jsonResponse.put("message", "gender ["+gender+"] is NOT valid");
+				return false;
+				
+			} 
 			
 		}
 		
 		// Check Mother Key
-		if (mumKey!=0) {
+		if (mumKey!=null) {
 			Member mum = memberService.findById(mumKey);
 			if (mum!=null) {
-				if (mum.getGender()!="female") {
+				if (mum.getGender()!="female" && mum.getGender()!=null) {
 					System.out.println("---- Invalid Mum Gender ----");
 					jsonResponse.put("result", false);
 					jsonResponse.put("message", "person(mum) with key ID ["+mumKey+"] may have a wrong gender");
@@ -467,20 +371,21 @@ public class IndexController {
 				}
 				mumBirthday = mum.getBirthday();
 				
-			} else {
+			} 
+			else {
 				System.out.println("---- Invalid Mum Key ----");
 				jsonResponse.put("result", false);
-				jsonResponse.put("message", "person with key ID ["+mumKey+"] does NOT exist");
+				jsonResponse.put("message", "person(mum) with mumKey ID ["+mumKey+"] does NOT exist");
 				return false;
 			}
 			
 		}
 		
 		// Check Father Key
-		if (dadKey!=0) {
+		if (dadKey!=null) {
 			Member dad = memberService.findById(dadKey);
 			if (dad!=null) {
-				if (dad.getGender()!="male") {
+				if (dad.getGender()!="male" && dad.getGender()!=null) {
 					System.out.println("---- Invalid Dad Gender ----");
 					jsonResponse.put("result", false);
 					jsonResponse.put("message", "person(dad) with key ID ["+dadKey+"] may have a wrong gender");
@@ -489,23 +394,27 @@ public class IndexController {
 				}
 				dadBirthday = dad.getBirthday();
 				
-			} else {
+			} 
+			else {
 				System.out.println("---- Invalid Dad Key ----");
 				jsonResponse.put("result", false);
-				jsonResponse.put("message", "person with key ID ["+dadKey+"] does NOT exist");
+				jsonResponse.put("message", "person(dad) with dadKey ID ["+dadKey+"] does NOT exist");
 				return false;
 			}
 			
 		}
 		
 		// Check birthday with parents
-		if (mumBirthday!=0 && dadBirthday!=0) {
-			
-			if (!isBornAfterParents(birthday, mumBirthday, dadBirthday)){
-				System.out.println("---- Invalid Birthday ----");
-				jsonResponse.put("result", false);
-				jsonResponse.put("message", "person may not be born before parents' birthday");
-				return false;
+		if (mumBirthday!=null || dadBirthday!=null) {
+			if (birthday!=null) {
+				if (!isBornAfterParents(birthday, mumBirthday, dadBirthday)){
+					System.out.println("---- Invalid Birthday ----");
+					jsonResponse.put("result", false);
+					jsonResponse.put("message", "person may not be born before parents' birthday");
+					return false;
+					
+				}
+				
 			}
 			
 		}
@@ -517,51 +426,148 @@ public class IndexController {
 	@RequestMapping(value="/delete/{id}", method=RequestMethod.GET) 
 	@ResponseBody
 	public Object deleteMember(@PathVariable Integer id ) {
-		JSONObject jsonResponse = new JSONObject();
+		JSONObject jsonResponseDelete = new JSONObject();
 		Member member = memberService.findById(id);
 		
 		if (member!=null) {
 			memberService.deleteById(id);
-			jsonResponse.put("result", true);
+			jsonResponseDelete.put("result", true);
 			
 		} else {
-			jsonResponse.put("result", false);
-			jsonResponse.put("message", "person id ["+id+"] can NOT be found");
-			return jsonResponse;
+			jsonResponseDelete.put("result", false);
+			jsonResponseDelete.put("message", "person id ["+id+"] can NOT be found");
+			return jsonResponseDelete;
 			
 		}
-		return jsonResponse;
+		return jsonResponseDelete.toMap();
 		
 	}
 	
 	//(c) Getting information about a specific person
 	@RequestMapping(value="/get/{id}", method=RequestMethod.GET)
 	@ResponseBody
-	public String getMemberInfo(@PathVariable Integer id) {
+	public Object getMemberInfo(@PathVariable Integer id) {
+		JSONObject jsonResponseMemberInfo = new JSONObject();
 		Member member = memberService.findById(id);
+		if (member!=null) {
+			return member;
+			
+		} else {
+			jsonResponseMemberInfo.put("result", false);
+			jsonResponseMemberInfo.put("message", "person with id ["+id+"] does NOT exist");
+			return jsonResponseMemberInfo.toMap();
+			
+		}
 		
-		return "member";
 	}
 	
 	//(d) Finding someones ancestors
 	@RequestMapping(value="/ancestors/{id}", method=RequestMethod.GET)
 	@ResponseBody
-	public String getMemberAncestors(@PathVariable Integer id) {
-		Member member = memberService.findById(id);
-		member.getMumKey();
+	public Object getMemberAncestors(@PathVariable Integer id) {
+		JSONObject jsonResponseAncestor = new JSONObject();
 		
-		return "redirect:/GE/person";
+		if (memberService.findById(id)!=null) {
+			Member member = memberService.findById(id);
+			System.out.println(member.getName()+" ["+id+"]");
+			jsonResponseAncestor.put("key", id);
+			
+			if (member.getMumKey()!=null || member.getDadKey()!=null) {
+				jsonResponseAncestor.put("parents", getParentsList(id));
+				
+			}
+			return jsonResponseAncestor.toMap();
+			
+		} else {
+			jsonResponseAncestor.put("result", false);
+			jsonResponseAncestor.put("message", "person with id ["+id+"] does NOT exist");
+			return jsonResponseAncestor.toMap();
+			
+		}
+		
+	}
+	
+	public Object getParentsList(Integer keyId) {
+		Integer mumKey = null;
+		Integer dadKey = null;
+		JSONObject jsonResponseParents = new JSONObject();
+		Member member = memberService.findById(keyId);
+
+		if(member.getDadKey()!=null) {
+			dadKey = member.getDadKey();
+			jsonResponseParents.put("f", getMemberAncestors(dadKey));
+		}
+		
+		if(member.getMumKey()!=null) {
+			mumKey = member.getMumKey();
+			jsonResponseParents.put("m", getMemberAncestors(mumKey));
+		}
+		
+		return jsonResponseParents;
 	}
 	
 	//(e) Finding someones descendants
 	@RequestMapping(value="/descendants/{id}")
 	@ResponseBody
-	public String getMemberDescendants(@PathVariable Integer id) {
-		Member member = memberService.findById(id);
-		member.getId();
+	public Object getMemberDescendants(@PathVariable Integer id) {
+		JSONObject jsonResponseDescendant = new JSONObject();
+		Integer currentPersonId=id;
 		
-		return "redirect:/GE/person";
+		if (memberService.findById(currentPersonId)!=null) {
+			Member member = memberService.findById(currentPersonId);
+			System.out.println(member.getName()+" ["+currentPersonId+"]");
+			
+			
+			@SuppressWarnings("unchecked")
+			Collection<Member> memberInDatabase = makeCollection(memberService.findAllIter());
+			int totalMember = memberInDatabase.size();
+			
+			JSONArray jsonChildrenArray = new JSONArray();
+			JSONObject jsonChildren = new JSONObject();
+			
+			for (Member memberForCheck : memberInDatabase) {
+				
+				
+				if ((memberForCheck.getMumKey()!=null && memberForCheck.getMumKey()==currentPersonId)
+						|| (memberForCheck.getDadKey()!=null && memberForCheck.getDadKey()==currentPersonId)) {
+					
+					Member memberHasChild = memberService.findById(currentPersonId);
+					jsonResponseDescendant.put("key", currentPersonId);
+					
+					
+					jsonResponseDescendant.put("children", jsonChildrenArray);
+					
+					jsonChildren.put("key", getMemberDescendants(memberForCheck.getId()));
+					jsonChildrenArray.put(jsonChildren);
+				}
+				
+			}
+			
+			
+			return jsonResponseDescendant.toMap();
+			
+		} else {
+			jsonResponseDescendant.put("result", false);
+			jsonResponseDescendant.put("message", "person with id ["+currentPersonId+"] does NOT exist");
+			return jsonResponseDescendant.toMap();
+			
+		}
 		
+	}
+	
+//	public Object getChildrenList(Integer id) {
+//		Member memberHasChild = memberService.findById(id);
+//		JSONArray jsonArrayChildren = new JSONArray();
+//		
+//	}
+	
+	// Convert Iterable of all person in repository to List
+	public static <E> Collection<E> makeCollection(Iterable<E> iterable) {
+	    Collection<E> list = new ArrayList<E>();
+	    for (E item : iterable) {
+	        list.add(item);
+	    }
+	    return list;
 	}
 	
 }
