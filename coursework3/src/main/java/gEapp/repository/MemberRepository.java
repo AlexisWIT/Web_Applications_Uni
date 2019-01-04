@@ -6,5 +6,5 @@ import gEapp.domain.Member;
 
 public interface MemberRepository extends CrudRepository<Member, Integer> {
 
-
+	Member findByName(String name);
 }

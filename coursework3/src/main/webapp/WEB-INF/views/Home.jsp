@@ -15,13 +15,14 @@
     
 	<title>Home | Genealogy Explorer</title>
 	
+	<!-- Home css -->
+	<link rel="stylesheet" href="resources/css/home.css">
+	
 	<!-- Bootstrap css -->
-	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet"
 		href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
-		
-	<!-- Home css -->
-	<link rel="stylesheet" href="/css/home.css">
+
 		
 </head>
 

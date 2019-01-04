@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Member {
 	
 	@Id
-	@Column(name="key")
-	Integer id;
+	@Column(name="id")
+	Integer key;
 	
 	String name;
 	Integer mumKey;
@@ -19,22 +19,34 @@ public class Member {
 	Integer birthday;
 	String gender;
 	
+	
+	
+	public Member() {
+		super();
+	}
+
 	public Member(Integer id, String name, Integer birthday, String gender,Integer mumKey, Integer dadKey) {
 		super();
-		this.id = id;
+		this.key = id;
 		this.name = name;
 		this.mumKey = mumKey;
 		this.dadKey = dadKey;
 		this.birthday = birthday;
 		this.gender = gender;
 	}
+	
+	public Member(Integer id, String name) {
+		super();
+		this.key = id;
+		this.name = name;
+	}
 
 	public Integer getId() {
-		return id;
+		return key;
 	}
 	
 	public void setId(Integer id) {
-		this.id = id;
+		this.key = id;
 	}
 	
 	public String getName() {
@@ -83,7 +95,7 @@ public class Member {
 
 	@Override
 	public String toString() {
-		return "Member [id=" + id + ", name=" + name + ", mumKey=" + mumKey + ", dadKey=" + dadKey + ", birthday="
+		return "Member [id=" + key + ", name=" + name + ", mumKey=" + mumKey + ", dadKey=" + dadKey + ", birthday="
 				+ birthday + ", gender=" + gender + "]";
 	}
 

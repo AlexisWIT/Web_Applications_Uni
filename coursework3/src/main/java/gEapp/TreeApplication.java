@@ -10,22 +10,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.beans.factory.annotation.Autowired;
 
 import gEapp.domain.Member;
+import gEapp.repository.MemberRepository;
 import gEapp.service.MemberService;
 
 @SpringBootApplication
 public class TreeApplication extends WebMvcConfigurerAdapter implements CommandLineRunner {
-	
-	@Autowired MemberService memberService;
+
+	@Autowired MemberRepository memberRepository;
     
 	public static void main (String[] args) {
 		SpringApplication.run(TreeApplication.class, args);
 	}
 	
 	@Override
-	public void run (String[] args) throws Exception {
+	public void run (String... args) throws Exception {
 		
-//		Member member = new Member(1, "John Smith", 19700101, "male", 2, 3);
-//		memberService.save(member);
+		Member member = new Member(1, "JohnSmith");
+		memberRepository.save(member);
 		
 	}
 	

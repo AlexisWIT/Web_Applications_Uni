@@ -15,7 +15,6 @@ public class Config_Web extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 		registry.addResourceHandler("/views/**").addResourceLocations("/WEB-INF/views/");
 		registry.addResourceHandler("/scripts/**").addResourceLocations("/WEB-INF/scripts/");
-		registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
 		
 	}
 	

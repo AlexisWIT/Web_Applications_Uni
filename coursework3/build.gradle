@@ -55,14 +55,14 @@ dependencies {
 	
 	// JSP
 	compile("org.apache.tomcat.embed:tomcat-embed-jasper:$jasperVersion")
-	implementation 'javax.servlet:jstl:1.2'
+	compile("javax.servlet:jstl:1.2")
 	
 	// JSON
 	implementation 'org.json:json:20180813'
 	implementation 'com.googlecode.json-simple:json-simple:1.1'
 	
 	// Jackson Databind
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+	//implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 	
 	// Google GSON
 	implementation 'com.google.code.gson:gson:2.8.5'
