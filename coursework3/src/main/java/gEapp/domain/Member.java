@@ -19,8 +19,6 @@ public class Member {
 	Integer birthday;
 	String gender;
 	
-	
-	
 	public Member(Integer id, String name, Integer birthday, String gender,Integer mumKey, Integer dadKey) {
 		super();
 		this.id = id;
@@ -82,7 +80,11 @@ public class Member {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Member [id=" + id + ", name=" + name + ", mumKey=" + mumKey + ", dadKey=" + dadKey + ", birthday="
+				+ birthday + ", gender=" + gender + "]";
+	}
 
 }

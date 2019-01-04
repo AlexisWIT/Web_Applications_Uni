@@ -21,7 +21,7 @@
 		href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
 		
 	<!-- Home css -->
-	<link rel="stylesheet" href="../css/home.css">
+	<link rel="stylesheet" href="/css/home.css">
 		
 </head>
 

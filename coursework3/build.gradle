@@ -55,7 +55,20 @@ dependencies {
 	
 	// JSP
 	compile("org.apache.tomcat.embed:tomcat-embed-jasper:$jasperVersion")
-	compile("javax.servlet:jstl:1.2")
+	implementation 'javax.servlet:jstl:1.2'
+	
+	// JSON
+	implementation 'org.json:json:20180813'
+	implementation 'com.googlecode.json-simple:json-simple:1.1'
+	
+	// Jackson Databind
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+	
+	// Google GSON
+	implementation 'com.google.code.gson:gson:2.8.5'
+	
+	// Apache Commons Lang
+	implementation 'org.apache.commons:commons-lang3:3.8.1'
 	
 	// Spring
 	testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
