@@ -16,6 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -24,13 +27,14 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import gEapp.domain.JSONOrderedObject;
 import gEapp.domain.Member;
 import gEapp.repository.MemberRepository;
 import gEapp.service.MemberService;
 
 @Controller
 @RequestMapping("/GE/person")
-public class IndexController {
+public class IndexController{
 	@Autowired MemberService memberService;
 	@Autowired MemberRepository memberRepository;
 	
@@ -69,7 +73,7 @@ public class IndexController {
 		
 		System.out.println("SAVED: "+member.toString());
 		System.out.println("SUCCESS: The person input have been saved!");
-		jsonResponseAdd.put("result", true);
+		jsonResponseAdd.put("result", "true");
 		return jsonResponseAdd.toMap();
 	}
 
@@ -85,7 +89,7 @@ public class IndexController {
 		// Check if it's empty/blank string
 		if (StringUtils.isBlank(memberInput)) {
 			System.out.println("String entered is blank");
-			jsonResponse.put("result", false);
+			jsonResponse.put("result", "false");
 			jsonResponse.put("message", "String entered is blank");
 			return jsonResponse;
 			
@@ -134,7 +138,7 @@ public class IndexController {
 					
 					System.out.println("SAVED: "+member.toString());
 					System.out.println("SUCCESS: The person input have been saved!");
-					jsonResponse.put("result", true);
+					jsonResponse.put("result", "true");
 					return jsonResponse.toMap();
 					
 				// Else (multiple persons) - JSON Array	
@@ -182,12 +186,12 @@ public class IndexController {
 	
 					}
 					System.out.println("SUCCESS: All the person input have been saved!");
-					jsonResponse.put("result", true);
+					jsonResponse.put("result", "true");
 					return jsonResponse.toMap();
 					
 				} else {
 					System.out.println("FAILED: Error occured!");
-					jsonResponse.put("result", false);
+					jsonResponse.put("result", "false");
 					jsonResponse.put("message", "Error occured");
 					return jsonResponse.toMap();
 					
@@ -195,7 +199,7 @@ public class IndexController {
 				
 			} else {
 				System.out.println("FAILED: Invalid Input String!");
-				jsonResponse.put("result", false);
+				jsonResponse.put("result", "false");
 				jsonResponse.put("message", "Cannot parse Input String into JSON, please check syntex");
 				return jsonResponse.toMap();
 				
@@ -320,7 +324,7 @@ public class IndexController {
 	    // Check Key ID
 		if (memberService.findById(id)!=null) {
 			System.out.println("---- Person ID exists ----");
-			jsonResponse.put("result", false);
+			jsonResponse.put("result", "false");
 			jsonResponse.put("message", "person id ["+id+"] already exists");
 			return false;
 			
@@ -329,7 +333,7 @@ public class IndexController {
 		// Check Name
 		if (memberRepository.findByName(name)!=null) {
 			System.out.println("---- Person Name exists ----");
-			jsonResponse.put("result", false);
+			jsonResponse.put("result", "false");
 			jsonResponse.put("message", "person name ["+name+"] already exists");
 			return false;
 			
@@ -338,7 +342,7 @@ public class IndexController {
 		// Check Birthday
 		if (!isValidDate(birthday)) {
 			System.out.println("---- Invalid Birthday ----");
-			jsonResponse.put("result", false);
+			jsonResponse.put("result", "false");
 			jsonResponse.put("message", "Date ["+birthday+"] is NOT valid");
 			return false;
 			
@@ -350,7 +354,7 @@ public class IndexController {
 			if (!(gender.equals("male")) && !(gender.equals("female"))) {
 
 				System.out.println("---- Invalid Gender ----");
-				jsonResponse.put("result", false);
+				jsonResponse.put("result", "false");
 				jsonResponse.put("message", "gender ["+gender+"] is NOT valid");
 				return false;
 				
@@ -364,7 +368,7 @@ public class IndexController {
 			if (mum!=null) {
 				if (mum.getGender()!="female" && mum.getGender()!=null) {
 					System.out.println("---- Invalid Mum Gender ----");
-					jsonResponse.put("result", false);
+					jsonResponse.put("result", "false");
 					jsonResponse.put("message", "person(mum) with key ID ["+mumKey+"] may have a wrong gender");
 					return false;
 					
@@ -374,7 +378,7 @@ public class IndexController {
 			} 
 			else {
 				System.out.println("---- Invalid Mum Key ----");
-				jsonResponse.put("result", false);
+				jsonResponse.put("result", "false");
 				jsonResponse.put("message", "person(mum) with mumKey ID ["+mumKey+"] does NOT exist");
 				return false;
 			}
@@ -387,7 +391,7 @@ public class IndexController {
 			if (dad!=null) {
 				if (dad.getGender()!="male" && dad.getGender()!=null) {
 					System.out.println("---- Invalid Dad Gender ----");
-					jsonResponse.put("result", false);
+					jsonResponse.put("result", "false");
 					jsonResponse.put("message", "person(dad) with key ID ["+dadKey+"] may have a wrong gender");
 					return false;
 					
@@ -397,7 +401,7 @@ public class IndexController {
 			} 
 			else {
 				System.out.println("---- Invalid Dad Key ----");
-				jsonResponse.put("result", false);
+				jsonResponse.put("result", "false");
 				jsonResponse.put("message", "person(dad) with dadKey ID ["+dadKey+"] does NOT exist");
 				return false;
 			}
@@ -409,7 +413,7 @@ public class IndexController {
 			if (birthday!=null) {
 				if (!isBornAfterParents(birthday, mumBirthday, dadBirthday)){
 					System.out.println("---- Invalid Birthday ----");
-					jsonResponse.put("result", false);
+					jsonResponse.put("result", "false");
 					jsonResponse.put("message", "person may not be born before parents' birthday");
 					return false;
 					
@@ -431,10 +435,10 @@ public class IndexController {
 		
 		if (member!=null) {
 			memberService.deleteById(id);
-			jsonResponseDelete.put("result", true);
+			jsonResponseDelete.put("result", "true");
 			
 		} else {
-			jsonResponseDelete.put("result", false);
+			jsonResponseDelete.put("result", "false");
 			jsonResponseDelete.put("message", "person id ["+id+"] can NOT be found");
 			return jsonResponseDelete;
 			
@@ -453,7 +457,7 @@ public class IndexController {
 			return member;
 			
 		} else {
-			jsonResponseMemberInfo.put("result", false);
+			jsonResponseMemberInfo.put("result", "false");
 			jsonResponseMemberInfo.put("message", "person with id ["+id+"] does NOT exist");
 			return jsonResponseMemberInfo.toMap();
 			
@@ -470,7 +474,7 @@ public class IndexController {
 		if (memberService.findById(id)!=null) {
 			Member member = memberService.findById(id);
 			System.out.println(member.getName()+" ["+id+"]");
-			jsonResponseAncestor.put("key", id);
+			jsonResponseAncestor.put("key", id.toString());
 			
 			if (member.getMumKey()!=null || member.getDadKey()!=null) {
 				jsonResponseAncestor.put("parents", getParentsList(id));
@@ -479,7 +483,7 @@ public class IndexController {
 			return jsonResponseAncestor.toMap();
 			
 		} else {
-			jsonResponseAncestor.put("result", false);
+			jsonResponseAncestor.put("result", "false");
 			jsonResponseAncestor.put("message", "person with id ["+id+"] does NOT exist");
 			return jsonResponseAncestor.toMap();
 			
@@ -510,7 +514,7 @@ public class IndexController {
 	@RequestMapping(value="/descendants/{id}")
 	@ResponseBody
 	public Object getMemberDescendants(@PathVariable Integer id) {
-		JSONObject jsonResponseDescendant = new JSONObject();
+		Map<String, Object> jsonResponseDescendant = new LinkedHashMap<>();
 		Integer currentPersonId=id;
 		
 		if (memberService.findById(currentPersonId)!=null) {
@@ -521,45 +525,65 @@ public class IndexController {
 			@SuppressWarnings("unchecked")
 			Collection<Member> memberInDatabase = makeCollection(memberService.findAllIter());
 			int totalMember = memberInDatabase.size();
+
 			
-			JSONArray jsonChildrenArray = new JSONArray();
-			JSONObject jsonChildren = new JSONObject();
+			List<Object> jsonChildrenArray = new ArrayList();
 			
-			for (Member memberForCheck : memberInDatabase) {
-				
-				
+			for (Member memberForCheck : memberInDatabase) {		
 				if ((memberForCheck.getMumKey()!=null && memberForCheck.getMumKey()==currentPersonId)
 						|| (memberForCheck.getDadKey()!=null && memberForCheck.getDadKey()==currentPersonId)) {
 					
-					Member memberHasChild = memberService.findById(currentPersonId);
-					jsonResponseDescendant.put("key", currentPersonId);
+					Integer childMemberKey = memberForCheck.getId();
+					jsonChildrenArray.add(getChildrenList(childMemberKey));
 					
-					
-					jsonResponseDescendant.put("children", jsonChildrenArray);
-					
-					jsonChildren.put("key", getMemberDescendants(memberForCheck.getId()));
-					jsonChildrenArray.put(jsonChildren);
 				}
 				
 			}
+			jsonResponseDescendant.put("key", currentPersonId.toString());
 			
+			if (jsonChildrenArray.size()!=0) {
+				jsonResponseDescendant.put("children", jsonChildrenArray);
+			}
 			
-			return jsonResponseDescendant.toMap();
+			return jsonResponseDescendant;
 			
 		} else {
-			jsonResponseDescendant.put("result", false);
+			jsonResponseDescendant.put("result", "false");
 			jsonResponseDescendant.put("message", "person with id ["+currentPersonId+"] does NOT exist");
-			return jsonResponseDescendant.toMap();
+			return jsonResponseDescendant;
 			
 		}
 		
 	}
 	
-//	public Object getChildrenList(Integer id) {
-//		Member memberHasChild = memberService.findById(id);
-//		JSONArray jsonArrayChildren = new JSONArray();
-//		
-//	}
+	public Object getChildrenList(Integer id) {
+		
+		Map<String,Object>jsonChildren = new LinkedHashMap<>();
+		
+		@SuppressWarnings("unchecked")
+		Collection<Member> memberInDatabase = makeCollection(memberService.findAllIter());
+		
+		
+		List<Object> jsonChildrenArray = new ArrayList();
+		
+		for (Member memberForCheck : memberInDatabase) {
+			if ((memberForCheck.getMumKey()!=null && memberForCheck.getMumKey()==id)
+					|| (memberForCheck.getDadKey()!=null && memberForCheck.getDadKey()==id)) {
+				
+				Integer childMemberKey = memberForCheck.getId();
+				jsonChildrenArray.add(getMemberDescendants(childMemberKey));
+				
+			}
+			
+		}
+		jsonChildren.put("key", id.toString());
+		
+		if (jsonChildrenArray.size()!=0) {
+			jsonChildren.put("children", jsonChildrenArray);
+		}
+		return jsonChildren;
+		
+	}
 	
 	// Convert Iterable of all person in repository to List
 	public static <E> Collection<E> makeCollection(Iterable<E> iterable) {
