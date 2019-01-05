@@ -469,23 +469,24 @@ public class IndexController{
 	@RequestMapping(value="/ancestors/{id}", method=RequestMethod.GET)
 	@ResponseBody
 	public Object getMemberAncestors(@PathVariable Integer id) {
-		JSONObject jsonResponseAncestor = new JSONObject();
+		JSONOrderedObject jsonResponseAncestor = new JSONOrderedObject();
 		
 		if (memberService.findById(id)!=null) {
 			Member member = memberService.findById(id);
-			System.out.println(member.getName()+" ["+id+"]");
+			System.out.println("Start searching parents for: "+member.getName()+" ["+id+"]");
 			jsonResponseAncestor.put("key", id.toString());
 			
 			if (member.getMumKey()!=null || member.getDadKey()!=null) {
 				jsonResponseAncestor.put("parents", getParentsList(id));
 				
 			}
-			return jsonResponseAncestor.toMap();
+			System.out.println("(No more parents found for: "+member.getName()+" ["+id+"])");
+			return jsonResponseAncestor.toLinkedHashMap();
 			
 		} else {
 			jsonResponseAncestor.put("result", "false");
 			jsonResponseAncestor.put("message", "person with id ["+id+"] does NOT exist");
-			return jsonResponseAncestor.toMap();
+			return jsonResponseAncestor.toLinkedHashMap();
 			
 		}
 		
@@ -494,20 +495,25 @@ public class IndexController{
 	public Object getParentsList(Integer keyId) {
 		Integer mumKey = null;
 		Integer dadKey = null;
-		JSONObject jsonResponseParents = new JSONObject();
+		//JSONOrderedObject jsonResponseParents = new JSONOrderedObject();
+		Map<String, Object> parentsMap = new LinkedHashMap();
 		Member member = memberService.findById(keyId);
-
-		if(member.getDadKey()!=null) {
-			dadKey = member.getDadKey();
-			jsonResponseParents.put("f", getMemberAncestors(dadKey));
-		}
 		
 		if(member.getMumKey()!=null) {
 			mumKey = member.getMumKey();
-			jsonResponseParents.put("m", getMemberAncestors(mumKey));
+			System.out.println("Found Mum of " + member.getName() + " ["+member.getId()+"] - "
+						+ memberService.findById(mumKey).getName() + " ["+mumKey+"]");
+			parentsMap.put("m", getMemberAncestors(mumKey));
 		}
 		
-		return jsonResponseParents;
+		if(member.getDadKey()!=null) {
+			dadKey = member.getDadKey();
+			System.out.println("Found Dad of " + member.getName() + " ["+member.getId()+"] - "
+					+ memberService.findById(dadKey).getName() + " ["+dadKey+"]");
+			parentsMap.put("f", getMemberAncestors(dadKey));
+		}
+		
+		return parentsMap;
 	}
 	
 	//(e) Finding someones descendants
@@ -543,6 +549,7 @@ public class IndexController{
 				}
 				
 			}
+			System.out.println("(No more children found for: "+member.getName()+" ["+currentPersonId+"])");
 			jsonResponseDescendant.put("key", currentPersonId.toString());
 
 			//if (jsonChildrenArray.size()!=0) {
@@ -590,12 +597,14 @@ public class IndexController{
 			
 		}
 		jsonChildren.put("key", id.toString());
-
+		
 		if (jsonChildrenArray.size()!=0) {
 		//if (jsonChildrenArray.toList().size()!=0) {
 			jsonChildren.put("children", jsonChildrenArray);
 			System.out.println("(2) Children found: "+jsonChildrenArray.toString());
 		}
+		
+		
 		return jsonChildren;
 		
 	}
