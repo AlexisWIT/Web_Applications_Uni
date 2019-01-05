@@ -514,43 +514,51 @@ public class IndexController{
 	@RequestMapping(value="/descendants/{id}")
 	@ResponseBody
 	public Object getMemberDescendants(@PathVariable Integer id) {
-		Map<String, Object> jsonResponseDescendant = new LinkedHashMap<>();
+		
+		//Map<String, Object> jsonResponseDescendant = new LinkedHashMap<>();
+		JSONOrderedObject jsonResponseDescendant = new JSONOrderedObject();
+		
 		Integer currentPersonId=id;
 		
 		if (memberService.findById(currentPersonId)!=null) {
 			Member member = memberService.findById(currentPersonId);
-			System.out.println(member.getName()+" ["+currentPersonId+"]");
-			
+			System.out.println("Start searching children for: "+member.getName()+" ["+currentPersonId+"]");
 			
 			@SuppressWarnings("unchecked")
 			Collection<Member> memberInDatabase = makeCollection(memberService.findAllIter());
 			int totalMember = memberInDatabase.size();
 
-			
-			List<Object> jsonChildrenArray = new ArrayList();
+			//List<Object> jsonChildrenArray = new ArrayList();
+			JSONArray  jsonChildrenArray = new JSONArray();
 			
 			for (Member memberForCheck : memberInDatabase) {		
 				if ((memberForCheck.getMumKey()!=null && memberForCheck.getMumKey()==currentPersonId)
 						|| (memberForCheck.getDadKey()!=null && memberForCheck.getDadKey()==currentPersonId)) {
 					
 					Integer childMemberKey = memberForCheck.getId();
-					jsonChildrenArray.add(getChildrenList(childMemberKey));
+					System.out.println("(1) Get Child For: "+memberService.findById(currentPersonId).getName()+" ["+currentPersonId+"] - "+memberForCheck.getName()+" ["+childMemberKey+"]");
+					//jsonChildrenArray.add(getChildrenList(childMemberKey));
+					jsonChildrenArray.put(getChildrenList(childMemberKey));
 					
 				}
 				
 			}
 			jsonResponseDescendant.put("key", currentPersonId.toString());
-			
-			if (jsonChildrenArray.size()!=0) {
+
+			//if (jsonChildrenArray.size()!=0) {
+			if (jsonChildrenArray.toList().size()!=0) {
 				jsonResponseDescendant.put("children", jsonChildrenArray);
+				System.out.println("(1) Children found: "+jsonChildrenArray.toString());
 			}
 			
-			return jsonResponseDescendant;
+			//return jsonResponseDescendant;
+			return jsonResponseDescendant.toLinkedHashMap();
 			
 		} else {
 			jsonResponseDescendant.put("result", "false");
 			jsonResponseDescendant.put("message", "person with id ["+currentPersonId+"] does NOT exist");
-			return jsonResponseDescendant;
+			//return jsonResponseDescendant;
+			return jsonResponseDescendant.toLinkedHashMap();
 			
 		}
 		
@@ -558,28 +566,35 @@ public class IndexController{
 	
 	public Object getChildrenList(Integer id) {
 		
-		Map<String,Object>jsonChildren = new LinkedHashMap<>();
+		Map<String, Object> jsonChildren = new LinkedHashMap<>();
+		//JSONOrderedObject jsonChildren = new JSONOrderedObject();
 		
 		@SuppressWarnings("unchecked")
 		Collection<Member> memberInDatabase = makeCollection(memberService.findAllIter());
 		
+		System.out.println("Start searching children for: "+memberService.findById(id).getName()+" ["+id+"]");
 		
 		List<Object> jsonChildrenArray = new ArrayList();
+		//JSONArray jsonChildrenArray = new JSONArray();
 		
 		for (Member memberForCheck : memberInDatabase) {
 			if ((memberForCheck.getMumKey()!=null && memberForCheck.getMumKey()==id)
 					|| (memberForCheck.getDadKey()!=null && memberForCheck.getDadKey()==id)) {
 				
 				Integer childMemberKey = memberForCheck.getId();
+				System.out.println("(2) Get Child For: "+memberService.findById(id).getName()+" ["+id+"] - "+memberForCheck.getName()+" ["+childMemberKey+"]");
 				jsonChildrenArray.add(getMemberDescendants(childMemberKey));
+				//jsonChildrenArray.put(getMemberDescendants(childMemberKey));
 				
 			}
 			
 		}
 		jsonChildren.put("key", id.toString());
-		
+
 		if (jsonChildrenArray.size()!=0) {
+		//if (jsonChildrenArray.toList().size()!=0) {
 			jsonChildren.put("children", jsonChildrenArray);
+			System.out.println("(2) Children found: "+jsonChildrenArray.toString());
 		}
 		return jsonChildren;
 		

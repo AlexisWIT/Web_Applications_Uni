@@ -16,7 +16,7 @@
 	<title>Home | Genealogy Explorer</title>
 	
 	<!-- Home css -->
-	<link rel="stylesheet" href="resources/css/home.css">
+	<link href="<core:url value="resources/css/home.css" />" rel="stylesheet" type="text/css" />
 	
 	<!-- Bootstrap css -->
 	<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
@@ -27,43 +27,27 @@
 </head>
 
 <body>
-<div class="site-wrapper">
+	<div class="site-wrapper">
+	<div class="main-container">
+		<div class="inner">
+			<h3 class="site-title">Genealogy Explorer</h3>
+			<nav class="nav-bar">
+			<ul class="nav nav-bar-list">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/GE/person/">Member</a></li>
+				<li><a href="/GE/tree">Family Tree</a></li>
+			</ul>
+			</nav>
+		</div>
 
-	<div class="site-wrapper-inner">
-
-        <div class="cover-container">
-
-          <div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand">Genealogy Explorer</h3>
-              <nav>
-                <ul class="nav masthead-nav">
-                  <li class="active"><a href="/GE/">Home</a></li>
-                  <li><a href="/GE/person/">Member</a></li>
-                  <li><a href="#">Family Tree</a></li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-
-          <div class="inner cover">
-	          <h1 class="cover-heading">Find your family</h1>
-	          <p class="lead">Genealogy Explorer is an online tool for building a family tree and tracking ancestry.</p>
-	          <p class="lead">
-	            <a href="/GE/person/" class="btn btn-lg btn-default">Start</a>
-	          </p>
-          </div>
-
-          <div class="mastfoot">
-            <div class="inner">
-              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by Yifan Tang (yt120)</a>.</p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
+		<div class="inner cover">
+			<h1 class="headline">Find your family</h1>
+			<p class="headline-desc">Genealogy Explorer is an online tool for building a family tree and tracking ancestry.</p>
+			<p class="headline-btn">
+				<a href="/GE/person/" class="btn btn-lg btn-default">Start</a>
+			</p>
+		</div>
+	</div>
     </div>
     
     <!-- Bootstrap scripts -->
