@@ -18,16 +18,15 @@ public class Member {
 	Integer dadKey;
 	Integer birthday;
 	String gender;
-	
-	
+	Integer spouseId=0;
 	
 	public Member() {
 		super();
 	}
 
-	public Member(Integer id, String name, Integer birthday, String gender,Integer mumKey, Integer dadKey) {
+	public Member(Integer key, String name, Integer birthday, String gender,Integer mumKey, Integer dadKey) {
 		super();
-		this.key = id;
+		this.key = key;
 		this.name = name;
 		this.mumKey = mumKey;
 		this.dadKey = dadKey;
@@ -35,18 +34,18 @@ public class Member {
 		this.gender = gender;
 	}
 	
-	public Member(Integer id, String name) {
+	public Member(Integer key, String name) {
 		super();
-		this.key = id;
+		this.key = key;
 		this.name = name;
 	}
 
-	public Integer getId() {
+	public Integer getKey() {
 		return key;
 	}
 	
-	public void setId(Integer id) {
-		this.key = id;
+	public void setKey(Integer key) {
+		this.key = key;
 	}
 	
 	public String getName() {
@@ -93,10 +92,18 @@ public class Member {
 		this.gender = gender;
 	}
 
+	public Integer getSpouseId() {
+		return spouseId;
+	}
+
+	public void setSpouseId(Integer spouseId) {
+		this.spouseId = spouseId;
+	}
+
 	@Override
 	public String toString() {
-		return "Member [id=" + key + ", name=" + name + ", mumKey=" + mumKey + ", dadKey=" + dadKey + ", birthday="
-				+ birthday + ", gender=" + gender + "]";
+		return "Member [key=" + key + ", name=" + name + ", mumKey=" + mumKey + ", dadKey=" + dadKey + ", birthday="
+				+ birthday + ", gender=" + gender + ", spouseId=" + spouseId + "]";
 	}
 
 }
