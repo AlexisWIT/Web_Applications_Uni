@@ -3,19 +3,22 @@
  */
 
 function initFamilyTree(familyDataArray) {
-    if (window.goSamples) goSamples(); // init for these samples -- you don't need to call this
+    if (window.goSamples) goSamples();
     var $ = go.GraphObject.make;
 
     familyTreeDiagram = $(go.Diagram, "myDiagramDiv", {
         initialAutoScale: go.Diagram.Uniform,
         initialContentAlignment: go.Spot.Center,
         "undoManager.isEnabled": true,
+        
         // when a node is selected, draw a big yellow circle behind it
         nodeSelectionAdornmentTemplate: $(go.Adornment, "Auto", {
                 layerName: "Grid"
             }, // the predefined layer that is behind everything else
             $(go.Shape, "Circle", {
                 fill: "yellow",
+                width: 40,
+                height: 40,
                 stroke: null
             }),
             $(go.Placeholder)
@@ -43,7 +46,7 @@ function initFamilyTree(familyDataArray) {
                     width: 40,
                     height: 40,
                     strokeWidth: 2,
-                    fill: "white",
+                    fill: "blue",
                     portId: ""
                 }),
                 $(go.Panel, { // for each attribute show a Shape at a particular place in the overall square
@@ -77,7 +80,7 @@ function initFamilyTree(familyDataArray) {
                     width: 40,
                     height: 40,
                     strokeWidth: 2,
-                    fill: "white",
+                    fill: "red",
                     portId: ""
                 }),
                 $(go.Panel, { // for each attribute show a Shape at a particular place in the overall circle
@@ -244,7 +247,7 @@ function setupParents(diagram) {
         var key = data.key;
         var mother = data.m;
         var father = data.f;
-        if (mother !== undefined && mother != null && father !== undefined && father != null) {
+        if (mother !== undefined && mother != null && father !== undefined && father != null && mother!=0 && father!=0) {
             var link = findMarriage(diagram, mother, father);
             if (link === null) {
                 // or warn no known mother or no known father or no known marriage between them

@@ -22,13 +22,9 @@
 	
 	<!-- Bootstrap scripts -->
 	<script src="resources/bootstrap/js/bootstrap.min.js"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
 	<!-- Bootstrap css -->
 	<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet"
-		href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
 	
 	<!-- GoJS scripts -->
 	<script src="../scripts/go.js" type="text/javascript"></script>
@@ -99,8 +95,8 @@
 					<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addPersonModal">Add Person</button>
 					<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editPersonModal">Edit Person</button>
 					<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deletePersonModal">Delete Person</button>
-					<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#showAncestor">View Ancestor</button>
-					<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#showDescendant">View Descendant</button>
+					<button class="btn btn-sm btn-primary" id="showAncestorBtn" data-toggle="modal" data-target="#showAncestor">View Ancestor</button>
+					<button class="btn btn-sm btn-primary" id="showDescendantBtn" data-toggle="modal" data-target="#showDescendant">View Descendant</button>
 				</p>
 	
 			</div>
@@ -118,7 +114,7 @@
 			<p>Genealogy Explorer is an online tool for building a family tree and tracking ancestry.</p>
 			<p>This project consists of two parts - RESTful Service (Back end) and Web Interface (Front end).</p>
 			<p>
-			  <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">Check it out &raquo;</a>
+			  <a class="btn btn-lg btn-primary" id="showFamilyTree" role="button">Check it out &raquo;</a>
 			</p>
 	
 		</div>

@@ -194,6 +194,7 @@ public class IndexController {
 	}
 
 	// (b) Deleting a person
+	// remember to deleted marriage and Father/Mother status as well!
 	@RequestMapping(value = "/GE/person/delete/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Object deleteMember(@PathVariable Integer id) {
