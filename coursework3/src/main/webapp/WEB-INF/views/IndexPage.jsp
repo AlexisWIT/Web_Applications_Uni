@@ -62,7 +62,7 @@
 				<ul class="nav navbar-nav">
 				
 					<li class="active" id="homeTab"><a href="#">Home</a></li>
-					<li id="personsTab"><a href="#">Persons</a></li>
+					<!-- li id="personsTab" ><a href="#"></a></li -->
 					<li id="treeTab"><a href="#">Tree</a></li>
 					<li class="dropdown">
 					
@@ -138,30 +138,30 @@
 	            
 		            <div class="modal-body">
 		            	<div id="addSinglePerson">
-		            	
+		            		<div hidden><span id="modeToken">1</span></div>
 			           		<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> Person Key</span>
-		        				<input id="personKey"	name="key" class="form-control" placeholder="Person Key" required>
+		        				<input id="personKey"	name="personKey" class="form-control" placeholder="Person Key" required autofocus>
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> Name</span>
-		        				<input id="name"		name="name" class="form-control" placeholder="Name" required autofocus>
+		        				<input id="name"		name="name" class="form-control" placeholder="Name" required >
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> Birthday</span>
-		        				<input id="birthday"	name="dob" class="form-control" placeholder="Birthday (eg. 19970101)" >
+		        				<input id="birthday"	name="birthday" class="form-control" placeholder="Birthday (eg. 19970101)" >
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-heart-empty"></i> Gender</span>
-		        				<input id="gender"		name="g" class="form-control" placeholder="Gender" >
+		        				<input id="gender"		name="gender" class="form-control" placeholder="Gender" >
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Mother Key</span>
-		        				<input id="motherKey"	name="m" class="form-control" placeholder="Mother Key" >
+		        				<input id="motherKey"	name="motherKey" class="form-control" placeholder="Mother Key" >
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Father Key</span>
-		        				<input id="fatherKey"	name="f" class="form-control" placeholder="Father Key" >
+		        				<input id="fatherKey"	name="fatherKey" class="form-control" placeholder="Father Key" >
 	        				</div>
 						
 							<div id="addErrorInfoSingle" role="alert"> </div>
@@ -186,7 +186,7 @@
 
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-		                <button type="button" class="btn btn-primary" id="submit-newPerson">Submit</button>
+		                <button type="submit" class="btn btn-primary" id="submit-newPerson">Submit</button>
 		            </div>
 	            </form>
 	            
@@ -210,27 +210,27 @@
 	            			<div hidden><span id="editToken"></span></div>
 			           		<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> Person Key</span>
-		        				<input id="edit-personKey"	name="key" class="form-control" placeholder="Person Key" required disabled>
+		        				<input id="edit-personKey"	name="edit-personKey" class="form-control" placeholder="Person Key" required disabled>
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> Name</span>
-		        				<input id="edit-name"		name="name" class="form-control" placeholder="Name" required autofocus>
+		        				<input id="edit-name"		name="edit-name" class="form-control" placeholder="Name" required autofocus>
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> Birthday</span>
-		        				<input id="edit-birthday"	name="dob" class="form-control" placeholder="Birthday (eg. 19970101)" >
+		        				<input id="edit-birthday"	name="edit-birthday" class="form-control" placeholder="Birthday (eg. 19970101)" >
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-heart-empty"></i> Gender</span>
-		        				<input id="edit-gender"		name="g" class="form-control" placeholder="Gender" >
+		        				<input id="edit-gender"		name="edit-gender" class="form-control" placeholder="Gender" >
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Mother Key</span>
-		        				<input id="edit-motherKey"	name="m" class="form-control" placeholder="Mother Key" >
+		        				<input id="edit-motherKey"	name="edit-motherKey" class="form-control" placeholder="Mother Key" >
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Father Key</span>
-		        				<input id="edit-fatherKey"	name="f" class="form-control" placeholder="Father Key" >
+		        				<input id="edit-fatherKey"	name="edit-fatherKey" class="form-control" placeholder="Father Key" >
 	        				</div>
 	        				<div class="alert alert-info fade" id="editInProgressAlert" role="alert"><span id="editInProgressInfo"></span></div>
 							<div class="alert alert-danger fade" id="editErrorAlert" role="alert"><span id="editFailedInfo"></span></div>
@@ -290,6 +290,19 @@
 	                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
 	            </div>
 	            
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- Modal 05 - Loading window -->
+	<div class="modal fade" id="loadingWindow" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="loadingWindowLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	        	<div class="modal-body">
+		        	<div>
+		        		<p><img id="loaderImg" src="resources/loader.gif" />   Processing your request, please wait...</p>
+					</div>
+				</div>
 	        </div>
 	    </div>
 	</div>

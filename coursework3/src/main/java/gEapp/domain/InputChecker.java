@@ -62,8 +62,8 @@ public class InputChecker {
 				return true;
 				
 			} catch (java.text.ParseException e) {
-				e.printStackTrace();
-				System.out.println("Invalid Date input");
+				
+				System.out.println("Invalid Date format input");
 				return false;
 				
 			}
