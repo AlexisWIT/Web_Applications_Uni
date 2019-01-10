@@ -22,8 +22,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import gEapp.domain.InputChecker;
 import gEapp.domain.JSONOrderedObject;
@@ -84,12 +82,12 @@ public class IndexController {
 
 	@RequestMapping(value = "/GE/person/addJSON", method = RequestMethod.POST)
 	@ResponseBody
-	public Object addMemberJSON(@RequestBody String memberInput) throws ParseException {
+	public Object addMemberJSON(@RequestBody String memberInput) {
 
 		System.out.println(memberInput);
 		final Gson gson = new Gson();
 		// final ObjectMapper objectMapper = new ObjectMapper();
-		JSONParser jsonParser = new JSONParser();
+		//JSONParser jsonParser = new JSONParser();
 		// JSONObject jsonResponse = new JSONObject();
 
 		// Check if it's empty/blank string
@@ -108,40 +106,42 @@ public class IndexController {
 				if (inputChecker.isJSONObject(memberInput)) {
 
 					jsonResponse = new JSONObject();
-					JSONObject jsonObject = gson.fromJson(memberInput, JSONObject.class);
+					//JSONObject jsonObject = gson.fromJson(memberInput, JSONObject.class);
 					
-					Integer keyId = Integer.valueOf((String) jsonObject.get("key"));
+					JSONObject jsonObject = new JSONObject(memberInput);
 					
-					String name = (String) jsonObject.get("name");
+					Integer keyId = Integer.valueOf((String) jsonObject.getJSONObject("newPerson").getString("key"));
+					
+					String name = (String) jsonObject.getJSONObject("newPerson").getString("name");
 					Integer birthday = null;
 					String gender = null;
 					Integer mumKey = null;
 					Integer dadKey = null;
 					
-					if (((String)jsonObject.get("dob")).equals("null")) {
+					if (((String)jsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
 						
 					} else {
-						birthday = Integer.valueOf((String)jsonObject.get("dob"));
+						birthday = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("dob"));
 					}
 					
-					if (((String)jsonObject.get("gender")).equals("null")) {
+					if (((String)jsonObject.getJSONObject("newPerson").getString("gender")).equals("null")) {
 						
 					} else {
-						gender = (String)jsonObject.get("gender");
+						gender = (String)jsonObject.getJSONObject("newPerson").getString("gender");
 						// Make the first letter to lower case
 						gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
 					}
 
-					if (((String)jsonObject.get("mkey")).equals("null")) {
+					if (((String)jsonObject.getJSONObject("newPerson").getString("mkey")).equals("null")) {
 					
 					} else {
-						mumKey = Integer.valueOf((String)jsonObject.get("mkey"));
+						mumKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("mkey"));
 					}
 					
-					if (((String)jsonObject.get("fkey")).equals("null")) {
+					if (((String)jsonObject.getJSONObject("newPerson").getString("fkey")).equals("null")) {
 					
 					} else {
-						dadKey = Integer.valueOf((String)jsonObject.get("fkey"));
+						dadKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("fkey"));
 					}
 
 					if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
@@ -168,21 +168,21 @@ public class IndexController {
 						jsonResponse = new JSONObject();
 						JSONObject extractedJsonObject = jsonArray.getJSONObject(i);
 
-						Integer keyId = Integer.valueOf((String) extractedJsonObject.get("key"));
+						Integer keyId = Integer.valueOf((String) extractedJsonObject.getJSONObject("newPerson").getString("key"));
 						
-						String name = (String) extractedJsonObject.get("name");
+						String name = (String) extractedJsonObject.getJSONObject("newPerson").getString("name");
 						Integer birthday = null;
 						String gender = null;
 						Integer mumKey = null;
 						Integer dadKey = null;
 						
-						if (((String)extractedJsonObject.get("dob")).equals("null")) {
+						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
 							
 						} else {
-							birthday = Integer.valueOf((String)extractedJsonObject.get("dob"));
+							birthday = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("dob"));
 						}
 						
-						if (((String)extractedJsonObject.get("g")).equals("null")) {
+						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("g")).equals("null")) {
 							
 						} else {
 							gender = (String)extractedJsonObject.get("g");
@@ -190,16 +190,16 @@ public class IndexController {
 							gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
 						}
 
-						if (((String)extractedJsonObject.get("m")).equals("null")) {
+						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("m")).equals("null")) {
 						
 						} else {
-							mumKey = Integer.valueOf((String)extractedJsonObject.get("m"));
+							mumKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("m"));
 						}
 						
-						if (((String)extractedJsonObject.get("f")).equals("null")) {
+						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("f")).equals("null")) {
 						
 						} else {
-							dadKey = Integer.valueOf((String)extractedJsonObject.get("f"));
+							dadKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("f"));
 						}
 
 						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {

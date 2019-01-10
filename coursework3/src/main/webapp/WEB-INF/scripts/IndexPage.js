@@ -147,7 +147,7 @@ $(document).ready(function () {
 			var fkey = $("#fatherKey").val();
 			if (fkey === undefined || fkey == "" ) fkey=null;
 			
-			var data = '{ "key": "'+key+'", "name": "'+name+'", "dob": "'+dob+'", "gender": "'+gender+'", "mkey": "'+mkey+'", "fkey": "'+fkey+'"}';
+			var data = '{ "newPerson" : { "key": "'+key+'", "name": "'+name+'", "dob": "'+dob+'", "gender": "'+gender+'", "mkey": "'+mkey+'", "fkey": "'+fkey+'"}}';
 			console.log(data);
 			
 			var jsonData = JSON.parse(data);

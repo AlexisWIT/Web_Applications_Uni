@@ -51,7 +51,7 @@ public class InterfaceController {
 		List<Member> listForTree = new ArrayList<>();
 		setupMarriage(0,0);
 		
-		System.out.println("Creating diagram, please wit...");
+		System.out.println("Creating diagram, please wait...");
 		listForTree = (List<Member>) memberService.findAllMembers();
 		
 		familyTreeResponse.setMemberList(listForTree);
