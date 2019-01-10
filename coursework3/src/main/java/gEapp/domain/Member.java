@@ -18,7 +18,7 @@ public class Member {
 	Integer dadKey;
 	Integer birthday;
 	String gender;
-	Integer spouseId=0;
+	Integer spouseId = null;
 	
 	public Member() {
 		super();

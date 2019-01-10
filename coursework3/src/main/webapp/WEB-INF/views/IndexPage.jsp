@@ -16,9 +16,8 @@
 	<title>Genealogy Explorer</title>
 	
 	<!-- JQuery scripts -->
-	<script src="../scripts/jquery.min.js"></script>
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="../scripts/jquery.331.min.js"></script>
+	<script src="../scripts/jquery.validate.min.js"></script>
 	
 	<!-- Bootstrap scripts -->
 	<script src="resources/bootstrap/js/bootstrap.min.js"></script>
@@ -30,6 +29,7 @@
 	<script src="../scripts/go.js" type="text/javascript"></script>
 
 	<!-- Custom scripts -->
+	<script src="../scripts/interactiveTree.js" type="text/javascript"></script>
 	<script src="../scripts/familyTree.js" type="text/javascript"></script>
 	<script src="../scripts/IndexPage.js" type="text/javascript"></script>
 	
@@ -61,20 +61,20 @@
 			
 				<ul class="nav navbar-nav">
 				
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="#">Persons</a></li>
-					<li><a href="#">Tree</a></li>
+					<li class="active" id="homeTab"><a href="#">Home</a></li>
+					<li id="personsTab"><a href="#">Persons</a></li>
+					<li id="treeTab"><a href="#">Tree</a></li>
 					<li class="dropdown">
 					
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More Options <span class="caret"></span></a>
+						<a href="#" id="moreOperationTab" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More Options <span class="caret"></span></a>
 
 						<ul class="dropdown-menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
+							<li><a href="#">Settings</a></li>
+							<li><a href="#">About</a></li>
 							<li role="separator" class="divider"></li>
-							<li class="dropdown-header">Nav header</li>
-							<li><a href="#">Separated link</a></li>
-							<li><a href="#">One more separated link</a></li>
+							<li class="dropdown-header">Manage Data</li>
+							<li><a href="#">Export to JSON</a></li>
+							<li><a href="#">Clear all</a></li>
 						</ul>
 					  
 					</li>
@@ -89,26 +89,7 @@
 	<!-- [Section 2]: Main Part below the Nav-bar -->
 	<div class="container">
 	
-		<div class="jumbotron" id="familyTreeSection">
-			<div id="operation-buttons">
-				<p>
-					<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addPersonModal">Add Person</button>
-					<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editPersonModal">Edit Person</button>
-					<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deletePersonModal">Delete Person</button>
-					<button class="btn btn-sm btn-primary" id="showAncestorBtn" data-toggle="modal" data-target="#showAncestor">View Ancestor</button>
-					<button class="btn btn-sm btn-primary" id="showDescendantBtn" data-toggle="modal" data-target="#showDescendant">View Descendant</button>
-				</p>
-	
-			</div>
-			
-			<div id="familyTreeChart">
-				
-				<div id="myDiagramDiv" style="border: solid 1px black; width:100%; height:600px"></div>
-			
-			</div>
-		</div>
-	
-		<div class="jumbotron" id="intro-content" aria-hidden="false">
+		<div class="jumbotron" id="intro-content">
 	
 			<h1>Find your family</h1>
 			<p>Genealogy Explorer is an online tool for building a family tree and tracking ancestry.</p>
@@ -118,6 +99,27 @@
 			</p>
 	
 		</div>
+	
+		<div class="jumbotron" id="familyTreeSection">
+			<div id="operation-buttons">
+				<p>
+					<button class="btn btn-sm btn-info" id="refreshTreeBtn" data-toggle="modal" data-target="#refreshTree">Refresh Tree</button>
+					<button class="btn btn-sm btn-primary" id="addPersonBtn"data-toggle="modal" data-target="#addPersonModal">Add Person</button>
+					<button class="btn btn-sm btn-primary" id="editPersonBtn"data-toggle="modal" data-target="#editPersonTips">Edit Person</button>
+					<button class="btn btn-sm btn-danger" id="deletePersonBtn"data-toggle="modal" data-target="#deletePersonModal">Delete Person</button>
+					<button class="btn btn-sm btn-primary" id="showAncestorBtn" data-toggle="modal" data-target="#showAncestor">View Ancestors</button>
+					<button class="btn btn-sm btn-primary" id="showDescendantBtn" data-toggle="modal" data-target="#showDescendant">View Descendants</button>
+				</p>
+	
+			</div>
+			
+			<div id="familyTreeDiagram">	
+				<div id="familyTreeDiagramDiv" style="border: solid 1px black; width:100%; height:600px"></div>
+				<div hidden><span id="personInfo" ></span></div>
+			</div>
+		</div>
+	
+		
 
 	</div>
 	
@@ -132,22 +134,165 @@
 	                <h4 class="modal-title" id="addPersonLabel">Add New Person</h4>
 	            </div>
 	            
+	            <form class="form-group" id="form-addNew">
+	            
+		            <div class="modal-body">
+		            	<div id="addSinglePerson">
+		            	
+			           		<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> Person Key</span>
+		        				<input id="personKey"	name="key" class="form-control" placeholder="Person Key" required>
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> Name</span>
+		        				<input id="name"		name="name" class="form-control" placeholder="Name" required autofocus>
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> Birthday</span>
+		        				<input id="birthday"	name="dob" class="form-control" placeholder="Birthday (eg. 19970101)" >
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-heart-empty"></i> Gender</span>
+		        				<input id="gender"		name="g" class="form-control" placeholder="Gender" >
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Mother Key</span>
+		        				<input id="motherKey"	name="m" class="form-control" placeholder="Mother Key" >
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Father Key</span>
+		        				<input id="fatherKey"	name="f" class="form-control" placeholder="Father Key" >
+	        				</div>
+						
+							<div id="addErrorInfoSingle" role="alert"> </div>
+							<br>
+							<p><a href="#" id="addMultiplePersonLink">Add multiple persons (JSON)</a></p>
+							<div class="alert alert-info fade" id="singleAddInProgressAlert" role="alert"><span id="singleAddInProgressInfo"></span></div>
+							<div class="alert alert-danger fade" id="singleAddErrorAlert" role="alert"><span id="singleAddFailedInfo"></span></div>
+							<div class="alert alert-success fade" id="singleAddCompleteAlert" role="alert"><span id="singleAddCompleteInfo"></span></div>
+						</div>
+						
+						<div id="addMultiplePerson">
+    						<label for="mutipleAdd">Add multiple persons (JSON)</label>
+							<textarea class="form-control" id="mutipleAddArea" rows="10"></textarea>
+							<div id="addErrorInfoMulti" role="alert"> </div>
+							<br>
+							<p><a href="#" id="addSinglePersonLink">Add single person</a></p>
+							<div class="alert alert-info fade" id="multiAddInProgressAlert" role="alert"><span id="multiAddInProgressInfo"></span></div>
+							<div class="alert alert-danger fade" id="multiAddErrorAlert" role="alert"><span id="multiAddFailedInfo"></span></div>
+							<div class="alert alert-success fade" id="multiAddCompleteAlert" role="alert"><span id="multiAddCompleteInfo"></span></div>
+						</div>
+		            </div>
+
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button type="button" class="btn btn-primary" id="submit-newPerson">Submit</button>
+		            </div>
+	            </form>
+	            
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- Modal 02 - Edit Current Person -->
+	<div class="modal fade" id="editPersonModal" tabindex="-1" role="dialog" aria-labelledby="editPersonLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	        
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="editPersonLabel">Edit Person</h4>
+	            </div>
+	            
+	            <form class="form-group" id="form-edit">
+		            <div class="modal-body">
+	            		<div id="editSinglePerson">
+	            			<div hidden><span id="editToken"></span></div>
+			           		<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> Person Key</span>
+		        				<input id="edit-personKey"	name="key" class="form-control" placeholder="Person Key" required disabled>
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> Name</span>
+		        				<input id="edit-name"		name="name" class="form-control" placeholder="Name" required autofocus>
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> Birthday</span>
+		        				<input id="edit-birthday"	name="dob" class="form-control" placeholder="Birthday (eg. 19970101)" >
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-heart-empty"></i> Gender</span>
+		        				<input id="edit-gender"		name="g" class="form-control" placeholder="Gender" >
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Mother Key</span>
+		        				<input id="edit-motherKey"	name="m" class="form-control" placeholder="Mother Key" >
+	        				</div>
+	        				<div class="input-group">
+		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Father Key</span>
+		        				<input id="edit-fatherKey"	name="f" class="form-control" placeholder="Father Key" >
+	        				</div>
+	        				<div class="alert alert-info fade" id="editInProgressAlert" role="alert"><span id="editInProgressInfo"></span></div>
+							<div class="alert alert-danger fade" id="editErrorAlert" role="alert"><span id="editFailedInfo"></span></div>
+							<div class="alert alert-success fade" id="editCompleteAlert" role="alert"><span id="editCompleteInfo"></span></div>
+							
+						</div>
+		            </div>
+		            
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button type="submit" class="btn btn-primary" id="submit-editedPerson">Submit</button>
+		            </div>
+	            </form>
+	            
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- Modal 03 - Delete Current Person -->
+	<div class="modal fade" id="deletePersonModal" tabindex="-1" role="dialog" aria-labelledby="deletePersonLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	        
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="deletePersonLabel">Delete Person</h4>
+	            </div>
+	            
 	            <div class="modal-body">
-	            
-						在这里添加一些文本
-	            
+	            	<p>Are you sure you want to delete this person?</p>
 	            </div>
 	            
 	            <div class="modal-footer">
 	                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-	                <button type="button" class="btn btn-primary" id="submit-newPerson">Submit</button>
+	                <button type="button" class="btn btn-danger" id="confirm-deletePerson">Delete</button>
 	            </div>
 	            
 	        </div>
 	    </div>
 	</div>
 	
-	
+	<!-- Modal 04 - Tips for editing Person -->
+	<div class="modal fade" id="editPersonTips" tabindex="-1" role="dialog" aria-labelledby="editPersonTipsLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	        
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="editPersonTipsLabel">Edit Person Tips</h4>
+	            </div>
+	            
+	            <div class="modal-body">
+	            	<p>Please double-click a person to edit!</p>
+	            </div>
+	            
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+	            </div>
+	            
+	        </div>
+	    </div>
+	</div>
 
 
 </body>

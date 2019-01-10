@@ -1,2 +1,30 @@
 @charset "UTF-8";
 
+.input-group-addon {
+    min-width:120px;
+    text-align:left;
+}
+
+#familyTreeSection {
+	display:none;
+}
+
+#showAncestorBtn {
+	display:none;
+}
+
+#showDescendantBtn {
+	display:none;
+}
+
+#deletePersonBtn {
+	display:none;
+}
+
+#editPersonBtn {
+	display:none;
+}
+
+#addMultiplePerson {
+	display:none;
+}

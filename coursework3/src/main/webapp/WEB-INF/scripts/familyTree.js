@@ -3,23 +3,40 @@
  */
 
 function initFamilyTree(familyDataArray) {
-    if (window.goSamples) goSamples();
+    
     var $ = go.GraphObject.make;
+    
+    // define tooltips for nodes
+    var tooltiptemplate =
+        $(go.Adornment, "Auto",
+            $(go.Shape, "Rectangle", {
+                fill: "whitesmoke",
+                stroke: "black"
+            }),
+            $(go.TextBlock, {
+                    font: "bold 8pt Helvetica, bold Arial, sans-serif",
+                    wrap: go.TextBlock.WrapFit,
+                    margin: 5
+                },
+                new go.Binding("text", "", tooltipTextConverter))
+        );
 
-    familyTreeDiagram = $(go.Diagram, "myDiagramDiv", {
+    familyTreeDiagram.div=null;
+    familyTreeDiagram = 
+    	$(go.Diagram, "familyTreeDiagramDiv", {
         initialAutoScale: go.Diagram.Uniform,
         initialContentAlignment: go.Spot.Center,
         "undoManager.isEnabled": true,
         
         // when a node is selected, draw a big yellow circle behind it
-        nodeSelectionAdornmentTemplate: $(go.Adornment, "Auto", {
+        nodeSelectionAdornmentTemplate: 
+        	$(go.Adornment, "Auto", {
                 layerName: "Grid"
             }, // the predefined layer that is behind everything else
-            $(go.Shape, "Circle", {
-                fill: "yellow",
-                width: 40,
-                height: 40,
-                stroke: null
+            $(go.Shape, "Rectangle", {
+                fill: null,
+                strokeWidth: 2,
+                stroke: "blue"
             }),
             $(go.Placeholder)
         ),
@@ -34,6 +51,28 @@ function initFamilyTree(familyDataArray) {
 
     // two different node templates, one for each sex,
     // named by the category value in the node data object
+	familyTreeDiagram.nodeTemplate = 
+		$(go.Node, "Auto", {
+				deletable: false,
+				toolTip: tooltiptemplate
+			},
+			new go.Binding("text", "name"),
+			$(go.Shape, "Rectangle", {
+					fill: "lightgray",
+					stroke: null,
+					strokeWidth: 0,
+					stretch: go.GraphObject.Fill,
+					alignment: go.Spot.Center
+				},
+				new go.Binding("fill", "g", genderBrushConverter)),
+			$(go.TextBlock, {
+					//font: "700 12px Droid Serif, sans-serif",
+					textAlign: "center",
+					margin: 10,
+					maxSize: new go.Size(80, NaN)
+				},
+				new go.Binding("text", "name"))
+		);
     familyTreeDiagram.nodeTemplateMap.add("male", // male
         $(go.Node, "Vertical", {
                 locationSpot: go.Spot.Center,
@@ -66,7 +105,7 @@ function initFamilyTree(familyDataArray) {
                     textAlign: "center",
                     maxSize: new go.Size(80, NaN)
                 },
-                new go.Binding("text", "n"))
+                new go.Binding("text", "name"))
         ));
     familyTreeDiagram.nodeTemplateMap.add("female", // female
         $(go.Node, "Vertical", {
@@ -100,7 +139,7 @@ function initFamilyTree(familyDataArray) {
                     textAlign: "center",
                     maxSize: new go.Size(80, NaN)
                 },
-                new go.Binding("text", "n"))
+                new go.Binding("text", "name"))
         ));
     
     familyTreeDiagram.nodeTemplateMap.add("LinkLabel",
@@ -151,14 +190,65 @@ function initFamilyTree(familyDataArray) {
             })
         ));
 
+    setupDiagram(familyTreeDiagram, familyDataArray, 0);
 
-    setupDiagram(familyTreeDiagram, familyDataArray, 1);
+}
 
+function genderBrushConverter(g) {
+	if (g === "male") return "blue";
+	if (g === "female") return "green";
+	return "lightgray";
+}
+
+//get tooltip text from the object's data
+function tooltipTextConverter(person) {
+    var string = "";
+    string += "Person Key: " + person.key;
+    if (person.dob !== undefined && person.dob != null) {
+    	string += "\nBirthday: " + person.dob;
+    } else {
+    	string += "\nBirthday: Not Available";
+    }
+    if (person.g !== undefined && person.g != null) {
+    	string += "\nGender: " + person.g;
+    } else {
+    	string += "\nGender: Not Available";
+    }
+    if (person.m !== undefined && person.m != null) {
+    	string += "\nMother Key: " + person.m;
+    } else {
+    	string += "\nMother Key: Not Available";
+    }
+    if (person.f !== undefined && person.f != null) {
+    	string += "\nFather Key: " + person.f;
+    } else {
+    	string += "\nFather Key: Not Available";
+    }
+    //if (person.deathYear !== undefined) str += "\nDied: " + person.deathYear;
+    //if (person.reign !== undefined) str += "\nReign: " + person.reign;
+    return string;
 }
 
 
 // create and initialize the Diagram.model given an array of node data representing people
 function setupDiagram(diagram, array, focusId) {
+
+	diagram.addDiagramListener("ObjectSingleClicked", // Person selected 
+            function (e1) {
+                var person = e1.subject.part;
+                if (!(person instanceof go.Link)) {
+                	showPersonKey(person.data.key);
+                }
+            });
+	
+	diagram.addDiagramListener("ObjectDoubleClicked", // Modal pop-out for Editing person
+            function (e2) {
+                var person = e2.subject.part;
+                if (!(person instanceof go.Link)) {
+                	editPersonDetail(person.data);
+                }
+            });
+	
     diagram.model = go.GraphObject.make(go.GraphLinksModel, { // declare support for link label nodes
             linkLabelKeysProperty: "labelKeys",
             // this property determines which template is used
@@ -210,7 +300,7 @@ function setupMarriages(diagram) {
         var key = data.key;
         var spouseId = data.spouseId;
 		
-        if (spouseId !== undefined && spouseId != null && spouseId != 0) {
+        if (spouseId !== undefined && spouseId != null) {
 
 			var link = findMarriage(diagram, key, spouseId);
 			if (link === null) {
@@ -233,7 +323,8 @@ function setupMarriages(diagram) {
 				console.log("Person ["+key+"] married with spouseId: "+spouseId+" ("+typeof spouseId+")");
 			}
             
-        }
+        } 
+		
     }
 }
 
@@ -247,7 +338,7 @@ function setupParents(diagram) {
         var key = data.key;
         var mother = data.m;
         var father = data.f;
-        if (mother !== undefined && mother != null && father !== undefined && father != null && mother!=0 && father!=0) {
+        if (mother !== undefined && mother != null && father !== undefined && father != null) {
             var link = findMarriage(diagram, mother, father);
             if (link === null) {
                 // or warn no known mother or no known father or no known marriage between them
@@ -262,35 +353,19 @@ function setupParents(diagram) {
             };
             familyTreeDiagram.model.addLinkData(cdata);
 			
-        } else if (mother !== undefined && mother != null) { // Mother-Only family
-			var parentLabel = {
-				s: "LinkLabel"
-			};
-		
-			familyTreeDiagram.model.addNodeData(parentLabel);
-		
+        } else if (mother !== undefined && mother != null ) { // Mother-Only family
 			var parentData = {
-				from: key,
-				to: mother,
-				labelKeys: [parentLabel.key],
-				category: "MumOnly"
+				from: mother,
+				to: key
 				
 			};
 			
 			familyTreeDiagram.model.addLinkData(parentData);
 			
-		} else if (father !== undefined && father != null) { // Father-Only family
-			var parentLabel = {
-				s: "LinkLabel"
-			};
-		
-			familyTreeDiagram.model.addNodeData(parentLabel);
-			
+		} else if (father !== undefined && father != null) { // Father-Only family		
 			var parentData = {
-				from: key,
-				to: father,
-				labelKeys: [parentLabel.key],
-				category: "DadOnly"
+				from: father,
+				to: key
 				
 			};
 			
@@ -301,6 +376,9 @@ function setupParents(diagram) {
 }
 
 
+function personDetail(detail) {
+	document.getElementById("personInfo").textContent = detail;
+}
 
 // A custom layout that shows the two families related to a person's parents
 function GenogramLayout() {

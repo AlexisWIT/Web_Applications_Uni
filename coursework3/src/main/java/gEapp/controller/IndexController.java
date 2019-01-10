@@ -40,7 +40,7 @@ public class IndexController {
 	MemberRepository memberRepository;
 	
 	InputChecker inputChecker = new InputChecker();
-
+	Gson gson = new Gson();
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 	JSONObject jsonResponse = new JSONObject();
 
@@ -86,6 +86,7 @@ public class IndexController {
 	@ResponseBody
 	public Object addMemberJSON(@RequestBody String memberInput) throws ParseException {
 
+		System.out.println(memberInput);
 		final Gson gson = new Gson();
 		// final ObjectMapper objectMapper = new ObjectMapper();
 		JSONParser jsonParser = new JSONParser();
@@ -107,19 +108,41 @@ public class IndexController {
 				if (inputChecker.isJSONObject(memberInput)) {
 
 					jsonResponse = new JSONObject();
-					JSONObject jsonObject = (JSONObject) jsonParser.parse(memberInput);
-
-					int keyId = (Integer) jsonObject.get("key");
+					JSONObject jsonObject = gson.fromJson(memberInput, JSONObject.class);
+					
+					Integer keyId = Integer.valueOf((String) jsonObject.get("key"));
+					
 					String name = (String) jsonObject.get("name");
-					Integer birthday = (Integer) jsonObject.get("dob");
-					String gender = (String) jsonObject.get("g");
-					// Make the first letter to lower case
-					if (gender != null) {
+					Integer birthday = null;
+					String gender = null;
+					Integer mumKey = null;
+					Integer dadKey = null;
+					
+					if (((String)jsonObject.get("dob")).equals("null")) {
+						
+					} else {
+						birthday = Integer.valueOf((String)jsonObject.get("dob"));
+					}
+					
+					if (((String)jsonObject.get("gender")).equals("null")) {
+						
+					} else {
+						gender = (String)jsonObject.get("gender");
+						// Make the first letter to lower case
 						gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
 					}
 
-					Integer mumKey = (Integer) jsonObject.get("m");
-					Integer dadKey = (Integer) jsonObject.get("f");
+					if (((String)jsonObject.get("mkey")).equals("null")) {
+					
+					} else {
+						mumKey = Integer.valueOf((String)jsonObject.get("mkey"));
+					}
+					
+					if (((String)jsonObject.get("fkey")).equals("null")) {
+					
+					} else {
+						dadKey = Integer.valueOf((String)jsonObject.get("fkey"));
+					}
 
 					if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
 						System.out.println("Person ["+keyId+"] input is VALID");
@@ -138,24 +161,46 @@ public class IndexController {
 					// Else (multiple persons) - JSON Array
 				} else if (inputChecker.isJSONArray(memberInput)) {
 
-					JSONArray jsonArray = (JSONArray) jsonParser.parse(memberInput);
+					JSONArray jsonArray = gson.fromJson(memberInput,JSONArray.class);
 
 					for (int i = 0; i < jsonArray.length(); i++) {
 
 						jsonResponse = new JSONObject();
 						JSONObject extractedJsonObject = jsonArray.getJSONObject(i);
 
-						int keyId = (Integer) extractedJsonObject.get("key");
+						Integer keyId = Integer.valueOf((String) extractedJsonObject.get("key"));
+						
 						String name = (String) extractedJsonObject.get("name");
-						Integer birthday = (Integer) extractedJsonObject.get("dob");
-						String gender = (String) extractedJsonObject.get("g");
-						// Make the first letter to lower case
-						if (gender != null) {
+						Integer birthday = null;
+						String gender = null;
+						Integer mumKey = null;
+						Integer dadKey = null;
+						
+						if (((String)extractedJsonObject.get("dob")).equals("null")) {
+							
+						} else {
+							birthday = Integer.valueOf((String)extractedJsonObject.get("dob"));
+						}
+						
+						if (((String)extractedJsonObject.get("g")).equals("null")) {
+							
+						} else {
+							gender = (String)extractedJsonObject.get("g");
+							// Make the first letter to lower case
 							gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
 						}
 
-						Integer mumKey = (Integer) extractedJsonObject.get("m");
-						Integer dadKey = (Integer) extractedJsonObject.get("f");
+						if (((String)extractedJsonObject.get("m")).equals("null")) {
+						
+						} else {
+							mumKey = Integer.valueOf((String)extractedJsonObject.get("m"));
+						}
+						
+						if (((String)extractedJsonObject.get("f")).equals("null")) {
+						
+						} else {
+							dadKey = Integer.valueOf((String)extractedJsonObject.get("f"));
+						}
 
 						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
 							System.out.println("Person ["+keyId+"] input is VALID");
@@ -204,6 +249,28 @@ public class IndexController {
 		if (member != null) {
 			memberService.deleteById(id);
 			jsonResponseDelete.put("result", "true");
+			
+			List<Member> allMember = (List<Member>) memberService.findAllMembers();
+			for (Member memberForUpdate : allMember) {
+				Integer dadKey = memberForUpdate.getDadKey();
+				Integer mumKey = memberForUpdate.getMumKey();
+				Integer spouseId = memberForUpdate.getSpouseId();
+				
+				if (dadKey == id) {
+					memberForUpdate.setDadKey(null);
+				}
+				
+				if (mumKey == id) {
+					memberForUpdate.setMumKey(null);
+				}
+				
+				if (spouseId == id) {
+					memberForUpdate.setSpouseId(null);
+				}
+				
+				memberService.save(memberForUpdate);
+				
+			}
 
 		} else {
 			jsonResponseDelete.put("result", "false");
@@ -397,10 +464,10 @@ public class IndexController {
 	}
 	
 	public boolean isValidPerson (Integer id, String name, Integer birthday, String gender, Integer mumKey, Integer dadKey) {
-		Integer mumBirthday = 0;
-		Integer dadBirthday = 0;
+		Integer mumBirthday = null;
+		Integer dadBirthday = null;
 		
-		//jsonResponse = new JSONObject();
+		jsonResponse = new JSONObject();
 	    
 	    // Check Key ID
 		if (memberService.findById(id)!=null) {
@@ -439,7 +506,24 @@ public class IndexController {
 				jsonResponse.put("message", "gender ["+gender+"] is NOT valid");
 				return false;
 				
-			} 
+			} else {
+				List<Member> allMembers = new ArrayList<>();
+				allMembers = (List<Member>) memberService.findAllMembers();
+				for (Member member: allMembers) {
+					if (member.getMumKey()==id && gender.equals("male")) {
+						jsonResponse.put("result", "false");
+						jsonResponse.put("message", "This person is "+member.getName()+" ["+member.getKey()
+															+"]'s mother, whose gender can not be 'male'!");
+						return false;
+						
+					} else if (member.getDadKey()==id && gender.equals("female")) {
+						jsonResponse.put("result", "false");
+						jsonResponse.put("message", "This person is "+member.getName()+" ["+member.getKey()
+															+"]'s father, whose gender can not be 'female'!");
+						return false;
+					}
+				}
+			}
 			
 		}
 		
