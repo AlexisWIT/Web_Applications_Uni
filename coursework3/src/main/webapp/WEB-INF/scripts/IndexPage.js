@@ -149,6 +149,10 @@ $(document).ready(function () {
 		$("#addSinglePerson").hide();
 		$("#addMultiplePerson").show();
 		
+		$("#singleAddErrorAlert").fadeOut();
+		$("#singleAddCompleteAlert").fadeOut();
+		$("#singleAddInProgressAlert").fadeOut();
+		
 	});
 	
 	$("#addSinglePersonLink").click(function(){
@@ -158,9 +162,29 @@ $(document).ready(function () {
 		$("#addMultiplePerson").hide();
 		$("#addSinglePerson").show();
 		
+		$("#multiAddErrorAlert").fadeOut();
+		$("#multiAddCompleteAlert").fadeOut();
+		$("#multiAddInProgressAlert").fadeOut();
+		
+	});
+	
+	$("#addPersonBtn").click(function(){
+		$("#multiAddInProgressAlert").fadeOut();
+		$("#multiAddErrorAlert").fadeOut();
+		$("#multiAddCompleteAlert").fadeOut();
+		$("#singleAddInProgressAlert").fadeOut();
+		$("#singleAddErrorAlert").fadeOut();
+		$("#singleAddCompleteAlert").fadeOut();
+		
 	});
 	
 	$("#submit-newPerson").click(function(){
+		$("#multiAddInProgressAlert").fadeOut();
+		$("#multiAddErrorAlert").fadeOut();
+		$("#multiAddCompleteAlert").fadeOut();
+		$("#singleAddInProgressAlert").fadeOut();
+		$("#singleAddErrorAlert").fadeOut();
+		$("#singleAddCompleteAlert").fadeOut();
 		
 		$("#personInfo").val("");
 		$("#showDescendantBtn").hide();
@@ -225,6 +249,9 @@ $(document).ready(function () {
 				},
 				submitHandler:function(form){
 					
+					$("#singleAddInProgressInfo").html("<strong>Please wait...</strong> Your request is being processing.");
+					$("#singleAddInProgressAlert").fadeIn();
+					
 					var key = $("#personKey").val();
 					var name = $("#name").val();
 					
@@ -253,14 +280,15 @@ $(document).ready(function () {
 						success:function(response){
 							console.log(response.result);
 							if(response.result=="false"){
-								$("#singleAddInProgressAlert").hide();
-								$("#singleAddFailedInfo").html("<strong>Update person failed!</strong> "+response.message);
-								$("#singleAddErrorAlert").alert();
+								console.log(response.message);
+								$("#singleAddInProgressAlert").toggle();
+								$("#singleAddFailedInfo").html("<strong>Add new person failed!</strong> "+response.message);
+								$("#singleAddErrorAlert").fadeIn(1000);
 								
 							} else if (response.result=="true") {
-								$("#singleAddInProgressAlert").hide();
+								$("#singleAddInProgressAlert").toggle();
 								$("#singleAddCompleteInfo").html("<strong>Done!</strong> "+response.message);
-								$("#singleAddCompleteAlert").show();
+								$("#singleAddCompleteAlert").fadeIn();
 								completeChange(response.result);
 								$("#addPersonModal").modal('hide');
 								
@@ -299,6 +327,9 @@ $(document).ready(function () {
 				},
 				submitHandler:function(form){
 					
+					$("#multiAddFailedInfo").html("<strong>Please wait...</strong> Your request is being processing.");
+					$("#multiAddInProgressAlert").fadeIn();
+					
 					var data = $("#mutipleAddArea").val();
 					console.log(data);
 					
@@ -314,14 +345,15 @@ $(document).ready(function () {
 						success:function(response){
 							console.log(response.result);
 							if(response.result=="false"){
-								$("#multiAddInProgressAlert").hide();
+								console.log(response.message);
+								$("#multiAddInProgressAlert").toggle();
 								$("#multiAddFailedInfo").html("<strong>Update person failed!</strong> "+response.message);
-								$("#multiAddErrorAlert").show();
+								$("#multiAddErrorAlert").fadeIn(1000);
 								
 							} else if (response.result=="true") {
-								$("#multiAddInProgressAlert").hide();
+								$("#multiAddInProgressAlert").toggle();
 								$("#multiAddCompleteInfo").html("<strong>Done!</strong> "+response.message);
-								$("#multiAddCompleteAlert").show();
+								$("#multiAddCompleteAlert").fadeIn();
 								completeChange(response.result);
 								$("#addPersonModal").modal('hide');
 								
@@ -342,8 +374,24 @@ $(document).ready(function () {
 		
 	});
 	
-	$("#submit-editedPerson").click(function(){
+	$("#cancel-editedPerson").click(function(){
+		$("#editErrorAlert").fadeOut();
+		$("#editCompleteAlert").fadeOut();
+		$("#editInProgressAlert").fadeOut();
 		
+	});
+	
+	$("#cancel-editedPersonIcon").click(function(){
+		$("#editErrorAlert").fadeOut();
+		$("#editCompleteAlert").fadeOut();
+		$("#editInProgressAlert").fadeOut();
+	});
+	
+	$("#submit-editedPerson").click(function(){
+		$("#editErrorAlert").fadeOut();
+		$("#editCompleteAlert").fadeOut();
+		$("#editInProgressAlert").fadeOut();
+
 		$("#personInfo").val("");
 		$("#showDescendantBtn").hide();
 		$("#showAncestorBtn").hide();
@@ -402,9 +450,9 @@ $(document).ready(function () {
 				}
 			},
 			submitHandler:function(form){
-				
+				$("#editInProgressInfo").html("");
 				$("#editInProgressInfo").html("<strong>Please wait...</strong> Your request is being processing.");
-				$("#editInProgressAlert").alert();
+				$("#editInProgressAlert").fadeIn();
 				
 				var key = $("#edit-personKey").val();
 				var name = $("#edit-name").val();
@@ -434,14 +482,16 @@ $(document).ready(function () {
 					success:function(response){
 						console.log(response.result);
 						if(response.result=="false"){
-							$("#editInProgressAlert").hide();
+							console.log(response.message);
+							$("#editInProgressAlert").toggle();
+							$("#editFailedInfo").html("");
 							$("#editFailedInfo").html("<strong>Update person failed!</strong> "+response.message);
-							$("#editErrorAlert").show();
+							$("#editErrorAlert").fadeIn(1000);		
 							
 						} else if (response.result=="true") {
-							$("#editInProgressAlert").hide();
+							$("#editInProgressAlert").toggle();
 							$("#editCompleteInfo").html("<strong>Done!</strong> "+response.message);
-							$("#editCompleteAlert").show();
+							$("#editCompleteAlert").fadeIn();
 							completeChange(response.result);
 							$("#editPersonModal").modal('hide');
 							

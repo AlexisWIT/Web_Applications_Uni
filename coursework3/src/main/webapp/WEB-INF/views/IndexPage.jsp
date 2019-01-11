@@ -164,12 +164,12 @@
 		        				<input id="fatherKey"	name="fatherKey" class="form-control" placeholder="Father Key" >
 	        				</div>
 						
-							<div id="addErrorInfoSingle" role="alert"> </div>
+							<div id="addInfoSingle"> </div>
 							<br>
 							<p><a href="#" id="addMultiplePersonLink">Add multiple persons (JSON)</a></p>
-							<div class="alert alert-info fade" id="singleAddInProgressAlert" role="alert"><span id="singleAddInProgressInfo"></span></div>
-							<div class="alert alert-danger fade" id="singleAddErrorAlert" role="alert"><span id="singleAddFailedInfo"></span></div>
-							<div class="alert alert-success fade" id="singleAddCompleteAlert" role="alert"><span id="singleAddCompleteInfo"></span></div>
+							<div class="alert alert-info fade in out" id="singleAddInProgressAlert" role="alert"><span id="singleAddInProgressInfo"></span></div>
+							<div class="alert alert-danger fade in out" id="singleAddErrorAlert" role="alert"><span id="singleAddFailedInfo"></span></div>
+							<div class="alert alert-success fade in out" id="singleAddCompleteAlert" role="alert"><span id="singleAddCompleteInfo"></span></div>
 						</div>
 						
 						<div id="addMultiplePerson">
@@ -178,9 +178,9 @@
 							<div id="addErrorInfoMulti" role="alert"> </div>
 							<br>
 							<p><a href="#" id="addSinglePersonLink">Add single person</a></p>
-							<div class="alert alert-info fade" id="multiAddInProgressAlert" role="alert"><span id="multiAddInProgressInfo"></span></div>
-							<div class="alert alert-danger fade" id="multiAddErrorAlert" role="alert"><span id="multiAddFailedInfo"></span></div>
-							<div class="alert alert-success fade" id="multiAddCompleteAlert" role="alert"><span id="multiAddCompleteInfo"></span></div>
+							<div class="alert alert-info fade in out" id="multiAddInProgressAlert" role="alert"><span id="multiAddInProgressInfo"></span></div>
+							<div class="alert alert-danger fade in out" id="multiAddErrorAlert" role="alert"><span id="multiAddFailedInfo"></span></div>
+							<div class="alert alert-success fade in out" id="multiAddCompleteAlert" role="alert"><span id="multiAddCompleteInfo"></span></div>
 						</div>
 		            </div>
 
@@ -200,7 +200,7 @@
 	        <div class="modal-content">
 	        
 	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <button type="button" class="close" id="cancel-editedPersonIcon" data-dismiss="modal" aria-hidden="true">&times;</button>
 	                <h4 class="modal-title" id="editPersonLabel">Edit Person</h4>
 	            </div>
 	            
@@ -232,15 +232,16 @@
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-home"></i> Father Key</span>
 		        				<input id="edit-fatherKey"	name="edit-fatherKey" class="form-control" placeholder="Father Key" >
 	        				</div>
-	        				<div class="alert alert-info fade" id="editInProgressAlert" role="alert"><span id="editInProgressInfo"></span></div>
-							<div class="alert alert-danger fade" id="editErrorAlert" role="alert"><span id="editFailedInfo"></span></div>
-							<div class="alert alert-success fade" id="editCompleteAlert" role="alert"><span id="editCompleteInfo"></span></div>
+	        				<br>
+	        				<div class="alert alert-info fade in out" id="editInProgressAlert" role="alert"><span id="editInProgressInfo"></span></div>
+							<div class="alert alert-danger fade in out" id="editErrorAlert" role="alert"><span id="editFailedInfo"></span></div>
+							<div class="alert alert-success fade in out" id="editCompleteAlert" role="alert"><span id="editCompleteInfo"></span></div>
 							
 						</div>
 		            </div>
 		            
 		            <div class="modal-footer">
-		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button type="button" class="btn btn-default" id="cancel-editedPerson" data-dismiss="modal">Cancel</button>
 		                <button type="submit" class="btn btn-primary" id="submit-editedPerson">Submit</button>
 		            </div>
 	            </form>

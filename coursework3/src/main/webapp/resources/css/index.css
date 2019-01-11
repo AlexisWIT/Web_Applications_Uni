@@ -33,6 +33,10 @@
   keyboard: false;
 }
 
+.alert {
+	display:none;
+}
+
 #loader {
 	display: none; 
 	margin-left: auto; 
