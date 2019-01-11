@@ -5,7 +5,7 @@
 
 function showPersonKey(personKey) {
 	
-	$("#personInfo").html(personKey);
+	$("#personInfo").val(personKey);
 	$("#editPersonBtn").show();
 	$("#deletePersonBtn").show();
 	$("#showAncestorBtn").show();
@@ -28,5 +28,5 @@ function editPersonDetail(personData) {
 	if (personData.f !== undefined && personData.f != null)
 	$("#edit-fatherKey").val(personData.f);
 	
-	$("#editToken").html(personData.key);
+	$("#editToken").val(personData.key);
 }

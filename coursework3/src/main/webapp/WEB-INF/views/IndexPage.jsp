@@ -115,7 +115,7 @@
 			
 			<div id="familyTreeDiagram">	
 				<div id="familyTreeDiagramDiv" style="border: solid 1px black; width:100%; height:600px"></div>
-				<div hidden><span id="personInfo" ></span></div>
+				<div hidden><input id="personInfo" ></input></div>
 			</div>
 		</div>
 	
@@ -138,14 +138,14 @@
 	            
 		            <div class="modal-body">
 		            	<div id="addSinglePerson">
-		            		<div hidden><span id="modeToken">1</span></div>
+		            		<div hidden><input id="modeToken"></input></div>
 			           		<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> Person Key</span>
-		        				<input id="personKey"	name="personKey" class="form-control" placeholder="Person Key" required autofocus>
+		        				<input id="personKey"	name="personKey" class="form-control" placeholder="Person Key">
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> Name</span>
-		        				<input id="name"		name="name" class="form-control" placeholder="Name" required >
+		        				<input id="name"		name="name" class="form-control" placeholder="Name">
 	        				</div>
 	        				<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i> Birthday</span>
@@ -173,8 +173,8 @@
 						</div>
 						
 						<div id="addMultiplePerson">
-    						<label for="mutipleAdd">Add multiple persons (JSON)</label>
-							<textarea class="form-control" id="mutipleAddArea" rows="10"></textarea>
+    						<label for="mutipleAddArea">Add multiple persons (JSON)</label>
+							<textarea class="form-control" id="mutipleAddArea" name="mutipleAddArea" rows="10"></textarea>
 							<div id="addErrorInfoMulti" role="alert"> </div>
 							<br>
 							<p><a href="#" id="addSinglePersonLink">Add single person</a></p>
@@ -207,7 +207,7 @@
 	            <form class="form-group" id="form-edit">
 		            <div class="modal-body">
 	            		<div id="editSinglePerson">
-	            			<div hidden><span id="editToken"></span></div>
+	            			<div hidden><input id="editToken"></input></div>
 			           		<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> Person Key</span>
 		        				<input id="edit-personKey"	name="edit-personKey" class="form-control" placeholder="Person Key" required disabled>

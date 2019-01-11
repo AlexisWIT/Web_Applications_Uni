@@ -37,11 +37,11 @@ $(document).ready(function () {
 	
 	$("#showAncestorBtn").click(function(){
 		
-		var selectedPerson = $("#personInfo").html();
+		var selectedPerson = $("#personInfo").val();
 		console.log("Request for Ancestor tree of ["+selectedPerson+"]");
 		$("#loadingWindow").modal('show');
 		
-		$("#personInfo").html("");
+		$("#personInfo").val("");
 		$("#showDescendantBtn").hide();
 		$("#showAncestorBtn").hide();
 		$("#deletePersonBtn").hide();
@@ -67,13 +67,14 @@ $(document).ready(function () {
 		
 	});
 	
+	
 	$("#showDescendantBtn").click(function(){
 		
-		var selectedPerson = $("#personInfo").html();
+		var selectedPerson = $("#personInfo").val();
 		console.log("Request for Descendant tree of ["+selectedPerson+"]");
 		$("#loadingWindow").modal('show');
 		
-		$("#personInfo").html("");
+		$("#personInfo").val("");
 		$("#showDescendantBtn").hide();
 		$("#showAncestorBtn").hide();
 		$("#deletePersonBtn").hide();
@@ -105,7 +106,7 @@ $(document).ready(function () {
 		$("#showDescendantBtn").hide();
 		$("#loadingWindow").modal('show');
 		
-		$("#personInfo").html("");
+		$("#personInfo").val("");
 		$("#showDescendantBtn").hide();
 		$("#showAncestorBtn").hide();
 		$("#deletePersonBtn").hide();
@@ -131,7 +132,14 @@ $(document).ready(function () {
 		
 	});
 	
+	$("#addPersonBtn").click(function(){
+		$("#modeToken").val('1');
+		
+	});
+	
 	$("#addMultiplePersonLink").click(function(){
+		$("#modeToken").val('');
+		$("#modeToken").val('2');
 		$("#personKey").val('');
 		$("#name").val('');
 		$("#birthday").val('');
@@ -144,6 +152,8 @@ $(document).ready(function () {
 	});
 	
 	$("#addSinglePersonLink").click(function(){
+		$("#modeToken").val('');
+		$("#modeToken").val('1');
 		$("#mutipleAddArea").val('');
 		$("#addMultiplePerson").hide();
 		$("#addSinglePerson").show();
@@ -152,13 +162,15 @@ $(document).ready(function () {
 	
 	$("#submit-newPerson").click(function(){
 		
-		$("#personInfo").html("");
+		$("#personInfo").val("");
 		$("#showDescendantBtn").hide();
 		$("#showAncestorBtn").hide();
 		$("#deletePersonBtn").hide();
 		$("#editPersonBtn").hide();
 		
-		if ($("#modeToken").html()=='1') {
+		if ($("#modeToken").val()==1) {
+			
+			console.log("Input Mode ["+$("#modeToken").val()+"]");
 			
 			$("#form-addNew").validate({
 				errorClass:'errors',
@@ -225,7 +237,7 @@ $(document).ready(function () {
 					var fkey = $("#fatherKey").val();
 					if (fkey === undefined || fkey == "" ) fkey=null;
 					
-					var data = '{ "newPerson" : { "key": "'+key+'", "name": "'+name+'", "dob": "'+dob+'", "gender": "'+gender+'", "mkey": "'+mkey+'", "fkey": "'+fkey+'"}}';
+					var data = '{"key": "'+key+'", "name": "'+name+'", "dob": "'+dob+'", "gender": "'+gender+'", "mkey": "'+mkey+'", "fkey": "'+fkey+'"}';
 					console.log(data);
 					
 					var jsonData = JSON.parse(data);
@@ -262,46 +274,69 @@ $(document).ready(function () {
 			})
 			
 			
-		} else if ($("#mutipleAddArea").val() != '') {
+		} else if ($("#modeToken").val()==2) {
 			
-			$("#personInfo").html("");
+			console.log("Input Mode ["+$("#modeToken").val()+"]");
+			
+			$("#personInfo").val("");
 			$("#showDescendantBtn").hide();
 			$("#showAncestorBtn").hide();
 			$("#deletePersonBtn").hide();
 			$("#editPersonBtn").hide();
 			
-			
-			var data = $("#mutipleAddArea").val();
-			console.log(data);
-			
-			var jsonData = JSON.parse(data);
-			console.log("Data sent: "+jsonData);
-			
-			$.ajax({
-				type: "POST",
-				url: "/GE/person/addJSON",
-				contentType: "application/json",
-				dataType: 'json',
-				data: JSON.stringify(jsonData),
-				success:function(response){
-					console.log(response.result);
-					if(response.result=="false"){
-						$("#multiAddInProgressAlert").hide();
-						$("#multiAddFailedInfo").html("<strong>Update person failed!</strong> "+response.message);
-						$("#multiAddErrorAlert").show();
-						
-					} else if (response.result=="true") {
-						$("#multiAddInProgressAlert").hide();
-						$("#multiAddCompleteInfo").html("<strong>Done!</strong> "+response.message);
-						$("#multiAddCompleteAlert").show();
-						completeChange(response.result);
-						$("#addPersonModal").modal('hide');
-						
+			$("#form-addNew").validate({
+				errorClass:'errors',
+				rules: {
+					"mutipleAddArea":{
+						required:true
 					}
 					
+				},
+				messages:{
+					"mutipleAddArea":{
+						required: "This field is required!"
+					}
+				},
+				submitHandler:function(form){
+					
+					var data = $("#mutipleAddArea").val();
+					console.log(data);
+					
+					var jsonData = JSON.parse(data);
+					console.log("Data sent: "+jsonData);
+					
+					$.ajax({
+						type: "POST",
+						url: "/GE/person/addJSON",
+						contentType: "application/json",
+						dataType: 'json',
+						data: JSON.stringify(jsonData),
+						success:function(response){
+							console.log(response.result);
+							if(response.result=="false"){
+								$("#multiAddInProgressAlert").hide();
+								$("#multiAddFailedInfo").html("<strong>Update person failed!</strong> "+response.message);
+								$("#multiAddErrorAlert").show();
+								
+							} else if (response.result=="true") {
+								$("#multiAddInProgressAlert").hide();
+								$("#multiAddCompleteInfo").html("<strong>Done!</strong> "+response.message);
+								$("#multiAddCompleteAlert").show();
+								completeChange(response.result);
+								$("#addPersonModal").modal('hide');
+								
+							}
+							
+						}
+					
+					});
+					
+					
 				}
+					
+			})
 			
-			});
+			
 		}
 		
 		
@@ -309,14 +344,14 @@ $(document).ready(function () {
 	
 	$("#submit-editedPerson").click(function(){
 		
-		$("#personInfo").html("");
+		$("#personInfo").val("");
 		$("#showDescendantBtn").hide();
 		$("#showAncestorBtn").hide();
 		$("#deletePersonBtn").hide();
 		$("#editPersonBtn").hide();
 		
 		$("#form-edit").validate({
-			errorClass:'alert alert-danger',
+			errorClass:'errors',
 			rules: {
 				"edit-personKey":{
 					required:true,
@@ -382,7 +417,7 @@ $(document).ready(function () {
 				if (mkey === undefined || mkey == "" ) mkey=null;
 				var fkey = $("#edit-fatherKey").val();
 				if (fkey === undefined || fkey == "" ) fkey=null;
-				var actualKey = $("#editToken").html();
+				var actualKey = $("#editToken").val();
 				
 				var data = '{ "key": "'+key+'", "name": "'+name+'", "dob": "'+dob+'", "gender": "'+gender+'", "mkey": "'+mkey+'", "fkey": "'+fkey+'", "actualKey": "'+actualKey+'"}';
 				console.log(data);
@@ -426,19 +461,17 @@ $(document).ready(function () {
 		
 		$("#loadingWindow").modal('show');
 		
-		$("#personInfo").html("");
 		$("#showDescendantBtn").hide();
 		$("#showAncestorBtn").hide();
 		$("#deletePersonBtn").hide();
 		$("#editPersonBtn").hide();
 		
-		var selectedPerson = $("#personInfo").html();
+		
+		var selectedPerson = $("#personInfo").val();
 		console.log("Request for delete person ["+selectedPerson+"]");
-		$("#personInfo").html("");
-		$("#showDescendantBtn").hide();
-		$("#showAncestorBtn").hide();
-		$("#deletePersonBtn").hide();
-		$("#editPersonBtn").hide();
+		
+		$("#personInfo").val("");
+		
 		
 		
 		$.ajax({
@@ -477,6 +510,7 @@ $(document).ready(function () {
 	});
 	
 	$("#treeTab").click(function(){
+		completeChange("true");
 		$("#homeTab").removeClass("active");
 		$("#personsTab").removeClass("active");
 		$("#treeTab").addClass("active");
@@ -498,7 +532,7 @@ $(document).ready(function () {
 
 function completeChange(result){
 	
-	$("#personInfo").html("");
+	$("#personInfo").val("");
 	$("#showDescendantBtn").hide();
 	$("#showAncestorBtn").hide();
 	$("#deletePersonBtn").hide();

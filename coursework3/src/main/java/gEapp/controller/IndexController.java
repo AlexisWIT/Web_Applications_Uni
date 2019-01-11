@@ -104,11 +104,14 @@ public class IndexController {
 
 				// If only one person to be added - JSON Object
 				if (inputChecker.isJSONObject(memberInput)) {
+					
+					String parsableInput = "{'newPerson': "+memberInput+"}";
 
 					jsonResponse = new JSONObject();
 					//JSONObject jsonObject = gson.fromJson(memberInput, JSONObject.class);
 					
-					JSONObject jsonObject = new JSONObject(memberInput);
+					JSONObject jsonObject = new JSONObject(parsableInput);
+					System.out.println("Prefix added: "+jsonObject.toString());
 					
 					Integer keyId = Integer.valueOf((String) jsonObject.getJSONObject("newPerson").getString("key"));
 					
@@ -160,13 +163,18 @@ public class IndexController {
 
 					// Else (multiple persons) - JSON Array
 				} else if (inputChecker.isJSONArray(memberInput)) {
-
-					JSONArray jsonArray = gson.fromJson(memberInput,JSONArray.class);
+					
+					JSONArray jsonArray = new JSONArray(memberInput);
 
 					for (int i = 0; i < jsonArray.length(); i++) {
 
 						jsonResponse = new JSONObject();
-						JSONObject extractedJsonObject = jsonArray.getJSONObject(i);
+						JSONObject inputJsonObject = jsonArray.getJSONObject(i);
+						
+						String parsableJSON = "{'newPerson': "+inputJsonObject.toString()+"}";
+						System.out.println("Prefix added: "+parsableJSON);
+						
+						JSONObject extractedJsonObject = new JSONObject(parsableJSON);
 
 						Integer keyId = Integer.valueOf((String) extractedJsonObject.getJSONObject("newPerson").getString("key"));
 						
@@ -185,7 +193,7 @@ public class IndexController {
 						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("g")).equals("null")) {
 							
 						} else {
-							gender = (String)extractedJsonObject.get("g");
+							gender = (String)extractedJsonObject.getJSONObject("newPerson").get("g");
 							// Make the first letter to lower case
 							gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
 						}
@@ -245,6 +253,8 @@ public class IndexController {
 	public Object deleteMember(@PathVariable Integer id) {
 		JSONObject jsonResponseDelete = new JSONObject();
 		Member member = memberService.findById(id);
+		
+		System.out.println("Received request for deleting ["+id+"]");
 
 		if (member != null) {
 			memberService.deleteById(id);
@@ -271,6 +281,7 @@ public class IndexController {
 				memberService.save(memberForUpdate);
 				
 			}
+			System.out.println("Person ["+id+"] deleted successfully.");
 
 		} else {
 			jsonResponseDelete.put("result", "false");

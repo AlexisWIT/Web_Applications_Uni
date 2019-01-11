@@ -195,8 +195,8 @@ function initFamilyTree(familyDataArray) {
 }
 
 function genderBrushConverter(g) {
-	if (g === "male") return "blue";
-	if (g === "female") return "green";
+	if (g === "male") return "lightblue";
+	if (g === "female") return "lightgreen";
 	return "lightgray";
 }
 

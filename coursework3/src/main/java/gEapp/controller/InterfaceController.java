@@ -130,6 +130,8 @@ public class InterfaceController {
 		Integer keyId = Integer.valueOf((String) jsonObject.get("key"));
 		Integer actualKeyId = Integer.valueOf((String)jsonObject.get("actualKey"));
 		
+		System.out.println("KeyId="+keyId+", ActualKey="+actualKeyId);
+		
 		String name = (String) jsonObject.get("name");
 		Integer birthday = null;
 		String gender = null;
@@ -436,15 +438,36 @@ public class InterfaceController {
 		Integer dadBirthday = null;
 		
 		jsonResponse = new JSONObject();
-	    
-	    // Check Key ID
-		if (key!=actualKey) {
-			System.out.println("---- Warning: Person ID Changed ----");
-			jsonResponse.put("result", "false");
-			jsonResponse.put("message", "person id must NOT be changed");
-			return false;
+		
+		if (key!=null&&actualKey!=null) {
+			int newKey = key;
+			int newActualKey = actualKey;
+			
+			// Check Key ID
+			if (key!=actualKey) {
+				System.out.println("---- Warning: Person ID Changed ----");
+				System.out.println("Key="+newKey+"ActualKey="+newActualKey);
+				jsonResponse.put("result", "false");
+				jsonResponse.put("message", "person id must NOT be changed");
+				return false;
+				
+			}
+			
+		} else {
+			// Check Key ID
+			if (key!=actualKey) {
+				System.out.println("---- Warning: Person ID Changed ----");
+				System.out.println("Key="+key+"ActualKey="+actualKey);
+				jsonResponse.put("result", "false");
+				jsonResponse.put("message", "person id must NOT be changed");
+				return false;
+				
+			}
 			
 		}
+		
+	    
+	    
 		
 		// Check Name
 		//If name is not original name and still exists already
