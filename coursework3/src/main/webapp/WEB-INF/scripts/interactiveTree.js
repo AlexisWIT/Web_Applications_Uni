@@ -3,9 +3,15 @@
  */
 
 
-function showPersonKey(personKey) {
+function confirmSelect(personData) {
 	
-	$("#personInfo").val(personKey);
+	$("#personInfo").val(personData.key);
+	$("#personName").val(personData.name);
+	$("#personDob").val(personData.dob);
+	$("#personGender").val(personData.g);
+	$("#personMkey").val(personData.m);
+	$("#personFkey").val(personData.f);
+	
 	$("#editPersonBtn").show();
 	$("#deletePersonBtn").show();
 	$("#showAncestorBtn").show();
@@ -13,9 +19,19 @@ function showPersonKey(personKey) {
 	
 }
 
-function editPersonDetail(personData) {
+function editPersonByClickObject(personData) {
 	
-	$("#editPersonModal").modal("show");
+	$("#editErrorAlert").fadeOut();
+	$("#editCompleteAlert").fadeOut();
+	$("#editInProgressAlert").fadeOut();
+	
+	// Initialise edit inputs
+	$("#editToken").val('');
+	$("#edit-birthday").val('');
+	$("#edit-gender").val('');
+	$("#edit-motherKey").val('');
+	$("#edit-fatherKey").val('');
+	
 	console.log("Start editing person ["+personData.key+"]");
 	$("#edit-personKey").val(personData.key);
 	$("#edit-name").val(personData.name);
@@ -29,4 +45,20 @@ function editPersonDetail(personData) {
 	$("#edit-fatherKey").val(personData.f);
 	
 	$("#editToken").val(personData.key);
+	
+	$("#editPersonModal").modal("show");
+}
+
+function cancelSelect() {
+	$("#personInfo").val('');
+	$("#personName").val('');
+	$("#personDob").val('');
+	$("#personGender").val('');
+	$("#personMkey").val('');
+	$("#personFkey").val('');
+	
+	$("#showDescendantBtn").hide();
+	$("#showAncestorBtn").hide();
+	$("#deletePersonBtn").hide();
+	$("#editPersonBtn").hide();
 }

@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import gEapp.domain.InputChecker;
 import gEapp.domain.JSONOrderedObject;
 import gEapp.domain.Member;
 import gEapp.repository.MemberRepository;
@@ -111,6 +110,7 @@ public class IndexController {
 					//JSONObject jsonObject = gson.fromJson(memberInput, JSONObject.class);
 					
 					JSONObject jsonObject = new JSONObject(parsableInput);
+
 					System.out.println("Prefix added: "+jsonObject.toString());
 					
 					Integer keyId = Integer.valueOf((String) jsonObject.getJSONObject("newPerson").getString("key"));
@@ -148,7 +148,7 @@ public class IndexController {
 					}
 
 					if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
-						System.out.println("Person ["+keyId+"] input is VALID");
+						System.out.println("Person ["+keyId+"] input is valid");
 					} else {
 						return jsonResponse.toMap();
 					}
@@ -260,6 +260,7 @@ public class IndexController {
 			memberService.deleteById(id);
 			jsonResponseDelete.put("result", "true");
 			
+			@SuppressWarnings("unchecked")
 			List<Member> allMember = (List<Member>) memberService.findAllMembers();
 			for (Member memberForUpdate : allMember) {
 				Integer dadKey = memberForUpdate.getDadKey();
@@ -354,10 +355,12 @@ public class IndexController {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Object getParentsList(Integer keyId) {
 		Integer mumKey = null;
 		Integer dadKey = null;
 
+		@SuppressWarnings("unchecked")
 		Map<String, Object> parentsMap = new LinkedHashMap();
 		Member member = memberService.findById(keyId);
 
@@ -393,7 +396,6 @@ public class IndexController {
 
 			@SuppressWarnings("unchecked")
 			Collection<Member> memberInDatabase = makeCollection(memberService.findAllIter());
-			int totalMember = memberInDatabase.size();
 
 			JSONArray jsonChildrenArray = new JSONArray();
 
@@ -430,6 +432,7 @@ public class IndexController {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Object getChildrenList(Integer id) {
 
 		Map<String, Object> jsonChildren = new LinkedHashMap<>();
@@ -439,6 +442,7 @@ public class IndexController {
 
 		System.out.println("Start searching children for: " + memberService.findById(id).getName() + " [" + id + "]");
 
+		@SuppressWarnings("unchecked")
 		List<Object> jsonChildrenArray = new ArrayList();
 
 		for (Member memberForCheck : memberInDatabase) {
@@ -474,6 +478,7 @@ public class IndexController {
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean isValidPerson (Integer id, String name, Integer birthday, String gender, Integer mumKey, Integer dadKey) {
 		Integer mumBirthday = null;
 		Integer dadBirthday = null;

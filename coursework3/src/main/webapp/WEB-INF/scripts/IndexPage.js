@@ -7,7 +7,11 @@ $(document).ready(function () {
 	
 	$("#showFamilyTree").click(function(){
 		
-
+		$("#showDescendantBtn").hide();
+		$("#showAncestorBtn").hide();
+		$("#deletePersonBtn").hide();
+		$("#editPersonBtn").hide();
+		
 		$("#homeTab").removeClass("active");
 		$("#personsTab").removeClass("active");
 		$("#treeTab").addClass("active");
@@ -138,7 +142,6 @@ $(document).ready(function () {
 	});
 	
 	$("#addMultiplePersonLink").click(function(){
-		$("#modeToken").val('');
 		$("#modeToken").val('2');
 		$("#personKey").val('');
 		$("#name").val('');
@@ -156,7 +159,6 @@ $(document).ready(function () {
 	});
 	
 	$("#addSinglePersonLink").click(function(){
-		$("#modeToken").val('');
 		$("#modeToken").val('1');
 		$("#mutipleAddArea").val('');
 		$("#addMultiplePerson").hide();
@@ -282,7 +284,7 @@ $(document).ready(function () {
 							if(response.result=="false"){
 								console.log(response.message);
 								$("#singleAddInProgressAlert").toggle();
-								$("#singleAddFailedInfo").html("<strong>Add new person failed!</strong> "+response.message);
+								$("#singleAddFailedInfo").html("<strong>Failed to add new person!</strong> "+response.message);
 								$("#singleAddErrorAlert").fadeIn(1000);
 								
 							} else if (response.result=="true") {
@@ -327,42 +329,49 @@ $(document).ready(function () {
 				},
 				submitHandler:function(form){
 					
-					$("#multiAddFailedInfo").html("<strong>Please wait...</strong> Your request is being processing.");
+					$("#multiAddInProgressInfo").html("<strong>Please wait...</strong> Your request is being processing.");
 					$("#multiAddInProgressAlert").fadeIn();
 					
 					var data = $("#mutipleAddArea").val();
-					console.log(data);
+					console.log("Data input: "+data);
 					
-					var jsonData = JSON.parse(data);
-					console.log("Data sent: "+jsonData);
-					
-					$.ajax({
-						type: "POST",
-						url: "/GE/person/addJSON",
-						contentType: "application/json",
-						dataType: 'json',
-						data: JSON.stringify(jsonData),
-						success:function(response){
-							console.log(response.result);
-							if(response.result=="false"){
-								console.log(response.message);
-								$("#multiAddInProgressAlert").toggle();
-								$("#multiAddFailedInfo").html("<strong>Update person failed!</strong> "+response.message);
-								$("#multiAddErrorAlert").fadeIn(1000);
-								
-							} else if (response.result=="true") {
-								$("#multiAddInProgressAlert").toggle();
-								$("#multiAddCompleteInfo").html("<strong>Done!</strong> "+response.message);
-								$("#multiAddCompleteAlert").fadeIn();
-								completeChange(response.result);
-								$("#addPersonModal").modal('hide');
+					try {
+						var jsonData = JSON.parse(data);
+						console.log("Data sent: "+jsonData);
+						
+						$.ajax({
+							type: "POST",
+							url: "/GE/person/addJSON",
+							contentType: "application/json",
+							dataType: 'json',
+							data: JSON.stringify(jsonData),
+							success:function(response){
+								console.log(response.result);
+								if(response.result=="false"){
+									console.log(response.message);
+									$("#multiAddInProgressAlert").toggle();
+									$("#multiAddFailedInfo").html("<strong>Failed to add new person!</strong> "+response.message);
+									$("#multiAddErrorAlert").fadeIn(1000);
+									
+								} else if (response.result=="true") {
+									$("#multiAddInProgressAlert").toggle();
+									$("#multiAddCompleteInfo").html("<strong>Done!</strong> "+response.message);
+									$("#multiAddCompleteAlert").fadeIn();
+									completeChange(response.result);
+									$("#addPersonModal").modal('hide');
+									
+								}
 								
 							}
-							
-						}
-					
-					});
-					
+						
+						});
+						
+					} catch (exception) {
+						$("#multiAddInProgressAlert").toggle();
+						$("#multiAddFailedInfo").html("<strong>JSON Input "+exception.name+":</strong> "+exception.message);
+						$("#multiAddErrorAlert").fadeIn(1000);
+
+					}
 					
 				}
 					
@@ -379,12 +388,46 @@ $(document).ready(function () {
 		$("#editCompleteAlert").fadeOut();
 		$("#editInProgressAlert").fadeOut();
 		
+		$("#personInfo").val("");
+		$("#personName").val('');
+		$("#personDob").val('');
+		$("#personGender").val('');
+		$("#personMkey").val('');
+		$("#personFkey").val('');
+		
 	});
 	
 	$("#cancel-editedPersonIcon").click(function(){
 		$("#editErrorAlert").fadeOut();
 		$("#editCompleteAlert").fadeOut();
 		$("#editInProgressAlert").fadeOut();
+		
+		$("#personInfo").val("");
+		$("#personName").val('');
+		$("#personDob").val('');
+		$("#personGender").val('');
+		$("#personMkey").val('');
+		$("#personFkey").val('');
+	});
+	
+	$("#editPersonBtn").click(function(){
+		$("#edit-personKey").val($("#personInfo").val());
+		$("#edit-name").val($("#personName").val());
+		
+		if ($("#personDob").val() !== undefined && $("#personDob").val() != null)
+		$("#edit-birthday").val($("#personDob").val());
+		
+		if ($("#personGender").val() !== undefined && $("#personGender").val() != null)
+		$("#edit-gender").val($("#personGender").val());
+		
+		if ($("#personMkey").val() !== undefined && $("#personMkey").val() != null)
+		$("#edit-motherKey").val($("#personMkey").val());
+		
+		if ($("#personFkey").val() !== undefined && $("#personFkey").val() != null)
+		$("#edit-fatherKey").val($("#personFkey").val());
+		
+		$("#editToken").val($("#personInfo").val());
+		
 	});
 	
 	$("#submit-editedPerson").click(function(){
@@ -542,6 +585,10 @@ $(document).ready(function () {
 	
 	
 	$("#homeTab").click(function(){
+		$("#showDescendantBtn").hide();
+		$("#showAncestorBtn").hide();
+		$("#deletePersonBtn").hide();
+		$("#editPersonBtn").hide();
 		$("#homeTab").addClass("active");
 		$("#personsTab").removeClass("active");
 		$("#treeTab").removeClass("active");
@@ -560,6 +607,10 @@ $(document).ready(function () {
 	});
 	
 	$("#treeTab").click(function(){
+		$("#showDescendantBtn").hide();
+		$("#showAncestorBtn").hide();
+		$("#deletePersonBtn").hide();
+		$("#editPersonBtn").hide();
 		completeChange("true");
 		$("#homeTab").removeClass("active");
 		$("#personsTab").removeClass("active");
@@ -583,10 +634,26 @@ $(document).ready(function () {
 function completeChange(result){
 	
 	$("#personInfo").val("");
+	$("#personName").val('');
+	$("#personDob").val('');
+	$("#personGender").val('');
+	$("#personMkey").val('');
+	$("#personFkey").val('');
+	
 	$("#showDescendantBtn").hide();
 	$("#showAncestorBtn").hide();
 	$("#deletePersonBtn").hide();
 	$("#editPersonBtn").hide();
+	
+	$("#editErrorAlert").fadeOut();
+	$("#editCompleteAlert").fadeOut();
+	$("#editInProgressAlert").fadeOut();
+	$("#multiAddInProgressAlert").fadeOut();
+	$("#multiAddErrorAlert").fadeOut();
+	$("#multiAddCompleteAlert").fadeOut();
+	$("#singleAddInProgressAlert").fadeOut();
+	$("#singleAddErrorAlert").fadeOut();
+	$("#singleAddCompleteAlert").fadeOut();
 	
 	if (result=="true") {
 		$("#loadingWindow").modal('show');

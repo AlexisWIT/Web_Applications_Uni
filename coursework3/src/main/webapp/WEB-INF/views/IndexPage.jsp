@@ -103,19 +103,26 @@
 		<div class="jumbotron" id="familyTreeSection">
 			<div id="operation-buttons">
 				<p>
-					<button class="btn btn-sm btn-info" id="refreshTreeBtn" data-toggle="modal" data-target="#refreshTree">Refresh Tree</button>
-					<button class="btn btn-sm btn-primary" id="addPersonBtn"data-toggle="modal" data-target="#addPersonModal">Add Person</button>
-					<button class="btn btn-sm btn-primary" id="editPersonBtn"data-toggle="modal" data-target="#editPersonTips">Edit Person</button>
-					<button class="btn btn-sm btn-danger" id="deletePersonBtn"data-toggle="modal" data-target="#deletePersonModal">Delete Person</button>
-					<button class="btn btn-sm btn-primary" id="showAncestorBtn" data-toggle="modal" data-target="#showAncestor">View Ancestors</button>
-					<button class="btn btn-sm btn-primary" id="showDescendantBtn" data-toggle="modal" data-target="#showDescendant">View Descendants</button>
+					<button class="btn btn-sm btn-info" id="refreshTreeBtn" data-toggle="modal" data-target="#refreshTree"><span class="glyphicon glyphicon-refresh"></span> Refresh Tree</button>
+					<button class="btn btn-sm btn-primary" id="addPersonBtn"data-toggle="modal" data-target="#addPersonModal"><span class="glyphicon glyphicon-plus"></span> Add Person</button>
+					<button class="btn btn-sm btn-primary" id="editPersonBtn"data-toggle="modal" data-target="#editPersonModal"><span class="glyphicon glyphicon-edit"></span> Edit Person</button>
+					<button class="btn btn-sm btn-danger" id="deletePersonBtn"data-toggle="modal" data-target="#deletePersonModal"><span class="glyphicon glyphicon-trash"></span> Delete Person</button>
+					<button class="btn btn-sm btn-primary" id="showAncestorBtn" data-toggle="modal" data-target="#showAncestor"><span class="glyphicon glyphicon-circle-arrow-up"></span> View Ancestors</button>
+					<button class="btn btn-sm btn-primary" id="showDescendantBtn" data-toggle="modal" data-target="#showDescendant"><span class="glyphicon glyphicon-circle-arrow-down"></span> View Descendants</button>
 				</p>
 	
 			</div>
 			
 			<div id="familyTreeDiagram">	
 				<div id="familyTreeDiagramDiv" style="border: solid 1px black; width:100%; height:600px"></div>
-				<div hidden><input id="personInfo" ></input></div>
+				<div hidden>
+					<input id="personInfo" ></input><!-- This is person key -->
+					<input id="personName" ></input>
+					<input id="personDob" ></input>
+					<input id="personGender" ></input>
+					<input id="personMkey" ></input>
+					<input id="personFkey" ></input>
+				</div>
 			</div>
 		</div>
 	

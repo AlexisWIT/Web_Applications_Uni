@@ -1,4 +1,4 @@
-package gEapp.domain;
+package gEapp.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

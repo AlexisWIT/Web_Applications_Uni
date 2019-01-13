@@ -28,14 +28,14 @@ function initFamilyTree(familyDataArray) {
         initialContentAlignment: go.Spot.Center,
         "undoManager.isEnabled": true,
         
-        // when a node is selected, draw a big yellow circle behind it
+        // when a node is selected, draw a blue rectangle behind it
         nodeSelectionAdornmentTemplate: 
         	$(go.Adornment, "Auto", {
                 layerName: "Grid"
             }, // the predefined layer that is behind everything else
             $(go.Shape, "Rectangle", {
                 fill: null,
-                strokeWidth: 2,
+                strokeWidth: 5,
                 stroke: "blue"
             }),
             $(go.Placeholder)
@@ -237,7 +237,7 @@ function setupDiagram(diagram, array, focusId) {
             function (e1) {
                 var person = e1.subject.part;
                 if (!(person instanceof go.Link)) {
-                	showPersonKey(person.data.key);
+                	confirmSelect(person.data);
                 }
             });
 	
@@ -245,8 +245,12 @@ function setupDiagram(diagram, array, focusId) {
             function (e2) {
                 var person = e2.subject.part;
                 if (!(person instanceof go.Link)) {
-                	editPersonDetail(person.data);
+                	editPersonByClickObject(person.data);
                 }
+            });
+	diagram.addDiagramListener("BackgroundSingleClicked", // Cancel select
+            function (e3) {
+                cancelSelect();
             });
 	
     diagram.model = go.GraphObject.make(go.GraphLinksModel, { // declare support for link label nodes

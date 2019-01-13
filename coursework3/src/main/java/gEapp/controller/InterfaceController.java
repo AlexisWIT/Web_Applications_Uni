@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
-import gEapp.domain.InputChecker;
 import gEapp.domain.JSONOrderedObject;
 import gEapp.domain.JSONResponse;
 import gEapp.domain.Member;
