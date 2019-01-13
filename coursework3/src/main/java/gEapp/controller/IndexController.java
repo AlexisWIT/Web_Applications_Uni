@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import gEapp.domain.JSONOrderedObject;
@@ -105,59 +106,71 @@ public class IndexController {
 				if (inputChecker.isJSONObject(memberInput)) {
 					
 					String parsableInput = "{'newPerson': "+memberInput+"}";
-
+					System.out.println("Prefix added: "+parsableInput);
 					jsonResponse = new JSONObject();
+					
 					//JSONObject jsonObject = gson.fromJson(memberInput, JSONObject.class);
-					
 					JSONObject jsonObject = new JSONObject(parsableInput);
-
-					System.out.println("Prefix added: "+jsonObject.toString());
 					
-					Integer keyId = Integer.valueOf((String) jsonObject.getJSONObject("newPerson").getString("key"));
 					
-					String name = (String) jsonObject.getJSONObject("newPerson").getString("name");
-					Integer birthday = null;
-					String gender = null;
-					Integer mumKey = null;
-					Integer dadKey = null;
-					
-					if (((String)jsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
+					try {
+						Integer keyId = Integer.valueOf((String) jsonObject.getJSONObject("newPerson").getString("key"));
 						
-					} else {
-						birthday = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("dob"));
-					}
-					
-					if (((String)jsonObject.getJSONObject("newPerson").getString("gender")).equals("null")) {
+						String name = (String) jsonObject.getJSONObject("newPerson").getString("name");
+						Integer birthday = null;
+						String gender = null;
+						Integer mumKey = null;
+						Integer dadKey = null;
 						
-					} else {
-						gender = (String)jsonObject.getJSONObject("newPerson").getString("gender");
-						// Make the first letter to lower case
-						gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
-					}
+						if (((String)jsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
+							
+						} else {
+							birthday = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("dob"));
+						}
+						
+						if (((String)jsonObject.getJSONObject("newPerson").getString("gender")).equals("null")) {
+							
+						} else {
+							gender = (String)jsonObject.getJSONObject("newPerson").getString("gender");
+							// Make the first letter to lower case
+							gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
+						}
 
-					if (((String)jsonObject.getJSONObject("newPerson").getString("mkey")).equals("null")) {
-					
-					} else {
-						mumKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("mkey"));
-					}
-					
-					if (((String)jsonObject.getJSONObject("newPerson").getString("fkey")).equals("null")) {
-					
-					} else {
-						dadKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("fkey"));
-					}
+						if (((String)jsonObject.getJSONObject("newPerson").getString("mkey")).equals("null")) {
+						
+						} else {
+							mumKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("mkey"));
+						}
+						
+						if (((String)jsonObject.getJSONObject("newPerson").getString("fkey")).equals("null")) {
+						
+						} else {
+							dadKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("fkey"));
+						}
 
-					if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
-						System.out.println("Person ["+keyId+"] input is valid");
-					} else {
+						// Check Validity
+						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
+							System.out.println("Person ["+keyId+"] input is valid");
+						} else {
+							return jsonResponse.toMap();
+						}
+
+						Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
+						memberService.save(member);
+
+						System.out.println("SAVED: " + member.toString());
+						System.out.println("SUCCESS: The person input have been saved!");
+						
+					} catch (JSONException je1) {
+						System.out.println("FAILED: "+je1.getMessage());
+						jsonResponse.put("result", "false");
+						jsonResponse.put("message", je1.getMessage());
 						return jsonResponse.toMap();
 					}
 
-					Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
-					memberService.save(member);
-
-					System.out.println("SAVED: " + member.toString());
-					System.out.println("SUCCESS: The person input have been saved!");
+					
+					
+					
 					jsonResponse.put("result", "true");
 					return jsonResponse.toMap();
 
@@ -175,54 +188,64 @@ public class IndexController {
 						System.out.println("Prefix added: "+parsableJSON);
 						
 						JSONObject extractedJsonObject = new JSONObject(parsableJSON);
-
-						Integer keyId = Integer.valueOf((String) extractedJsonObject.getJSONObject("newPerson").getString("key"));
 						
-						String name = (String) extractedJsonObject.getJSONObject("newPerson").getString("name");
-						Integer birthday = null;
-						String gender = null;
-						Integer mumKey = null;
-						Integer dadKey = null;
-						
-						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
+						try {
 							
-						} else {
-							birthday = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("dob"));
-						}
-						
-						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("g")).equals("null")) {
+							Integer keyId = Integer.valueOf((String) extractedJsonObject.getJSONObject("newPerson").getString("key"));
 							
-						} else {
-							gender = (String)extractedJsonObject.getJSONObject("newPerson").get("g");
-							// Make the first letter to lower case
-							gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
-						}
+							String name = (String) extractedJsonObject.getJSONObject("newPerson").getString("name");
+							Integer birthday = null;
+							String gender = null;
+							Integer mumKey = null;
+							Integer dadKey = null;
+							
+							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
+								
+							} else {
+								birthday = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("dob"));
+							}
+							
+							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("g")).equals("null")) {
+								
+							} else {
+								gender = (String)extractedJsonObject.getJSONObject("newPerson").get("g");
+								// Make the first letter to lower case
+								gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
+							}
 
-						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("m")).equals("null")) {
-						
-						} else {
-							mumKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("m"));
-						}
-						
-						if (((String)extractedJsonObject.getJSONObject("newPerson").getString("f")).equals("null")) {
-						
-						} else {
-							dadKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("f"));
-						}
+							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("m")).equals("null")) {
+							
+							} else {
+								mumKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("m"));
+							}
+							
+							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("f")).equals("null")) {
+							
+							} else {
+								dadKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("f"));
+							}
 
-						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
-							System.out.println("Person ["+keyId+"] input is VALID");
-						} else {
+							// Check Validity
+							if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
+								System.out.println("Person ["+keyId+"] input is VALID");
+							} else {
+								return jsonResponse.toMap();
+							}
+
+							Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
+							memberService.save(member);
+
+							System.out.println("SAVED: " + member.toString());
+							System.out.println("SUCCESS: All the person input have been saved!");
+							
+						} catch (JSONException je2) {
+							System.out.println("FAILED: "+je2.getMessage());
+							jsonResponse.put("result", "false");
+							jsonResponse.put("message", je2.getMessage());
 							return jsonResponse.toMap();
 						}
 
-						Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
-						memberService.save(member);
-
-						System.out.println("SAVED: " + member.toString());
-
 					}
-					System.out.println("SUCCESS: All the person input have been saved!");
 					jsonResponse.put("result", "true");
 					return jsonResponse.toMap();
 
