@@ -126,24 +126,24 @@ public class IndexController {
 				        	keyValue = jsonObject.getString(keyName);
 				        	
 				        } catch (JSONException e1) {
-				        	System.out.println("keyValue for KeyName ["+keyName+"] is not String");
+				        	System.out.println("keyValue type for KeyName ["+keyName+"] is not String");
 				        	try {
 				        		keyValueArray = jsonObject.getJSONArray(keyName);
 				        		System.out.println("JSONArray found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
 					        	addMemberJSON(keyValueArray.toString());
 				        		
 				        	} catch (JSONException e2) {
-				        		System.out.println("keyValue for KeyName ["+keyName+"] is not JSONArray");
+				        		System.out.println("keyValue type for KeyName ["+keyName+"] is not JSONArray");
 				        		try {
 				        			keyValueObject = jsonObject.getJSONObject(keyName);
 				        			System.out.println("Another JSONObject found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
 						        	addMemberJSON(keyValueObject.toString());
 						        	
 				        		} catch (JSONException e3) {
-				        			System.out.println("keyValue for KeyName ["+keyName+"] is Unknown");
+				        			System.out.println("keyValue type for KeyName ["+keyName+"] is Unknown");
 				        			jsonResponse.put("result", "false");
-				        			jsonResponse.put("message", "Unknown Internal Error");
-				        			return jsonResponse;
+				        			jsonResponse.put("message", "Unknown JSON format");
+				        			return jsonResponse.toMap();
 				        		}
 				        	}
 				        	
@@ -154,7 +154,7 @@ public class IndexController {
 				        			System.out.println("key="+keyValue);
 				        			try {
 				        				keyId = Integer.valueOf(keyValue);
-				        			} catch (NumberFormatException ne1) { }
+				        			} catch (NumberFormatException ne0) { }
 				        			break;
 			        		case "name":
 				        			System.out.println("name="+keyValue);
@@ -232,24 +232,24 @@ public class IndexController {
 					        	keyValue = inArrayJsonObject.getString(keyName);
 					        	
 					        } catch (JSONException e1) {
-					        	System.out.println("keyValue for KeyName ["+keyName+"] is not String");
+					        	System.out.println("keyValue type for KeyName ["+keyName+"] is not String");
 					        	try {
 					        		keyValueArray = inArrayJsonObject.getJSONArray(keyName);
 					        		System.out.println("JSONArray found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
 						        	addMemberJSON(keyValueArray.toString());
 					        		
 					        	} catch (JSONException e2) {
-					        		System.out.println("keyValue for KeyName ["+keyName+"] is not JSONArray");
+					        		System.out.println("keyValue type for KeyName ["+keyName+"] is not JSONArray");
 					        		try {
 					        			keyValueObject = inArrayJsonObject.getJSONObject(keyName);
 					        			System.out.println("Another JSONObject found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
 							        	addMemberJSON(keyValueObject.toString());
 							        	
 					        		} catch (JSONException e3) {
-					        			System.out.println("keyValue for KeyName ["+keyName+"] is Unknown");
+					        			System.out.println("keyValue type for KeyName ["+keyName+"] is Unknown");
 					        			jsonResponse.put("result", "false");
-					        			jsonResponse.put("message", "Unknown Internal Error");
-					        			return jsonResponse;
+					        			jsonResponse.put("message", "Unknown JSON format");
+					        			return jsonResponse.toMap();
 					        		}
 					        	}
 					        	
@@ -257,37 +257,37 @@ public class IndexController {
 					        	
 				        	switch (keyName) {
 				        		case "key" :
-				        			System.out.println("key="+keyValue);
-				        			try {
-				        				keyId = Integer.valueOf(keyValue);
-				        			} catch (NumberFormatException ne1) { }
-				        			break;
+					        			System.out.println("key="+keyValue);
+					        			try {
+					        				keyId = Integer.valueOf(keyValue);
+					        			} catch (NumberFormatException ne0) { }
+					        			break;
 				        		case "name":
-				        			System.out.println("name="+keyValue);
-				        			name = keyValue;
-				        			break;
+					        			System.out.println("name="+keyValue);
+					        			name = keyValue;
+					        			break;
 				        		case "dob":
-				        			System.out.println("dob="+keyValue);
-				        			try {
-				        				birthday = Integer.valueOf(keyValue);
-				        			} catch (NumberFormatException ne1) { }
-				        			break;
+					        			System.out.println("dob="+keyValue);
+					        			try {
+					        				birthday = Integer.valueOf(keyValue);
+					        			} catch (NumberFormatException ne1) { }
+					        			break;
 				        		case "g":
-				        			System.out.println("g="+keyValue);
-				        			gender = keyValue;
-				        			break;
+					        			System.out.println("g="+keyValue);
+					        			gender = keyValue;
+					        			break;
 				        		case "m":
-				        			System.out.println("m="+keyValue);
-				        			try {
-				        				mumKey = Integer.valueOf(keyValue);
-				        			} catch (NumberFormatException ne2) { }
-				        			break;
+					        			System.out.println("m="+keyValue);
+					        			try {
+					        				mumKey = Integer.valueOf(keyValue);
+					        			} catch (NumberFormatException ne2) { }
+					        			break;
 				        		case "f":
-				        			System.out.println("f="+keyValue);
-				        			try {
-				        				dadKey = Integer.valueOf(keyValue);
-				        			} catch (NumberFormatException ne3) { }
-				        			break;
+					        			System.out.println("f="+keyValue);
+					        			try {
+					        				dadKey = Integer.valueOf(keyValue);
+					        			} catch (NumberFormatException ne3) { }
+					        			break;
 				        	}
 						        
 						}
@@ -575,7 +575,6 @@ public class IndexController {
 			jsonResponse.put("result", "false");
 			jsonResponse.put("message", "person id is null");
 			return false;
-			
 			
 		} else if (memberService.findById(id)!=null) {
 			System.out.println("---- Person ID exists ----");
