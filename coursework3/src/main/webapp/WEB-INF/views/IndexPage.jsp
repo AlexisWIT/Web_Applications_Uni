@@ -139,13 +139,11 @@
 	            <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	                <h4 class="modal-title" id="addPersonLabel">Add New Person</h4>
+	                <div hidden><input id="modeToken"></input></div>
 	            </div>
-	            
-	            <form class="form-group" id="form-addNew">
-	            
-		            <div class="modal-body">
+	            <form class="form-group" id="form-addSingleNew">
+		            <div class="modal-body" id="singleAddBody">
 		            	<div id="addSinglePerson">
-		            		<div hidden><input id="modeToken"></input></div>
 			           		<div class="input-group">
 		      					<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> Person Key</span>
 		        				<input id="personKey"	name="personKey" class="form-control" placeholder="Person Key">
@@ -178,7 +176,15 @@
 							<div class="alert alert-danger fade in out" id="singleAddErrorAlert" role="alert"><span id="singleAddFailedInfo"></span></div>
 							<div class="alert alert-success fade in out" id="singleAddCompleteAlert" role="alert"><span id="singleAddCompleteInfo"></span></div>
 						</div>
-						
+					</div>	
+					
+					<div class="modal-footer" id="singleAddFooter">
+		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button type="submit" class="btn btn-primary" id="submit-newSinglePerson">Submit</button>
+		            </div>	
+				</form>
+				<form class="form-group" id="form-addMultiNew">		
+					<div class="modal-body" id="multiAddBody">	
 						<div id="addMultiplePerson">
     						<label for="mutipleAddArea">Add multiple persons (JSON)</label>
 							<textarea class="form-control" id="mutipleAddArea" name="mutipleAddArea" rows="10"></textarea>
@@ -191,9 +197,9 @@
 						</div>
 		            </div>
 
-		            <div class="modal-footer">
+		            <div class="modal-footer" id="multiAddFooter">
 		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-		                <button type="submit" class="btn btn-primary" id="submit-newPerson">Submit</button>
+		                <button type="submit" class="btn btn-primary" id="submit-newMultiPerson">Submit</button>
 		            </div>
 	            </form>
 	            

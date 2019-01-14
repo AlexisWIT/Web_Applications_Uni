@@ -25,7 +25,11 @@
 	display:none;
 }
 
-#addMultiplePerson {
+#multiAddBody {
+	display:none;
+}
+
+#multiAddFooter {
 	display:none;
 }
 

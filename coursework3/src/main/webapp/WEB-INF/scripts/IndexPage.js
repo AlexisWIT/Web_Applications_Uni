@@ -136,11 +136,6 @@ $(document).ready(function () {
 		
 	});
 	
-	$("#addPersonBtn").click(function(){
-		$("#modeToken").val('1');
-		
-	});
-	
 	$("#addMultiplePersonLink").click(function(){
 		$("#modeToken").val('2');
 		$("#personKey").val('');
@@ -149,8 +144,11 @@ $(document).ready(function () {
 		$("#gender").val('');
 		$("#motherKey").val('');
 		$("#fatherKey").val('');
-		$("#addSinglePerson").hide();
-		$("#addMultiplePerson").show();
+		
+		$("#singleAddBody").hide();
+		$("#singleAddFooter").hide();
+		$("#multiAddBody").show();
+		$("#multiAddFooter").show();
 		
 		$("#singleAddErrorAlert").fadeOut();
 		$("#singleAddCompleteAlert").fadeOut();
@@ -161,8 +159,11 @@ $(document).ready(function () {
 	$("#addSinglePersonLink").click(function(){
 		$("#modeToken").val('1');
 		$("#mutipleAddArea").val('');
-		$("#addMultiplePerson").hide();
-		$("#addSinglePerson").show();
+		
+		$("#multiAddBody").hide();
+		$("#multiAddFooter").hide();
+		$("#singleAddBody").show();
+		$("#singleAddFooter").show();
 		
 		$("#multiAddErrorAlert").fadeOut();
 		$("#multiAddCompleteAlert").fadeOut();
@@ -171,6 +172,7 @@ $(document).ready(function () {
 	});
 	
 	$("#addPersonBtn").click(function(){
+		$("#modeToken").val('1');
 		$("#multiAddInProgressAlert").fadeOut();
 		$("#multiAddErrorAlert").fadeOut();
 		$("#multiAddCompleteAlert").fadeOut();
@@ -180,7 +182,7 @@ $(document).ready(function () {
 		
 	});
 	
-	$("#submit-newPerson").click(function(){
+	$("#submit-newSinglePerson").click(function(){
 		$("#multiAddInProgressAlert").fadeOut();
 		$("#multiAddErrorAlert").fadeOut();
 		$("#multiAddCompleteAlert").fadeOut();
@@ -194,12 +196,11 @@ $(document).ready(function () {
 		$("#deletePersonBtn").hide();
 		$("#editPersonBtn").hide();
 		
-		if ($("#modeToken").val()==1) {
-			
+//		if ($("#modeToken").val()==1) {
 			console.log("Input Mode ["+$("#modeToken").val()+"]");
 			
-			$("#form-addNew").validate({
-				errorClass:'errors',
+			$("#form-addSingleNew").validate({
+				errorClass:'errors1',
 				rules: {
 					"personKey":{
 						required:true,
@@ -266,7 +267,7 @@ $(document).ready(function () {
 					var fkey = $("#fatherKey").val();
 					if (fkey === undefined || fkey == "" ) fkey=null;
 					
-					var data = '{"key": "'+key+'", "name": "'+name+'", "dob": "'+dob+'", "gender": "'+gender+'", "mkey": "'+mkey+'", "fkey": "'+fkey+'"}';
+					var data = '{"key": "'+key+'", "name": "'+name+'", "dob": "'+dob+'", "g": "'+gender+'", "m": "'+mkey+'", "f": "'+fkey+'"}';
 					console.log(data);
 					
 					var jsonData = JSON.parse(data);
@@ -301,10 +302,21 @@ $(document).ready(function () {
 					});
 				}
 					
-			})
+			});
 			
 			
-		} else if ($("#modeToken").val()==2) {
+		});
+		
+		
+		
+		$("#submit-newMultiPerson").click(function() {
+			
+			$("#multiAddInProgressAlert").fadeOut();
+			$("#multiAddErrorAlert").fadeOut();
+			$("#multiAddCompleteAlert").fadeOut();
+			$("#singleAddInProgressAlert").fadeOut();
+			$("#singleAddErrorAlert").fadeOut();
+			$("#singleAddCompleteAlert").fadeOut();
 			
 			console.log("Input Mode ["+$("#modeToken").val()+"]");
 			
@@ -314,8 +326,8 @@ $(document).ready(function () {
 			$("#deletePersonBtn").hide();
 			$("#editPersonBtn").hide();
 			
-			$("#form-addNew").validate({
-				errorClass:'errors',
+			$("#form-addMultiNew").validate({
+				errorClass:'errors2',
 				rules: {
 					"mutipleAddArea":{
 						required:true
@@ -375,10 +387,7 @@ $(document).ready(function () {
 					
 				}
 					
-			})
-			
-			
-		}
+			});
 		
 		
 	});

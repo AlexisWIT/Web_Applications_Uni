@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,9 +87,6 @@ public class IndexController {
 
 		System.out.println(memberInput);
 		final Gson gson = new Gson();
-		// final ObjectMapper objectMapper = new ObjectMapper();
-		//JSONParser jsonParser = new JSONParser();
-		// JSONObject jsonResponse = new JSONObject();
 
 		// Check if it's empty/blank string
 		if (StringUtils.isBlank(memberInput)) {
@@ -102,53 +100,93 @@ public class IndexController {
 			// if (isValidJSON(memberInput, gson, objectMapper)) {
 			if (inputChecker.isValidJSON(memberInput, gson)) {
 
-				// If only one person to be added - JSON Object
+				// If it's JSON Object
 				if (inputChecker.isJSONObject(memberInput)) {
 					
-					String parsableInput = "{'newPerson': "+memberInput+"}";
-					System.out.println("Prefix added: "+parsableInput);
+					String parsableInput = memberInput;
 					jsonResponse = new JSONObject();
-					
-					//JSONObject jsonObject = gson.fromJson(memberInput, JSONObject.class);
+
 					JSONObject jsonObject = new JSONObject(parsableInput);
+					Iterator<String> jsonKeyIterator = jsonObject.keys();
 					
+					Integer keyId = null;
+					String name = null;
+					Integer birthday = null;
+					String gender = null;
+					Integer mumKey = null;
+					Integer dadKey = null;
 					
-					try {
-						Integer keyId = Integer.valueOf((String) jsonObject.getJSONObject("newPerson").getString("key"));
-						
-						String name = (String) jsonObject.getJSONObject("newPerson").getString("name");
-						Integer birthday = null;
-						String gender = null;
-						Integer mumKey = null;
-						Integer dadKey = null;
-						
-						if (((String)jsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
-							
-						} else {
-							birthday = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("dob"));
-						}
-						
-						if (((String)jsonObject.getJSONObject("newPerson").getString("gender")).equals("null")) {
-							
-						} else {
-							gender = (String)jsonObject.getJSONObject("newPerson").getString("gender");
-							// Make the first letter to lower case
-							gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
-						}
-
-						if (((String)jsonObject.getJSONObject("newPerson").getString("mkey")).equals("null")) {
-						
-						} else {
-							mumKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("mkey"));
-						}
-						
-						if (((String)jsonObject.getJSONObject("newPerson").getString("fkey")).equals("null")) {
-						
-						} else {
-							dadKey = Integer.valueOf((String)jsonObject.getJSONObject("newPerson").getString("fkey"));
-						}
-
-						// Check Validity
+					while (jsonKeyIterator.hasNext()) {
+				        String keyName = (String)jsonKeyIterator.next();
+				        String keyValue = null;
+				        JSONArray keyValueArray = new JSONArray();
+				        JSONObject keyValueObject = new JSONObject();
+				        
+				        try {
+				        	keyValue = jsonObject.getString(keyName);
+				        	
+				        } catch (JSONException e1) {
+				        	System.out.println("keyValue for KeyName ["+keyName+"] is not String");
+				        	try {
+				        		keyValueArray = jsonObject.getJSONArray(keyName);
+				        		System.out.println("JSONArray found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
+					        	addMemberJSON(keyValueArray.toString());
+				        		
+				        	} catch (JSONException e2) {
+				        		System.out.println("keyValue for KeyName ["+keyName+"] is not JSONArray");
+				        		try {
+				        			keyValueObject = jsonObject.getJSONObject(keyName);
+				        			System.out.println("Another JSONObject found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
+						        	addMemberJSON(keyValueObject.toString());
+						        	
+				        		} catch (JSONException e3) {
+				        			System.out.println("keyValue for KeyName ["+keyName+"] is Unknown");
+				        			jsonResponse.put("result", "false");
+				        			jsonResponse.put("message", "Unknown Internal Error");
+				        			return jsonResponse;
+				        		}
+				        	}
+				        	
+				        }
+				        	
+			        	switch (keyName) {
+			        		case "key" :
+				        			System.out.println("key="+keyValue);
+				        			try {
+				        				keyId = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne1) { }
+				        			break;
+			        		case "name":
+				        			System.out.println("name="+keyValue);
+				        			name = keyValue;
+				        			break;
+			        		case "dob":
+				        			System.out.println("dob="+keyValue);
+				        			try {
+				        				birthday = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne1) { }
+				        			break;
+			        		case "g":
+				        			System.out.println("g="+keyValue);
+				        			gender = keyValue;
+				        			break;
+			        		case "m":
+				        			System.out.println("m="+keyValue);
+				        			try {
+				        				mumKey = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne2) { }
+				        			break;
+			        		case "f":
+				        			System.out.println("f="+keyValue);
+				        			try {
+				        				dadKey = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne3) { }
+				        			break;
+			        	}
+					        
+					}
+					
+					if (keyId != null && name != null) {	
 						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
 							System.out.println("Person ["+keyId+"] input is valid");
 						} else {
@@ -157,20 +195,11 @@ public class IndexController {
 
 						Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
 						memberService.save(member);
-
 						System.out.println("SAVED: " + member.toString());
-						System.out.println("SUCCESS: The person input have been saved!");
+						System.out.println("SUCCESS: The person ["+name+"] input has been saved!");
 						
-					} catch (JSONException je1) {
-						System.out.println("FAILED: "+je1.getMessage());
-						jsonResponse.put("result", "false");
-						jsonResponse.put("message", je1.getMessage());
-						return jsonResponse.toMap();
 					}
 
-					
-					
-					
 					jsonResponse.put("result", "true");
 					return jsonResponse.toMap();
 
@@ -182,67 +211,99 @@ public class IndexController {
 					for (int i = 0; i < jsonArray.length(); i++) {
 
 						jsonResponse = new JSONObject();
-						JSONObject inputJsonObject = jsonArray.getJSONObject(i);
+						JSONObject inArrayJsonObject = jsonArray.getJSONObject(i);
 						
-						String parsableJSON = "{'newPerson': "+inputJsonObject.toString()+"}";
-						System.out.println("Prefix added: "+parsableJSON);
+						Iterator<String> jsonKeyIterator = inArrayJsonObject.keys();
 						
-						JSONObject extractedJsonObject = new JSONObject(parsableJSON);
+						Integer keyId = null;
+						String name = null;
+						Integer birthday = null;
+						String gender = null;
+						Integer mumKey = null;
+						Integer dadKey = null;
 						
-						try {
-							
-							Integer keyId = Integer.valueOf((String) extractedJsonObject.getJSONObject("newPerson").getString("key"));
-							
-							String name = (String) extractedJsonObject.getJSONObject("newPerson").getString("name");
-							Integer birthday = null;
-							String gender = null;
-							Integer mumKey = null;
-							Integer dadKey = null;
-							
-							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("dob")).equals("null")) {
-								
-							} else {
-								birthday = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("dob"));
-							}
-							
-							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("g")).equals("null")) {
-								
-							} else {
-								gender = (String)extractedJsonObject.getJSONObject("newPerson").get("g");
-								// Make the first letter to lower case
-								gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
-							}
-
-							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("m")).equals("null")) {
-							
-							} else {
-								mumKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("m"));
-							}
-							
-							if (((String)extractedJsonObject.getJSONObject("newPerson").getString("f")).equals("null")) {
-							
-							} else {
-								dadKey = Integer.valueOf((String)extractedJsonObject.getJSONObject("newPerson").getString("f"));
-							}
-
-							// Check Validity
+						while (jsonKeyIterator.hasNext()) {
+					        String keyName = (String)jsonKeyIterator.next();
+					        String keyValue = null;
+					        JSONArray keyValueArray = new JSONArray();
+					        JSONObject keyValueObject = new JSONObject();
+					        
+					        try {
+					        	keyValue = inArrayJsonObject.getString(keyName);
+					        	
+					        } catch (JSONException e1) {
+					        	System.out.println("keyValue for KeyName ["+keyName+"] is not String");
+					        	try {
+					        		keyValueArray = inArrayJsonObject.getJSONArray(keyName);
+					        		System.out.println("JSONArray found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
+						        	addMemberJSON(keyValueArray.toString());
+					        		
+					        	} catch (JSONException e2) {
+					        		System.out.println("keyValue for KeyName ["+keyName+"] is not JSONArray");
+					        		try {
+					        			keyValueObject = inArrayJsonObject.getJSONObject(keyName);
+					        			System.out.println("Another JSONObject found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
+							        	addMemberJSON(keyValueObject.toString());
+							        	
+					        		} catch (JSONException e3) {
+					        			System.out.println("keyValue for KeyName ["+keyName+"] is Unknown");
+					        			jsonResponse.put("result", "false");
+					        			jsonResponse.put("message", "Unknown Internal Error");
+					        			return jsonResponse;
+					        		}
+					        	}
+					        	
+					        }
+					        	
+				        	switch (keyName) {
+				        		case "key" :
+				        			System.out.println("key="+keyValue);
+				        			try {
+				        				keyId = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne1) { }
+				        			break;
+				        		case "name":
+				        			System.out.println("name="+keyValue);
+				        			name = keyValue;
+				        			break;
+				        		case "dob":
+				        			System.out.println("dob="+keyValue);
+				        			try {
+				        				birthday = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne1) { }
+				        			break;
+				        		case "g":
+				        			System.out.println("g="+keyValue);
+				        			gender = keyValue;
+				        			break;
+				        		case "m":
+				        			System.out.println("m="+keyValue);
+				        			try {
+				        				mumKey = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne2) { }
+				        			break;
+				        		case "f":
+				        			System.out.println("f="+keyValue);
+				        			try {
+				        				dadKey = Integer.valueOf(keyValue);
+				        			} catch (NumberFormatException ne3) { }
+				        			break;
+				        	}
+						        
+						}
+						
+						if (keyId != null && name != null) {	
 							if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
-								System.out.println("Person ["+keyId+"] input is VALID");
+								System.out.println("Person ["+keyId+"] input is valid");
 							} else {
 								return jsonResponse.toMap();
 							}
 
 							Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
 							memberService.save(member);
-
 							System.out.println("SAVED: " + member.toString());
-							System.out.println("SUCCESS: All the person input have been saved!");
+							System.out.println("SUCCESS: The person ["+name+"] input has been saved!");
 							
-						} catch (JSONException je2) {
-							System.out.println("FAILED: "+je2.getMessage());
-							jsonResponse.put("result", "false");
-							jsonResponse.put("message", je2.getMessage());
-							return jsonResponse.toMap();
 						}
 
 					}
@@ -252,7 +313,7 @@ public class IndexController {
 				} else {
 					System.out.println("FAILED: Error occured!");
 					jsonResponse.put("result", "false");
-					jsonResponse.put("message", "Error occured");
+					jsonResponse.put("message", "Error occured! JSON format may not be correct.");
 					return jsonResponse.toMap();
 
 				}
@@ -509,7 +570,14 @@ public class IndexController {
 		jsonResponse = new JSONObject();
 	    
 	    // Check Key ID
-		if (memberService.findById(id)!=null) {
+		if (id==null) {
+			System.out.println("---- Person ID is NULL ----");
+			jsonResponse.put("result", "false");
+			jsonResponse.put("message", "person id is null");
+			return false;
+			
+			
+		} else if (memberService.findById(id)!=null) {
 			System.out.println("---- Person ID exists ----");
 			jsonResponse.put("result", "false");
 			jsonResponse.put("message", "person id ["+id+"] already exists");
@@ -518,12 +586,17 @@ public class IndexController {
 		}
 		
 		// Check Name
-		if (memberRepository.findByName(name)!=null) {
+		if (name.equals(null)) {
+			System.out.println("---- Person Name is NULL ----");
+			jsonResponse.put("result", "false");
+			jsonResponse.put("message", "person name is null");
+			return false;
+			
+		} else if (memberRepository.findByName(name)!=null) {
 			System.out.println("---- Person Name exists ----");
 			jsonResponse.put("result", "false");
 			jsonResponse.put("message", "person name ["+name+"] already exists");
 			return false;
-			
 		}
 		
 		// Check Birthday

@@ -1,6 +1,9 @@
 package gEapp.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,17 +56,21 @@ public class InputChecker {
 	}
 	
 	public boolean isValidDate (Integer dateInput, SimpleDateFormat dateFormat) {
-		Date date;
+//		Date date;
+		LocalDate date;
 		if (dateInput!=null) {
 			try {
-				date = dateFormat.parse(dateInput.toString());
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+				date = LocalDate.parse(dateInput.toString(), formatter);
+				//System.out.printf("%s%n", date);
+//				date = dateFormat.parse(dateInput.toString());
 //				SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
 //				String formatedDate = newFormat.format(date);	
 				return true;
 				
-			} catch (java.text.ParseException e) {
+			} catch (DateTimeParseException e) {
 				
-				System.out.println("Invalid Date format input");
+				System.out.println("Invalid Date input: "+e.getMessage());
 				return false;
 				
 			}
