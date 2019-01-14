@@ -198,7 +198,7 @@
 		            </div>
 
 		            <div class="modal-footer" id="multiAddFooter">
-		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button type="button" class="btn btn-default" id="cancelAddMulti" data-dismiss="modal">Cancel</button>
 		                <button type="submit" class="btn btn-primary" id="submit-newMultiPerson">Submit</button>
 		            </div>
 	            </form>

@@ -4,22 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
-import gEapp.domain.JSONOrderedObject;
 import gEapp.domain.JSONResponse;
 import gEapp.domain.Member;
 import gEapp.repository.MemberRepository;
@@ -43,6 +37,7 @@ public class InterfaceController {
 	JSONObject jsonResponse = new JSONObject();
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/GE/FamilyTree", method=RequestMethod.GET)
 	public @ResponseBody JSONResponse createFamilyTree() {
 		
@@ -57,10 +52,10 @@ public class InterfaceController {
 		return familyTreeResponse;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/GE/AncestorTree", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONResponse createAncestorTree(Integer key) {
-		JSONObject jsonAncestors = new JSONObject();
 		JSONResponse ancestorTreeResponse = new JSONResponse();
 		List<Member> ancestorListForTree = new ArrayList<>();
 		List<Integer> resultParentList = new ArrayList<>();
@@ -81,24 +76,15 @@ public class InterfaceController {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/GE/DescendantTree", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONResponse createDescendantTree(Integer key) {
-		JSONObject jsonDescendants = new JSONObject();
 		JSONResponse descendantTreeResponse = new JSONResponse();
 		List<Member> descendantListForTree = new ArrayList<>();
-		List<Integer> resultChildrenList = new ArrayList<>();
 		System.out.println("Received Request for finding ancestor of ["+key+"]");
 		setupMarriage(2,key);
 		
-//		resultChildrenList = (List<Integer>)getChildrenObject(key);
-//		
-//		System.out.println("\nResult="+resultChildrenList.toString());
-//		for(Integer memberkey: resultChildrenList) {
-//			Member member = memberService.findById(memberkey);
-//			descendantListForTree.add(member);
-//				
-//		}
 		descendantListForTree = (List<Member>)getChildrenObject(key);
 		System.out.println("\nResult="+descendantListForTree.toString());
 		
@@ -147,8 +133,8 @@ public class InterfaceController {
 			
 		} else {
 			gender = (String)jsonObject.get("gender");
-			// Make the first letter to lower case
-			gender = gender.substring(0, 1).toLowerCase() + gender.substring(1);
+			// Make all letters to lower case
+			gender = gender.toLowerCase();
 		}
 
 		if (((String)jsonObject.get("mkey")).equals("null")) {

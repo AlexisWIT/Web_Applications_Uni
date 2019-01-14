@@ -307,7 +307,9 @@ $(document).ready(function () {
 			
 		});
 		
-		
+		$("#cancelAddMulti").click(function(){
+			completeChange("true");
+		});
 		
 		$("#submit-newMultiPerson").click(function() {
 			

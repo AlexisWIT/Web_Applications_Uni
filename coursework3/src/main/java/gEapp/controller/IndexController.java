@@ -130,14 +130,14 @@ public class IndexController {
 				        	try {
 				        		keyValueArray = jsonObject.getJSONArray(keyName);
 				        		System.out.println("JSONArray found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
-					        	addMemberJSON(keyValueArray.toString());
+				        		return addMemberJSON(keyValueArray.toString());
 				        		
 				        	} catch (JSONException e2) {
 				        		System.out.println("keyValue type for KeyName ["+keyName+"] is not JSONArray");
 				        		try {
 				        			keyValueObject = jsonObject.getJSONObject(keyName);
 				        			System.out.println("Another JSONObject found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
-						        	addMemberJSON(keyValueObject.toString());
+				        			return addMemberJSON(keyValueObject.toString());
 						        	
 				        		} catch (JSONException e3) {
 				        			System.out.println("keyValue type for KeyName ["+keyName+"] is Unknown");
@@ -158,7 +158,7 @@ public class IndexController {
 				        			break;
 			        		case "name":
 				        			System.out.println("name="+keyValue);
-				        			name = keyValue;
+				        			if (!keyValue.equals("null")) name = keyValue;
 				        			break;
 			        		case "dob":
 				        			System.out.println("dob="+keyValue);
@@ -168,7 +168,7 @@ public class IndexController {
 				        			break;
 			        		case "g":
 				        			System.out.println("g="+keyValue);
-				        			gender = keyValue;
+				        			if (!keyValue.equals("null")) gender = keyValue;
 				        			break;
 			        		case "m":
 				        			System.out.println("m="+keyValue);
@@ -185,21 +185,19 @@ public class IndexController {
 			        	}
 					        
 					}
-					
-					if (keyId != null && name != null) {	
-						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
-							System.out.println("Person ["+keyId+"] input is valid");
-						} else {
-							return jsonResponse.toMap();
-						}
 
+					if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
+						System.out.println("Person ["+keyId+"] input is valid");
 						Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
 						memberService.save(member);
-						System.out.println("SAVED: " + member.toString());
-						System.out.println("SUCCESS: The person ["+name+"] input has been saved!");
+						System.out.println("(1) SAVED: " + member.toString());
+						System.out.println("(1) SUCCESS: The person ["+name+"] input has been saved!");
+					} else if (keyId==null && name==null && birthday==null && gender==null && mumKey==null && dadKey==null){
 						
+					} else {
+						return jsonResponse.toMap();
 					}
-
+					
 					jsonResponse.put("result", "true");
 					return jsonResponse.toMap();
 
@@ -236,14 +234,14 @@ public class IndexController {
 					        	try {
 					        		keyValueArray = inArrayJsonObject.getJSONArray(keyName);
 					        		System.out.println("JSONArray found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
-						        	addMemberJSON(keyValueArray.toString());
+						        	return addMemberJSON(keyValueArray.toString());
 					        		
 					        	} catch (JSONException e2) {
 					        		System.out.println("keyValue type for KeyName ["+keyName+"] is not JSONArray");
 					        		try {
 					        			keyValueObject = inArrayJsonObject.getJSONObject(keyName);
 					        			System.out.println("Another JSONObject found as the keyValue for KeyName ["+keyName+"] in the current JSONObject!");
-							        	addMemberJSON(keyValueObject.toString());
+					        			return addMemberJSON(keyValueObject.toString());
 							        	
 					        		} catch (JSONException e3) {
 					        			System.out.println("keyValue type for KeyName ["+keyName+"] is Unknown");
@@ -264,7 +262,7 @@ public class IndexController {
 					        			break;
 				        		case "name":
 					        			System.out.println("name="+keyValue);
-					        			name = keyValue;
+					        			if (!keyValue.equals("null")) name = keyValue;
 					        			break;
 				        		case "dob":
 					        			System.out.println("dob="+keyValue);
@@ -273,8 +271,8 @@ public class IndexController {
 					        			} catch (NumberFormatException ne1) { }
 					        			break;
 				        		case "g":
-					        			System.out.println("g="+keyValue);
-					        			gender = keyValue;
+				        				System.out.println("g="+keyValue);
+					        			if (!keyValue.equals("null")) gender = keyValue;
 					        			break;
 				        		case "m":
 					        			System.out.println("m="+keyValue);
@@ -292,18 +290,16 @@ public class IndexController {
 						        
 						}
 						
-						if (keyId != null && name != null) {	
-							if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
-								System.out.println("Person ["+keyId+"] input is valid");
-							} else {
-								return jsonResponse.toMap();
-							}
-
+						if (isValidPerson(keyId, name, birthday, gender, mumKey, dadKey)) {
+							System.out.println("Person ["+keyId+"] input is valid");
 							Member member = new Member(keyId, name, birthday, gender, mumKey, dadKey);
 							memberService.save(member);
-							System.out.println("SAVED: " + member.toString());
-							System.out.println("SUCCESS: The person ["+name+"] input has been saved!");
+							System.out.println("(2) SAVED: " + member.toString());
+							System.out.println("(2) SUCCESS: The person ["+name+"] input has been saved!");
+						} else if (keyId==null && name.equals(null) && birthday==null && gender.equals(null) && mumKey==null && dadKey==null){
 							
+						} else {
+							return jsonResponse.toMap();
 						}
 
 					}
@@ -573,13 +569,13 @@ public class IndexController {
 		if (id==null) {
 			System.out.println("---- Person ID is NULL ----");
 			jsonResponse.put("result", "false");
-			jsonResponse.put("message", "person id is null");
+			jsonResponse.put("message", "person ["+name+"] id is null");
 			return false;
 			
 		} else if (memberService.findById(id)!=null) {
 			System.out.println("---- Person ID exists ----");
 			jsonResponse.put("result", "false");
-			jsonResponse.put("message", "person id ["+id+"] already exists");
+			jsonResponse.put("message", "person ["+name+"] id ["+id+"] already exists");
 			return false;
 			
 		}
@@ -588,7 +584,7 @@ public class IndexController {
 		if (name.equals(null)) {
 			System.out.println("---- Person Name is NULL ----");
 			jsonResponse.put("result", "false");
-			jsonResponse.put("message", "person name is null");
+			jsonResponse.put("message", "person ["+id+"] name is null");
 			return false;
 			
 		} else if (memberRepository.findByName(name)!=null) {
